@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useHistory } from "react-router-dom";
-import { UserProfileContext } from "../providers/UserProfileProvider";
+import { UserProfileContext } from "../../providers/UserProfileProvider";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,12 +12,16 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
-function Copyright() {
+const Copyright = () => {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://keartroth.github.io/">
+            <Link color="inherit" href="https://keartroth.github.io/" target="_blank">
                 Michael Carroll
       </Link>{' '}
             {new Date().getFullYear()}
@@ -46,36 +50,50 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SignUp() {
+export const Register = () => {
     const classes = useStyles();
     const history = useHistory();
     const { register, existingUserCheck } = useContext(UserProfileContext);
 
-    const [registerState, setRegisterState] = useState({})
+    const [registerState, setRegisterState] = useState({ showPassword: false })
+
     const handleUserInput = (e) => {
         const updatedState = { ...registerState }
         updatedState[e.target.id] = e.target.value
         setRegisterState(updatedState)
     }
 
+    const handleClickShowPassword = () => {
+        setRegisterState({ ...registerState, showPassword: !registerState.showPassword });
+        console.log(registerState.showPassword);
+    };
 
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     const registerClick = (e) => {
         e.preventDefault();
-
+        debugger
         const password = registerState.password;
         const passwordConfirmation = registerState.passwordConfirmation;
 
         if (password && password !== passwordConfirmation) {
             alert("Passwords don't match. Do better.");
         } else {
-            existingUserCheck(registerState.email)
+            existingUserCheck(registerState.email, registerState.displayName)
                 .then((result) => {
-                    if (result) {
+                    if (result.status === 404) {
+                        delete registerState.passwordConfirmation;
+                        delete registerState.showPassword;
                         register(registerState, password)
                             .then(() => history.push("/"));
                     } else {
-                        window.alert("Email already in use.");
+                        if (result.email === registerState.email) {
+                            window.alert("Email already in use.");
+                        } else {
+                            window.alert("Display name already in use.");
+                        }
                     };
                 });
         };
@@ -123,10 +141,10 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                name="displayname"
+                                name="displayName"
                                 label="Display Name"
-                                type="displayname"
-                                id="displayname"
+                                type="displayName"
+                                id="displayName"
                                 autoComplete="dname"
                                 onChange={handleUserInput}
                             />
@@ -162,9 +180,23 @@ export default function SignUp() {
                                 fullWidth
                                 name="password"
                                 label="Password"
-                                type="password"
+                                type={registerState.showPassword ? "text" : "password"}
                                 id="password"
                                 autoComplete="current-password"
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={handleClickShowPassword}
+                                                onMouseDown={handleMouseDownPassword}
+                                                edge="end"
+                                            >
+                                                {registerState.showPassword ? <Visibility /> : <VisibilityOff />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
                                 onChange={handleUserInput}
                             />
                         </Grid>
@@ -175,9 +207,23 @@ export default function SignUp() {
                                 fullWidth
                                 name="password"
                                 label="Password Confirmation"
-                                type="password"
+                                type={registerState.showPassword ? "text" : "password"}
                                 id="passwordConfirmation"
                                 autoComplete="current-password"
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={handleClickShowPassword}
+                                                onMouseDown={handleMouseDownPassword}
+                                                edge="end"
+                                            >
+                                                {registerState.showPassword ? <Visibility /> : <VisibilityOff />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
                                 onChange={handleUserInput}
                             />
                         </Grid>

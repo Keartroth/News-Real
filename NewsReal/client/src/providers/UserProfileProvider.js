@@ -44,17 +44,11 @@ export const UserProfileProvider = (props) => {
             });
     };
 
-    const existingUserCheck = (email) => {
-        return fetch(`${apiUrl}/existingUserCheck/${email}`, {
+    const existingUserCheck = (email, displayName) => {
+        return fetch(`${apiUrl}/existingusercheck/${email}&${displayName}`, {
             method: "GET"
         })
-            .then(_ => _.json())
-            .then(user => {
-                if (user.length) {
-                    return false
-                }
-                return true
-            })
+            .then(_ => _.json());
     };
 
     const getToken = () => firebase.auth().currentUser.getIdToken();
