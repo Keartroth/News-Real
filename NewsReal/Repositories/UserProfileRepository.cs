@@ -18,9 +18,9 @@ namespace NewsReal.Repositories
             return _context.UserProfile.FirstOrDefault(up => up.FirebaseUserId == firebaseUserId);
         }
 
-        public UserProfile GetByEmail(string email)
+        public UserProfile GetByEmail(string email, string displayName)
         {
-            return _context.UserProfile.FirstOrDefault(up => up.Email == email);
+            return _context.UserProfile.FirstOrDefault(up => up.Email == email || up.DisplayName == displayName);
         }
 
         public void Add(UserProfile userProfile)

@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using NewsReal.Data;
 using NewsReal.Models;
 using NewsReal.Repositories;
+using System;
+using System.Security.Claims;
 
 namespace NewsReal.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserProfileController : ControllerBase
@@ -17,10 +18,10 @@ namespace NewsReal.Controllers
             _userProfileRepository = new UserProfileRepository(context);
         }
 
-        [HttpGet("existingusercheck/{email}")]
-        public IActionResult ExistingUserCheck(string email)
+        [HttpGet("existingusercheck/{email}&{displayName}")]
+        public IActionResult ExistingUserCheck(string email, string displayName)
         {
-            var userProfile = _userProfileRepository.GetByEmail(email);
+            var userProfile = _userProfileRepository.GetByEmail(email, displayName);
             if (userProfile == null)
             {
                 return NotFound();
@@ -28,6 +29,7 @@ namespace NewsReal.Controllers
             return Ok(userProfile);
         }
 
+        [Authorize]
         [HttpGet("{firebaseUserId}")]
         public IActionResult GetByFirebaseUserId(string firebaseUserId)
         {
@@ -39,12 +41,20 @@ namespace NewsReal.Controllers
             return Ok(userProfile);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult Register(UserProfile userProfile)
         {
+            userProfile.CreateDateTime = DateTime.Now;
             _userProfileRepository.Add(userProfile);
             return CreatedAtAction(
                 nameof(GetByFirebaseUserId), new { firebaseUserId = userProfile.FirebaseUserId }, userProfile);
+        }
+
+        private UserProfile GetCurrentUserProfile()
+        {
+            var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return _userProfileRepository.GetByFirebaseUserId(firebaseUserId);
         }
     }
 }

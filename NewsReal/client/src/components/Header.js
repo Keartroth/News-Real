@@ -5,8 +5,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import Link from '@material-ui/core/Link';
 import { UserProfileContext } from "../providers/UserProfileProvider";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Header() {
-    const { isLoggedIn, logout } = useContext(UserProfileContext);
+export const Header = () => {
+    const { logout } = useContext(UserProfileContext);
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
     const classes = useStyles();
@@ -48,7 +49,7 @@ export default function Header() {
                         <AccountCircleIcon />
                     </IconButton>
                     <IconButton edge="end" color="inherit" aria-label="menu" onClick={logout}>
-                        <ExitToAppIcon />
+                        <ExitToAppRoundedIcon />
                     </IconButton>
                 </Toolbar>
             </AppBar>

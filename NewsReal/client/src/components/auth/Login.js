@@ -12,14 +12,18 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserProfileContext } from '../../providers/UserProfileProvider';
 
-function Copyright() {
+const Copyright = () => {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://keartroth.github.io/">
+            <Link color="inherit" href="https://keartroth.github.io/" target="_blank">
                 Michael Carroll
       </Link>{' '}
             {new Date().getFullYear()}
@@ -33,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh',
     },
     image: {
-        backgroundImage: 'url(https://source.unsplash.com/random)',
+        backgroundImage: 'url(https://source.unsplash.com/random/?newspaper)',
         backgroundRepeat: 'no-repeat',
         backgroundColor:
             theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
@@ -59,17 +63,31 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SignInSide() {
+export const Login = () => {
     const classes = useStyles();
     const { login } = useContext(UserProfileContext);
     const history = useHistory();
 
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const [userInput, setUserInput] = useState({ showPassword: false })
+
+    const handleClickShowPassword = () => {
+        setUserInput({ ...userInput, showPassword: !userInput.showPassword });
+        console.log(userInput.showPassword);
+    };
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
+    const handleUserInput = (e) => {
+        const updatedState = { ...userInput }
+        updatedState[e.target.id] = e.target.value
+        setUserInput(updatedState);
+    };
 
     const loginSubmit = (e) => {
         e.preventDefault();
-        login(email, password)
+        login(userInput.email, userInput.password)
             .then(() => history.push("/"))
             .catch(() => alert("Invalid email or password"));
     };
@@ -97,7 +115,7 @@ export default function SignInSide() {
                             name="email"
                             autoComplete="email"
                             autoFocus
-                            onChange={e => setEmail(e.target.value)}
+                            onChange={handleUserInput}
                         />
                         <TextField
                             variant="outlined"
@@ -106,10 +124,24 @@ export default function SignInSide() {
                             fullWidth
                             name="password"
                             label="Password"
-                            type="password"
+                            type={userInput.showPassword ? "text" : "password"}
                             id="password"
                             autoComplete="current-password"
-                            onChange={e => setPassword(e.target.value)}
+                            onChange={handleUserInput}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            edge="end"
+                                        >
+                                            {userInput.showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
