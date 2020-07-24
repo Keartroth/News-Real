@@ -89,7 +89,10 @@ export const Login = () => {
         e.preventDefault();
         login(userInput.email, userInput.password)
             .then(() => history.push("/"))
-            .catch(() => alert("Invalid email or password"));
+            .catch((resp) => {
+                debugger
+                alert("Invalid email or password");
+            });
     };
 
     return (
