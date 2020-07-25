@@ -90,7 +90,6 @@ export const Login = () => {
         login(userInput.email, userInput.password)
             .then(() => history.push("/"))
             .catch((resp) => {
-                debugger
                 alert("Invalid email or password");
             });
     };

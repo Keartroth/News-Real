@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NewsReal.Data;
+using NewsReal.Models;
 using NewsReal.Repositories;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NewsReal.Controllers
 {
@@ -13,14 +11,17 @@ namespace NewsReal.Controllers
     [ApiController]
     public class NewsController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult GetNews()
+        private readonly NewsRepository _newsRepository;
+        public NewsController(ApplicationDbContext context)
         {
-            var currentsRecentNews = NewsRepository.GetArticles();
-            if (currentsRecentNews == null)
-            {
-                return NotFound();
-            }
+            _newsRepository = new NewsRepository(context);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<CurrentsArticle>>> GetNews()
+        {
+            List<CurrentsArticle> currentsRecentNews = await _newsRepository.GetArticlesAsync();
+
             return Ok(currentsRecentNews);
         }
     }

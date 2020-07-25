@@ -1,7 +1,6 @@
 ﻿using NewsReal.Data;
 using NewsReal.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,41 +12,43 @@ namespace NewsReal.Repositories
 {
     public class NewsRepository
     {
+        private readonly ApplicationDbContext _context;
+
+        public NewsRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         private static string currentsBaseUrl = "https://api.currentsapi.services/v1/";
 
-        private static string apiKey = "nrnl2jYQ7yFM4EhxMixvcAQ4ZFub4sRI6yuCNF9qpZPGWmNk";
+        private static string apiKey = "KEEP_IT_SECRET_KEEP_IT_SAFE";
 
-        public static async Task<string> GetArticles()
+        public async Task<List<CurrentsArticle>> GetArticlesAsync()
         {
-            try
+            List<CurrentsArticle> articles;
+            using (var httpClient = new HttpClient())
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    using (HttpResponseMessage response = await client.GetAsync(currentsBaseUrl))
-                    {
-                        using (HttpContent content = response.Content)
-                        {
-                            var data = await content.ReadAsStringAsync();
+                httpClient.BaseAddress = new Uri(currentsBaseUrl);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                            if (data != null)
-                            {
-                                Console.WriteLine("data------------{0}", JObject.Parse(data)["results"]);
-                                return data;
-                            }
-                            else
-                            {
-                                Console.WriteLine("NO Data----------");
-                                return null;
-                            }
-                        }
-                    }
+                HttpResponseMessage response = await httpClient.GetAsync("latest-news?apiKey=" + apiKey);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    
+                    var currentsResponse = JsonConvert.DeserializeObject<CurrentsResponse>(result);
+
+                    articles = currentsResponse.news;
+                    
+                    httpClient.Dispose();
+                    return articles;
                 }
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine("Exception Hit------------");
-                Console.WriteLine(exception);
-                return exception.ToString();
+                else
+                {
+                    httpClient.Dispose();
+                    return null;
+                }
             }
         }
     }

@@ -3,7 +3,7 @@ import { Article } from './Article';
 
 export const ArticleList = props => {
     const news = props.news;
-    debugger
+
     return (
         <>
             {

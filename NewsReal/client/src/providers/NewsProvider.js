@@ -17,12 +17,25 @@ export const NewsProvider = (props) => {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            }).then((res) => res.json())
+            }).then((resp) => resp.json())
                 .then(setNews));
     };
 
+    const getNewsByDefinedParameters = (searchParameters) => {
+        return getToken().then((token) =>
+            fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(searchParameters),
+            })).then(resp => resp.json())
+            .then(setNews);
+    };
+
     return (
-        <NewsContext.Provider value={{ news, getRecentNews }}>
+        <NewsContext.Provider value={{ news, getRecentNews, getNewsByDefinedParameters }}>
             {props.children}
         </NewsContext.Provider>
     );

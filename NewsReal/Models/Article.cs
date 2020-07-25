@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace NewsReal.Models
 {
@@ -57,5 +58,10 @@ namespace NewsReal.Models
         public double Sentimentality { get; set; }
 
         public UserProfile UserProile { get; set; }
+
+        public static implicit operator Task<object>(Article v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
