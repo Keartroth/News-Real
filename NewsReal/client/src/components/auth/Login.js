@@ -25,7 +25,7 @@ const Copyright = () => {
             {'Copyright © '}
             <Link color="inherit" href="https://keartroth.github.io/" target="_blank">
                 Michael Carroll
-      </Link>{' '}
+            </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
         </Typography>
@@ -60,6 +60,11 @@ const useStyles = makeStyles((theme) => ({
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
+    },
+    foot: {
+        bottom: theme.spacing(2),
+        position: 'fixed',
+        marginBottom: 'auto',
     },
 }));
 
@@ -170,10 +175,10 @@ export const Login = () => {
                                 </Link>
                             </Grid>
                         </Grid>
-                        <Box mt={5}>
-                            <Copyright />
-                        </Box>
                     </form>
+                    <Box mt={5} className={classes.foot}>
+                        <Copyright />
+                    </Box>
                 </div>
             </Grid>
         </Grid>

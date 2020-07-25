@@ -80,7 +80,7 @@ export const UserProfileProvider = (props) => {
             {
                 (isFirebaseReady)
                     ? props.children
-                    : <CircularProgress />
+                    : <div style={{ display: 'flex', justifyContent: 'center' }}><CircularProgress status="loading" /></div>
             }
         </UserProfileContext.Provider>
     );

@@ -8,7 +8,7 @@ export const ArticleList = props => {
         <>
             {
                 news.map(a => {
-                    return <Article article={a} />
+                    return <Article key={a.id} article={a} />
                 })
             }
         </>

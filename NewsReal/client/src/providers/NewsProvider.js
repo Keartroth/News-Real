@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { UserProfileContext } from "./UserProfileProvider";
-import { CircularProgress } from '@material-ui/core';
 
 export const NewsContext = React.createContext();
 

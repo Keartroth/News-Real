@@ -19,19 +19,8 @@ const Copyright = () => {
 }
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '50vh',
-        maxHeight: '50vh',
-    },
-    main: {
-        marginTop: theme.spacing(8),
-        marginBottom: theme.spacing(2),
-    },
     footer: {
-        padding: theme.spacing(3, 2),
-        marginTop: 'auto',
+        padding: theme.spacing(1.5, 2),
         backgroundColor:
             theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
     },
@@ -41,13 +30,11 @@ export const Footer = () => {
     const classes = useStyles();
 
     return (
-        <div className={classes.root}>
+        <footer className={classes.footer}>
             <CssBaseline />
-            <footer className={classes.footer}>
-                <Container maxWidth="sm">
-                    <Copyright />
-                </Container>
-            </footer>
-        </div>
+            <Container maxWidth="sm">
+                <Copyright />
+            </Container>
+        </footer>
     );
 };

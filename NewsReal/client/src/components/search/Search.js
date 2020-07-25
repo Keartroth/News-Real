@@ -47,7 +47,7 @@ export const mainSearchItems = (
 
 export const secondarySearchItems = (
     <div>
-        <ListSubheader inset>Saved reports</ListSubheader>
+        <ListSubheader inset>Saved Search Criteria</ListSubheader>
         <ListItem button>
             <ListItemIcon>
                 <AssignmentIcon />
