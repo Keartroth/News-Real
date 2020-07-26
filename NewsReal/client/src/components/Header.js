@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import clsx from 'clsx';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AppBar from '@material-ui/core/AppBar';
@@ -9,16 +9,14 @@ import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 import IconButton from '@material-ui/core/IconButton';
 import InputBase from '@material-ui/core/InputBase';
 import Link from '@material-ui/core/Link';
-import List from '@material-ui/core/List';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { CssBaseline } from '@material-ui/core';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import { mainSearchItems, secondarySearchItems } from './search/Search';
+import { SearchItems } from './search/Search';
 import { UserProfileContext } from "../providers/UserProfileProvider";
-import { NewsContext } from '../providers/NewsProvider';
 
 const drawerWidth = 240;
 
@@ -112,7 +110,6 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
-
     toolbar: {
         paddingRight: 24, // keep right padding when drawer closed
     },
@@ -127,7 +124,6 @@ const useStyles = makeStyles((theme) => ({
 
 export const Header = ({ handleSearchInput }) => {
     const { logout } = useContext(UserProfileContext);
-    const { getNewsByDefinedParameters } = useContext(NewsContext);
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const handleDrawerChange = () => {
@@ -207,10 +203,8 @@ export const Header = ({ handleSearchInput }) => {
                     </IconButton>
                 </div>
                 <Divider />
-                <List>{mainSearchItems}</List>
-                <Divider />
-                <List>{secondarySearchItems}</List>
+                <SearchItems open={open} classes={classes} handleDrawerChange={handleDrawerChange} />
             </Drawer>
         </div>
     );
-}
+};
