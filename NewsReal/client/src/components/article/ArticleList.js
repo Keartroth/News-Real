@@ -2,7 +2,6 @@ import React from 'react';
 import { Article } from './Article';
 
 export const ArticleList = props => {
-    debugger
     const news = props.news;
 
     return (

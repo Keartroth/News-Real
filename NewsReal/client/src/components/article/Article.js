@@ -1,5 +1,5 @@
 import React from 'react';
-import { parseJSON } from 'date-fns'
+import { parseISO } from 'date-fns'
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -37,7 +37,7 @@ const useStyles = makeStyles({
 
 export const Article = ({ article, idx }) => {
     const classes = useStyles();
-    const formatedDate = parseJSON(article.published).toDateString();;
+    const formatedDate = parseISO(article.published).toDateString();;
 
     return (
         <Paper id={`articleDetails--${idx}`} elevation={3} variant="outlined" style={{ width: '40%', minWidth: '450px', margin: '2rem' }}>

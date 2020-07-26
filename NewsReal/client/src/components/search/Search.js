@@ -1,27 +1,37 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { CssBaseline, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import React, {
+    useContext,
+    useState,
+    useEffect
+} from 'react';
+import {
+    CssBaseline,
+    Button
+} from '@material-ui/core';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import ClassIcon from '@material-ui/icons/Class';
+import DateFnsUtils from '@date-io/date-fns';
+import Divider from '@material-ui/core/Divider';
+import DomainIcon from '@material-ui/icons/Domain';
+import DomainDisabledIcon from '@material-ui/icons/DomainDisabled';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import Grid from '@material-ui/core/Grid';
+import InputLabel from '@material-ui/core/InputLabel';
+import {
+    KeyboardDatePicker,
+    MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import Divider from '@material-ui/core/Divider';
-import TextField from '@material-ui/core/TextField';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
-import ClassIcon from '@material-ui/icons/Class';
-import DateRangeIcon from '@material-ui/icons/DateRange';
-import { NewsContext } from '../../providers/NewsProvider';
-import InputLabel from '@material-ui/core/InputLabel';
+import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { CategoryContext } from '../../providers/CategoryProvider';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-import DomainIcon from '@material-ui/icons/Domain';
-import DomainDisabledIcon from '@material-ui/icons/DomainDisabled';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import { NewsContext } from '../../providers/NewsProvider';
+import { CategoryContext } from '../../providers/CategoryProvider';
 
 const useStyles = makeStyles((theme) => ({
     searchTitle: {
@@ -39,23 +49,46 @@ export const SearchItems = ({ open, handleDrawerChange }) => {
         getCategories();
     }, []);
 
-    const [searchState, setSearchState] = useState({
+    const initialSearchState = {
         language: "en",
         category: "",
-        start_date: "",
-        end_date: "",
+        start_date: null,
+        end_date: null,
         country: "us",
         page_number: 1,
         domain: "",
         domain_not: "",
         type: "",
-    });
+    };
+
+    const [searchState, setSearchState] = useState(initialSearchState);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
     const handleChange = (e) => {
         const updatedSearchState = { ...searchState };
         updatedSearchState[e.target.name] = e.target.value;
         setSearchState(updatedSearchState);
-    }
+    };
+
+    const handleStartDateChange = (e) => {
+        setStartDate(e);
+    };
+
+    const handleEndDateChange = (e) => {
+        setEndDate(e);
+    };
+
+    useEffect(() => {
+        if (!open) {
+            setSearchState(initialSearchState);
+            setStartDate(null);
+            setEndDate(null);
+        };
+    }, [open]);
+
+    const date = new Date();
+    const earliestDate = (date.getFullYear() - 1) + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 
     return (
         <>
@@ -87,28 +120,80 @@ export const SearchItems = ({ open, handleDrawerChange }) => {
                                 </Select>
                             </ListItem>
                             <ListItem>
-                                <ListItemIcon>
-                                    <DateRangeIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Start Date" />
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <Grid container justify="space-around">
+                                        <KeyboardDatePicker
+                                            disableToolbar
+                                            variant="inline"
+                                            format="yyyy/MM/dd"
+                                            margin="none"
+                                            id="date-picker-inline"
+                                            label="Date Range Start"
+                                            name="start_date"
+                                            value={startDate}
+                                            onChange={handleStartDateChange}
+                                            autoOk={true}
+                                            disableFuture={true}
+                                            minDate={earliestDate}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
+                                    </Grid>
+                                </MuiPickersUtilsProvider>
                             </ListItem>
                             <ListItem>
-                                <ListItemIcon>
-                                    <DateRangeIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="End Date" />
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    <Grid container justify="space-around">
+                                        <KeyboardDatePicker
+                                            disableToolbar
+                                            variant="inline"
+                                            format="yyyy/MM/dd"
+                                            margin="none"
+                                            id="date-picker-inline"
+                                            label="Date Range End"
+                                            name="end_date"
+                                            value={endDate}
+                                            onChange={handleEndDateChange}
+                                            autoOk={true}
+                                            disableFuture={true}
+                                            minDate={earliestDate}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
+                                    </Grid>
+                                </MuiPickersUtilsProvider>
                             </ListItem>
                             <ListItem>
                                 <ListItemIcon>
                                     <DomainIcon />
                                 </ListItemIcon>
-                                <ListItemText primary="Domain Exclusive" />
+                                <TextField
+                                    variant="outlined"
+                                    margin="none"
+                                    fullWidth
+                                    name="domain"
+                                    label="Domain Exclusive"
+                                    type="text"
+                                    id="searchFilter--domain"
+                                    onChange={handleChange}
+                                />
                             </ListItem>
                             <ListItem>
                                 <ListItemIcon>
                                     <DomainDisabledIcon />
                                 </ListItemIcon>
-                                <ListItemText primary="Exclude Domain" />
+                                <TextField
+                                    variant="outlined"
+                                    margin="none"
+                                    fullWidth
+                                    name="domain_not"
+                                    label="Domain: Exclusion"
+                                    type="text"
+                                    id="searchFilter--domainNot"
+                                    onChange={handleChange}
+                                />
                             </ListItem>
                             <ListItem>
                                 <ListItemIcon>
@@ -120,7 +205,7 @@ export const SearchItems = ({ open, handleDrawerChange }) => {
                                     id="searchFilter--pageNumber"
                                     value={searchState.page_number}
                                     onChange={handleChange}
-                                    label="Pages Returned"
+                                    // label="Pages Returned"
                                     name="page_number"
                                 >
                                     <MenuItem value={1}>Max 30</MenuItem>
