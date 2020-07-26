@@ -7,13 +7,15 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 import IconButton from '@material-ui/core/IconButton';
+import InputBase from '@material-ui/core/InputBase';
 import Link from '@material-ui/core/Link';
 import List from '@material-ui/core/List';
 import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { CssBaseline } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import { mainSearchItems, secondarySearchItems } from './search/Search';
 import { UserProfileContext } from "../providers/UserProfileProvider";
 import { NewsContext } from '../providers/NewsProvider';
@@ -62,6 +64,22 @@ const useStyles = makeStyles((theme) => ({
             width: theme.spacing(9) + 1,
         },
     },
+    inputRoot: {
+        color: 'inherit',
+    },
+    inputInput: {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            width: '18ch',
+            '&:focus': {
+                width: '25ch',
+            },
+        },
+    },
     title: {
         flexGrow: 1,
     },
@@ -71,6 +89,30 @@ const useStyles = makeStyles((theme) => ({
     menuButtonHidden: {
         display: 'none',
     },
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(1),
+            width: 'auto',
+        },
+    },
+    searchIcon: {
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
     toolbar: {
         paddingRight: 24, // keep right padding when drawer closed
     },
@@ -124,6 +166,19 @@ export const Header = props => {
                             Saved Snippets
                         </Link>
                     </Typography>
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <SearchIcon />
+                        </div>
+                        <InputBase
+                            placeholder="Search Present List…"
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{ 'aria-label': 'search' }}
+                        />
+                    </div>
                     <IconButton edge="end" color="inherit" aria-label="menu">
                         <AccountCircleIcon />
                     </IconButton>

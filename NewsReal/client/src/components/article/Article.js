@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { parseJSON } from 'date-fns'
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -15,13 +16,16 @@ const useStyles = makeStyles({
     root: {
         minWidth: 275,
     },
+    author: {
+        fontSize: 14,
+    },
     bullet: {
         display: 'inline-block',
         margin: '0 2px',
         transform: 'scale(0.8)',
     },
-    author: {
-        fontSize: 14,
+    expandedDetails: {
+        width: '75%',
     },
     pos: {
         marginBottom: 12,
@@ -33,9 +37,10 @@ const useStyles = makeStyles({
 
 export const Article = ({ article, idx }) => {
     const classes = useStyles();
+    const formatedDate = parseJSON(article.published).toDateString();;
 
     return (
-        <Paper elevation={3} variant="outlined" style={{ width: '40%', minWidth: '450px', margin: '2rem' }}>
+        <Paper id={`articleDetails--${idx}`} elevation={3} variant="outlined" style={{ width: '40%', minWidth: '450px', margin: '2rem' }}>
             <Card className={classes.root} style={{ height: '100%', }}>
                 <CardContent>
                     <Typography component={'div'} style={{ display: 'flex', flexWrap: 'nowrap', justifyContent: 'space-between' }}>
@@ -54,7 +59,7 @@ export const Article = ({ article, idx }) => {
                     </Typography>
                     {
                         (article.description !== "")
-                            ? <Accordion id={`articleSummary--${idx}`}>
+                            ? <Accordion>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
                                     aria-controls="panel1a-content"
@@ -71,7 +76,7 @@ export const Article = ({ article, idx }) => {
                                         {article.description}
                                     </Typography>
                                     <Typography component={'div'}>
-                                        {article.published}
+                                        {formatedDate}
                                     </Typography>
                                 </AccordionDetails>
                             </Accordion>
