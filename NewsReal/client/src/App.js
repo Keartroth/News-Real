@@ -1,21 +1,20 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { BrowserRouter as Router } from "react-router-dom";
-import { UserProfileContext } from "./providers/UserProfileProvider";
 import { ApplicationViews } from "./components/ApplicationViews";
-import { Header } from "./components/Header";
-import logo from './logo.svg';
-import './App.css';
 import { NewsProvider } from './providers/NewsProvider';
+import { UserProfileProvider } from "./providers/UserProfileProvider";
+// import logo from './logo.svg';
+import './App.css';
 
 export const App = () => {
-  const { isLoggedIn } = useContext(UserProfileContext);
 
   return (
     <Router>
-      <NewsProvider>
-        {isLoggedIn ? <Header /> : ""}
-        <ApplicationViews />
-      </NewsProvider>
+      <UserProfileProvider>
+        <NewsProvider>
+          <ApplicationViews />
+        </NewsProvider>
+      </UserProfileProvider>
     </Router>
   );
 }

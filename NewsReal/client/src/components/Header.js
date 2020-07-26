@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AppBar from '@material-ui/core/AppBar';
@@ -125,9 +125,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Header = props => {
+export const Header = ({ handleSearchInput }) => {
     const { logout } = useContext(UserProfileContext);
-    const { getRecentNews, getNewsByDefinedParameters } = useContext(NewsContext);
+    const { getNewsByDefinedParameters } = useContext(NewsContext);
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const handleDrawerChange = () => {
@@ -177,6 +177,7 @@ export const Header = props => {
                                 input: classes.inputInput,
                             }}
                             inputProps={{ 'aria-label': 'search' }}
+                            onChange={handleSearchInput}
                         />
                     </div>
                     <IconButton edge="end" color="inherit" aria-label="menu">

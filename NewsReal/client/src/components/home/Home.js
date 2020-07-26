@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
@@ -6,6 +6,8 @@ import { CircularProgress } from '@material-ui/core';
 import { ArticleList } from '../article/ArticleList';
 import { NewsContext } from '../../providers/NewsProvider';
 import { Footer } from '../Footer';
+import { Header } from '../Header';
+import debounce from 'lodash.debounce'
 
 const dummyData = [
     {
@@ -390,7 +392,6 @@ const useStyles = makeStyles((theme) => ({
 export const Home = () => {
     const classes = useStyles();
     const { news, getRecentNews } = useContext(NewsContext);
-
     const [newsReady, setNewsReady] = useState(true);
 
     // useEffect(() => {
@@ -399,20 +400,42 @@ export const Home = () => {
     //     });
     // }, []);
 
+    const [searchTerms, setSearchTerms] = useState(null);
+    const [filteredArticles, setFilteredArticles] = useState([]);
+    const debounceSearchNews = debounce(setSearchTerms, 500);
+
+    const handleSearchInput = (e) => {
+        e.preventDefault();
+        debounceSearchNews(e.target.value);
+    };
+
+    useEffect(() => {
+        if (searchTerms !== null) {
+            const toLowerCriteria = searchTerms.toLowerCase();
+            const articleSubset = dummyData.filter((a) => a.title.toLowerCase().includes(toLowerCriteria) || a.description.toLowerCase().includes(toLowerCriteria));
+            setFilteredArticles(articleSubset);
+        } else {
+            setFilteredArticles(dummyData);
+        }
+    }, [searchTerms, dummyData]);
+
     return (
-        <div className={classes.root}>
-            <CssBaseline />
-            <div className={classes.content}>
-                <div className={classes.appBarSpacer} />
-                <Container maxWidth="lg" className={classes.container}>
-                    {
-                        (newsReady === true)
-                            ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><ArticleList news={dummyData} /></div>
-                            : <div style={{ display: 'flex', justifyContent: 'center' }}><CircularProgress status="loading" /></div>
-                    }
-                </Container>
-                <Footer />
+        <>
+            <Header handleSearchInput={handleSearchInput} />
+            <div className={classes.root}>
+                <CssBaseline />
+                <div className={classes.content}>
+                    <div className={classes.appBarSpacer} />
+                    <Container maxWidth="lg" className={classes.container}>
+                        {
+                            (newsReady === true)
+                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><ArticleList news={(filteredArticles != []) ? filteredArticles : dummyData} /></div>
+                                : <div style={{ display: 'flex', justifyContent: 'center' }}><CircularProgress status="loading" /></div>
+                        }
+                    </Container>
+                    <Footer />
+                </div>
             </div>
-        </div>
+        </>
     );
 }
