@@ -5,13 +5,17 @@ import { ApplicationViews } from "./components/ApplicationViews";
 import { Header } from "./components/Header";
 import logo from './logo.svg';
 import './App.css';
+import { NewsProvider } from './providers/NewsProvider';
 
 export const App = () => {
   const { isLoggedIn } = useContext(UserProfileContext);
+
   return (
     <Router>
-      {isLoggedIn ? <Header /> : ""}
-      <ApplicationViews />
+      <NewsProvider>
+        {isLoggedIn ? <Header /> : ""}
+        <ApplicationViews />
+      </NewsProvider>
     </Router>
   );
 }

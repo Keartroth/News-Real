@@ -74,7 +74,6 @@ export const Register = () => {
 
     const registerClick = (e) => {
         e.preventDefault();
-        debugger
         const password = registerState.password;
         const passwordConfirmation = registerState.passwordConfirmation;
 

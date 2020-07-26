@@ -40,7 +40,7 @@ CREATE TABLE [Article] (
   [UserTitle] varchar(50),
   [Content] varchar(1000),
   [CreateDateTime] datetime,
-  [Image] nvarchar,
+  [Image] nvarchar(max),
   [Language] nvarchar(2),
   [Published] datetime NOT NULL,
   [Ojectivity] float,
