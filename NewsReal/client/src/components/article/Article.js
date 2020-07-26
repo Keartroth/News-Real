@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -25,10 +25,13 @@ const useStyles = makeStyles({
     },
     pos: {
         marginBottom: 12,
+        listStyleType: 'none',
+        display: 'flex',
+        flexWrap: 'nowrap',
     },
 });
 
-export const Article = ({ article }) => {
+export const Article = ({ article, idx }) => {
     const classes = useStyles();
 
     return (
@@ -46,16 +49,15 @@ export const Article = ({ article }) => {
                     </Typography>
                     <Typography component={'ul'} className={classes.pos} color="textSecondary">
                         {
-                            (article.category).map((c, idx) => <li key={article.category[idx]}>{c}</li>)
+                            (article.category).map((c, idx) => <li key={article.category[idx]} style={{ display: 'inline', margin: '0 0.5em' }}>{c}</li>)
                         }
                     </Typography>
                     {
                         (article.description !== "")
-                            ? <Accordion>
+                            ? <Accordion id={`articleSummary--${idx}`}>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
                                     aria-controls="panel1a-content"
-                                    id="panel1a-header"
                                 >
                                     <Typography className={classes.heading}>Additional Details</Typography>
                                 </AccordionSummary>
