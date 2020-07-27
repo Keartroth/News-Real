@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using NewsReal.Data;
 using NewsReal.Models;
 using NewsReal.Repositories;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace NewsReal.Controllers
@@ -25,6 +27,14 @@ namespace NewsReal.Controllers
             List<CurrentsArticle> currentsRecentNews = await _newsRepository.GetArticlesAsync();
 
             return Ok(currentsRecentNews);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<CurrentsArticle>>> SearchNews(string searchCriteria)
+        {
+            List<CurrentsArticle> currentsNewsSearchResults = await _newsRepository.SearchNewsByCriteriaAsync(searchCriteria);
+
+            return Ok(currentsNewsSearchResults);
         }
     }
 }

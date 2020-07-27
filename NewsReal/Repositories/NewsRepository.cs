@@ -51,5 +51,34 @@ namespace NewsReal.Repositories
                 }
             }
         }
+
+        public async Task<List<CurrentsArticle>> SearchNewsByCriteriaAsync(string criteria)
+        {
+            List<CurrentsArticle> articles;
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri(currentsBaseUrl);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = await httpClient.GetAsync("search?apiKey=" + apiKey + criteria);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+
+                    var currentsResponse = JsonConvert.DeserializeObject<CurrentsResponse>(result);
+
+                    articles = currentsResponse.news;
+
+                    httpClient.Dispose();
+                    return articles;
+                }
+                else
+                {
+                    httpClient.Dispose();
+                    return null;
+                }
+            }
+        }
     }
 }

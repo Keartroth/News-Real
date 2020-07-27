@@ -90,6 +90,26 @@ export const SearchItems = ({ open, handleDrawerChange }) => {
     const date = new Date();
     const earliestDate = (date.getFullYear() - 1) + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 
+    const submitSearchCriteria = (e) => {
+        e.preventDefault();
+
+        if (startDate !== null && startDate !== "") {
+            searchState.start_date = startDate;
+        }
+        if (endDate !== null && endDate !== "") {
+            searchState.end_date = endDate;
+        }
+        let searchCriteriaString = ""
+
+        Object.keys(searchState).forEach((key) => {
+            if (searchState[key] !== null && searchState[key] !== "") {
+                searchCriteriaString = searchCriteriaString + `&${key}=${searchState[key]}`
+            }
+        });
+
+        getNewsByDefinedParameters(searchCriteriaString);
+    };
+
     return (
         <>
             <CssBaseline />
@@ -215,11 +235,8 @@ export const SearchItems = ({ open, handleDrawerChange }) => {
                                     <MenuItem value={5}>Max 150</MenuItem>
                                 </Select>
                             </ListItem>
-                            <ListItem button>
-                                <ListItemIcon>
-                                    <FileCopyIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Search By Criteria" />
+                            <ListItem>
+                                <Button color="primary" onClick={submitSearchCriteria} >Search By Criteria</Button>
                             </ListItem>
                         </div>
                         : <Button onClick={handleDrawerChange}><span className={classes.searchTitle}>News Filter Criteria</span></Button>

@@ -77,7 +77,6 @@ export const Login = () => {
 
     const handleClickShowPassword = () => {
         setUserInput({ ...userInput, showPassword: !userInput.showPassword });
-        console.log(userInput.showPassword);
     };
 
     const handleMouseDownPassword = (event) => {
