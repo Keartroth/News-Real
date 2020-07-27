@@ -3,7 +3,6 @@ using NewsReal.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -23,7 +22,7 @@ namespace NewsReal.Repositories
 
         private static string apiKey = "KEEP_IT_SECRET_KEEP_IT_SAFE";
 
-        public async Task<List<CurrentsArticle>> GetArticlesAsync()
+        public async Task<List<CurrentsArticle>> GetNewsAsync()
         {
             List<CurrentsArticle> articles;
             using (var httpClient = new HttpClient())

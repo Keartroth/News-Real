@@ -21,15 +21,12 @@ export const NewsProvider = (props) => {
     };
 
     const getNewsByDefinedParameters = (searchParameters) => {
-
         return getToken().then((token) =>
-            fetch(apiUrl, {
-                method: "POST",
+            fetch(apiUrl + `/searchnews/${searchParameters}`, {
+                method: "GET",
                 headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(searchParameters),
+                    Authorization: `Bearer ${token}`
+                }
             })).then(resp => resp.json())
             .then(setNews);
     };

@@ -15,7 +15,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { CssBaseline } from '@material-ui/core';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import { SearchItems } from './search/Search';
+import { Search } from './search/Search';
 import { UserProfileContext } from "../providers/UserProfileProvider";
 
 const drawerWidth = 240;
@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Header = ({ handleSearchInput }) => {
+export const Header = ({ handleSearchInput, setNewsReady }) => {
     const { logout } = useContext(UserProfileContext);
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -203,7 +203,7 @@ export const Header = ({ handleSearchInput }) => {
                     </IconButton>
                 </div>
                 <Divider />
-                <SearchItems open={open} classes={classes} handleDrawerChange={handleDrawerChange} />
+                <Search open={open} classes={classes} handleDrawerChange={handleDrawerChange} setNewsReady={setNewsReady} />
             </Drawer>
         </div>
     );

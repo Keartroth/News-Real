@@ -28,16 +28,22 @@ const useStyles = makeStyles((theme) => ({
 export const Home = () => {
     const classes = useStyles();
     const { news, getRecentNews } = useContext(NewsContext);
-    const [newsReady, setNewsReady] = useState(true);
+    const [newsReady, setNewsReady] = useState(false);
 
-    // useEffect(() => {
-    //     getRecentNews().then(resp => {
-    //         setNewsReady(!newsReady)
-    //     });
-    // }, []);
+    useEffect(() => {
+        getRecentNews();
+    }, []);
+
+    useEffect(() => {
+        if (news !== null && news.length > 0) {
+            setNewsReady(true);
+        } else if (news === null || news.length === 0) {
+            setNewsReady(false);
+        }
+    }, [news]);
 
     const [searchTerms, setSearchTerms] = useState(null);
-    const [filteredArticles, setFilteredArticles] = useState([]);
+    const [filteredArticles, setFilteredArticles] = useState(null);
     const debounceSearchNews = debounce(setSearchTerms, 500);
 
     const handleSearchInput = (e) => {
@@ -46,18 +52,18 @@ export const Home = () => {
     };
 
     useEffect(() => {
-        if (searchTerms !== null) {
-            const toLowerCriteria = searchTerms.toLowerCase();
-            const articleSubset = dummyData.filter((a) => a.title.toLowerCase().includes(toLowerCriteria) || a.description.toLowerCase().includes(toLowerCriteria));
-            setFilteredArticles(articleSubset);
+        if (searchTerms === null || searchTerms === "") {
+            setFilteredArticles(news);
         } else {
-            setFilteredArticles(dummyData);
+            const toLowerCriteria = searchTerms.toLowerCase();
+            const articleSubset = news.filter((a) => a.title.toLowerCase().includes(toLowerCriteria) || a.description.toLowerCase().includes(toLowerCriteria));
+            setFilteredArticles(articleSubset);
         }
     }, [searchTerms]);
 
     return (
         <>
-            <Header handleSearchInput={handleSearchInput} />
+            <Header handleSearchInput={handleSearchInput} setNewsReady={setNewsReady} />
             <div className={classes.root}>
                 <CssBaseline />
                 <div className={classes.content}>
@@ -65,7 +71,7 @@ export const Home = () => {
                     <Container maxWidth="lg" className={classes.container}>
                         {
                             (newsReady === true)
-                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><ArticleList news={(filteredArticles !== []) ? filteredArticles : dummyData} /></div>
+                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><ArticleList news={(filteredArticles !== null) ? filteredArticles : news} /></div>
                                 : <div style={{ display: 'flex', justifyContent: 'center' }}><CircularProgress status="loading" /></div>
                         }
                     </Container>

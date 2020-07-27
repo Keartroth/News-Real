@@ -14,6 +14,7 @@ import Divider from '@material-ui/core/Divider';
 import DomainIcon from '@material-ui/icons/Domain';
 import DomainDisabledIcon from '@material-ui/icons/DomainDisabled';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import format from 'date-fns/format'
 import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
 import {
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SearchItems = ({ open, handleDrawerChange }) => {
+export const Search = ({ open, handleDrawerChange, setNewsReady }) => {
     const classes = useStyles();
     const { getNewsByDefinedParameters } = useContext(NewsContext);
     const { categories, getCategories } = useContext(CategoryContext);
@@ -88,16 +89,16 @@ export const SearchItems = ({ open, handleDrawerChange }) => {
     }, [open]);
 
     const date = new Date();
-    const earliestDate = (date.getFullYear() - 1) + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    const earliestDate = ((date.getMonth() - 5 > 0) ? (date.getFullYear()) : (date.getFullYear() - 1)) + '-' + ((date.getMonth() - 5 > 0) ? (date.getMonth() - 5) : (date.getMonth() + 7)) + '-' + date.getDate();
 
     const submitSearchCriteria = (e) => {
         e.preventDefault();
 
         if (startDate !== null && startDate !== "") {
-            searchState.start_date = startDate;
+            searchState.start_date = format(startDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
         }
         if (endDate !== null && endDate !== "") {
-            searchState.end_date = endDate;
+            searchState.end_date = format(endDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
         }
         let searchCriteriaString = ""
 
@@ -107,7 +108,8 @@ export const SearchItems = ({ open, handleDrawerChange }) => {
             }
         });
 
-        getNewsByDefinedParameters(searchCriteriaString);
+        setNewsReady(false);
+        getNewsByDefinedParameters(searchCriteriaString).then(handleDrawerChange);
     };
 
     return (
@@ -145,9 +147,9 @@ export const SearchItems = ({ open, handleDrawerChange }) => {
                                         <KeyboardDatePicker
                                             disableToolbar
                                             variant="inline"
-                                            format="yyyy/MM/dd"
+                                            format="MM/dd/yyyy"
                                             margin="none"
-                                            id="date-picker-inline"
+                                            id="start-date-picker-inline"
                                             label="Date Range Start"
                                             name="start_date"
                                             value={startDate}
@@ -168,9 +170,9 @@ export const SearchItems = ({ open, handleDrawerChange }) => {
                                         <KeyboardDatePicker
                                             disableToolbar
                                             variant="inline"
-                                            format="yyyy/MM/dd"
+                                            format="MM/dd/yyyy"
                                             margin="none"
-                                            id="date-picker-inline"
+                                            id="end-date-picker-inline"
                                             label="Date Range End"
                                             name="end_date"
                                             value={endDate}
