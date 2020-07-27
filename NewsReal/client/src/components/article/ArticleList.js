@@ -7,9 +7,11 @@ export const ArticleList = props => {
     return (
         <>
             {
-                news.map((a, idx) => {
-                    return <Article key={a.id} article={a} idx={idx} />
-                })
+                (news.length > 0)
+                    ? news.map((a, idx) => {
+                        return <Article key={a.id} article={a} idx={idx} />
+                    })
+                    : <div>No Results Match Your Search</div>
             }
         </>
     )

@@ -65,7 +65,6 @@ export const Register = () => {
 
     const handleClickShowPassword = () => {
         setRegisterState({ ...registerState, showPassword: !registerState.showPassword });
-        console.log(registerState.showPassword);
     };
 
     const handleMouseDownPassword = (event) => {
