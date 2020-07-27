@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace NewsReal.Models
         public string Description { get; set; }
 
         [Required]
-        [DataType(DataType.EmailAddress)]
+        [DataType(DataType.Url)]
         [MaxLength(255)]
         public string Url { get; set; }
 
@@ -44,7 +45,7 @@ namespace NewsReal.Models
 
         public DateTime? CreateDateTime { get; set; }
 
-        [DataType(DataType.Url)]
+        [DataType(DataType.ImageUrl)]
         public string Image { get; set; }
 
         [MaxLength(2)]
@@ -59,9 +60,6 @@ namespace NewsReal.Models
 
         public UserProfile UserProile { get; set; }
 
-        public static implicit operator Task<object>(Article v)
-        {
-            throw new NotImplementedException();
-        }
+        public List<ArticleCategory> ArticleCategories { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Article } from './Article';
+import { News } from './News';
 
-export const ArticleList = props => {
+export const NewsList = props => {
     const news = props.news;
 
     return (
@@ -9,7 +9,7 @@ export const ArticleList = props => {
             {
                 (news.length > 0)
                     ? news.map((a, idx) => {
-                        return <Article key={a.id} article={a} idx={idx} />
+                        return <News key={a.id} article={a} idx={idx} />
                     })
                     : <div>No Results Match Your Search</div>
             }

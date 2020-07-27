@@ -35,7 +35,7 @@ const useStyles = makeStyles({
     },
 });
 
-export const Article = ({ article, idx }) => {
+export const Snippet = ({ article, idx }) => {
     const classes = useStyles();
     const formatedDate = parseISO(article.published).toDateString();;
 
