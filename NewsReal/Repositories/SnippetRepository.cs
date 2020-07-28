@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NewsReal.Data;
 using NewsReal.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace NewsReal.Repositories
 {
@@ -38,7 +36,6 @@ namespace NewsReal.Repositories
 
         public void Add(Article snippet)
         {
-            snippet.CreateDateTime = DateTime.Now;
             _context.Add(snippet);
             _context.SaveChanges();
         }

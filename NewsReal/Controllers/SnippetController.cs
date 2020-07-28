@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using NewsReal.Data;
 using NewsReal.Models;
 using NewsReal.Repositories;
@@ -62,19 +57,9 @@ namespace NewsReal.Controllers
         [HttpPost]
         public IActionResult Post(Article snippet)
         {
-            var currentUserId = GetCurrentUserProfile().Id;
-
-            snippet.UserProfileId = currentUserId;
             snippet.CreateDateTime = DateTime.Now;
 
             _snippetRepository.Add(snippet);
-
-            foreach (var articleCategory in snippet.ArticleCategory)
-            {
-                articleCategory.ArticleId = snippet.Id;
-
-                _categoryRepository.AddArticleCategory(articleCategory);
-            }
 
             return CreatedAtAction("Get", new { id = snippet.Id }, snippet);
         }

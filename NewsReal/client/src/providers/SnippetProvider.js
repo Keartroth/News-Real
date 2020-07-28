@@ -35,21 +35,22 @@ export const SnippetProvider = (props) => {
             }));
     }
 
-    const addSnippet = (snippet, articleCategories) =>
-        getToken().then((token) =>
+    const addSnippet = (snippet) => {
+        return getToken().then((token) =>
             fetch(apiUrl, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(snippet, articleCategories),
+                body: JSON.stringify(snippet),
             }).then(resp => {
                 if (resp.ok) {
                     return resp.json();
                 }
                 throw new Error("Unauthorized");
-            }));
+            }))
+    };
 
     const deleteSnippet = (id) => {
         return getToken().then((token) =>

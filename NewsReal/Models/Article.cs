@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 
 namespace NewsReal.Models
 {
@@ -29,7 +28,7 @@ namespace NewsReal.Models
         public string Title { get; set; }
 
         [Required]
-        [MaxLength(500)]
+        [MaxLength(5000)]
         public string Description { get; set; }
 
         [Required]
@@ -37,10 +36,10 @@ namespace NewsReal.Models
         [MaxLength(255)]
         public string Url { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(500)]
         public string UserTitle { get; set; }
 
-        [MaxLength(1000)]
+        [MaxLength(100000)]
         public string Content { get; set; }
 
         public DateTime? CreateDateTime { get; set; }
@@ -51,12 +50,11 @@ namespace NewsReal.Models
         [MaxLength(2)]
         public string Language { get; set; }
 
-        [Required]
-        public DateTime Published { get; set; }
+        public DateTime? Published { get; set; }
 
-        public double Objectivity { get; set; }
+        public double? Objectivity { get; set; }
 
-        public double Sentimentality { get; set; }
+        public double? Sentimentality { get; set; }
 
         public UserProfile UserProile { get; set; }
 

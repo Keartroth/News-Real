@@ -1,9 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useState, useRef } from 'react';
 import { parseISO } from 'date-fns'
 import { makeStyles } from '@material-ui/core/styles';
-import { Accordion } from '@material-ui/core';
-import { AccordionSummary } from '@material-ui/core';
-import { AccordionDetails } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { Button } from '@material-ui/core';
 import { ButtonGroup } from '@material-ui/core';
@@ -12,15 +9,12 @@ import { CardActions } from '@material-ui/core';
 import { CardContent } from '@material-ui/core';
 import { CardMedia } from '@material-ui/core';
 import { ClickAwayListener } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Grow } from '@material-ui/core';
-import { Link } from '@material-ui/core';
 import { MenuItem } from '@material-ui/core';
 import { MenuList } from '@material-ui/core';
 import { Paper } from '@material-ui/core';
 import { Popper } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
-import { SnippetContext } from '../../providers/SnippetProvider';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,20 +28,30 @@ const useStyles = makeStyles((theme) => ({
         margin: '0 2px',
         transform: 'scale(0.8)',
     },
+    buttonGroup: {
+        width: '263px',
+    },
     card: {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
         margin: theme.spacing(2),
     },
+    cardFull: {
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        margin: 'auto',
+        maxWidth: '75%',
+    },
     cardMedia: {
         paddingTop: '56.25%', // 16:9
     },
     cardContent: {
         flexGrow: 1,
+        margin: 'inherit',
     },
     cardTitle: {
-        // fontSize: 'inherit',
         maxWidth: 'fit-content',
     },
     expandedDetails: {
@@ -59,68 +63,37 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexWrap: 'nowrap',
     },
+    marginRight: {
+        margin: '0 0.5em 0 0'
+    },
+    marginLeft: {
+        margin: '0 0 0 0.5em'
+    },
 }));
 
 const snippetOptions = ['Create New Snippet', 'Append Existing Snippet'];
-const articleOptions = ['View Article Details', 'Visit Article Home'];
+const articleOptions = ['View Description', 'Visit Article Home'];
 
-export const News = ({ article, categories, idx }) => {
+export const News = ({ article, handleModalChange, setdialogNewsState }) => {
     const classes = useStyles();
+    const [articleOpen, setArticleOpen] = useState(false);
+    const [snippetOpen, setSnippetOpen] = useState(false);
+    const [showDetailState, setShowDetailState] = useState(false);
+    const articleAnchorRef = useRef(null);
+    const snippetAnchorRef = useRef(null);
+    const [selectedArticleIndex, setSelectedArticleIndex] = useState(0);
+    const [selectedSnippetIndex, setSelectedSnippetIndex] = useState(0);
     const formatedDate = parseISO(article.published).toDateString();
-    const { addSnippet } = useContext(SnippetContext);
 
-    const [articleOpen, setArticleOpen] = React.useState(false);
-    const [snippetOpen, setSnippetOpen] = React.useState(false);
-    const articleAnchorRef = React.useRef(null);
-    const snippetAnchorRef = React.useRef(null);
-    const [selectedArticleIndex, setSelectedArticleIndex] = React.useState(1);
-    const [selectedSnippetIndex, setSelectedSnippetIndex] = React.useState(1);
+    const getHostname = (url) => {
+        return new URL(url).hostname;
+    }
 
     const handleSnippetClick = (e) => {
         e.preventDefault();
         if (snippetOptions[selectedSnippetIndex] === 'Create New Snippet') {
-            const getHostname = (url) => {
-                // use URL constructor and return hostname
-                return new URL(url).hostname;
-            }
-
-            const publisherArray = getHostname(article.url).split(".");
-            let publisher = "";
-            debugger
-            if (publisherArray.length === 2) {
-                publisher = publisherArray[0];
-            } else {
-                publisher = publisherArray[1];
-            }
-
-            const newSnippet = {
-                author: article.author,
-                publisher: publisher,
-                currentsId: article.id,
-                title: article.title,
-                description: article.description,
-                url: article.url,
-                userTitle: "",
-                content: "",
-                image: article.image,
-                language: article.language,
-                published: article.published,
-                // objectivity: "",
-                // sentimentality: "",
-                articleCategory: []
-            }
-
-            article.category.map(c => {
-                const foundCategory = categories.find(cat => cat.name === c);
-                let articleCategory = {
-                    categoryId: foundCategory.id
-                };
-
-                newSnippet.articleCategory.push(articleCategory);
-            });
-            debugger
-            console.log(newSnippet);
-            // addSnippet(newSnippet);
+            setdialogNewsState(article)
+            handleModalChange();
         } else {
             console.log(snippetOptions[selectedSnippetIndex]);
         }
@@ -128,11 +101,23 @@ export const News = ({ article, categories, idx }) => {
 
     const handleArticleClick = (e) => {
         e.preventDefault();
-        debugger
-        if (articleOptions[selectedSnippetIndex] === 'View Article Details') {
-            console.log(articleOptions[selectedSnippetIndex]);
+
+        if (articleOptions[selectedArticleIndex].includes('View')) {
+            if (articleOptions[selectedArticleIndex].includes('Details')) {
+                setShowDetailState(!showDetailState);
+                e.target.parentElement.parentElement.parentElement.scrollIntoView();
+                articleOptions[selectedArticleIndex] = 'View Description';
+            } else {
+                if (article.description !== "") {
+                    setShowDetailState(!showDetailState);
+                    e.target.parentElement.parentElement.parentElement.scrollIntoView();
+                    articleOptions[selectedArticleIndex] = 'View Article Details';
+                } else {
+                    alert('This article has no additional provided description.');
+                }
+            }
         } else {
-            console.log(articleOptions[selectedSnippetIndex]);
+            window.open(article.url, '_blank');
         }
     };
 
@@ -169,24 +154,45 @@ export const News = ({ article, categories, idx }) => {
     };
 
     return (
-        <Card className={classes.card}>
+        <Card className={(showDetailState) ? classes.cardFull : classes.card}>
             <CardMedia
                 className={classes.cardMedia}
                 image={(article.image !== "None") ? article.image : "https://source.unsplash.com/random/?newspaper"}
                 title="Image title"
             />
             <CardContent className={classes.cardContent}>
-                <Typography className={classes.cardTitle} gutterBottom variant="h5" component="h2">
-                    {article.title}
-                </Typography>
-                <Typography>
-                    <strong>Author:</strong> {article.author}
-                    <strong>Published:</strong> {formatedDate}
-                </Typography>
+                {
+                    (showDetailState)
+                        ? <Typography>{article.description}</Typography>
+                        : <><Typography className={classes.cardTitle} gutterBottom variant="h5" component="h2">
+                            {article.title}
+                        </Typography>
+                            <Typography>
+                                <span className={classes.marginRight}><strong>Author:</strong> {article.author}</span>
+                                <span className={classes.marginLeft}><strong>Published:</strong> {formatedDate}</span>
+                            </Typography>
+                            <Typography>
+                                <span className={classes.marginRight}><strong>Publisher:</strong> {getHostname(article.url)}</span>
+                                <span className={classes.marginLeft}><strong>Category:</strong> {
+                                    article.category.map((c, idx) => {
+                                        const length = article.category.length;
+                                        if (length === 1) {
+                                            return <span key={idx}>{c}</span>
+                                        } else {
+                                            if (idx < length - 1) {
+                                                return <span key={idx}>{c}, </span>
+                                            } else {
+                                                return <span key={idx}>{c}</span>
+                                            }
+                                        }
+                                    })
+                                }</span>
+                            </Typography></>
+                }
             </CardContent>
             <CardActions>
-                <ButtonGroup variant="contained" color="primary" ref={articleAnchorRef} aria-label="split button">
-                    <Button onClick={handleArticleClick}>{articleOptions[selectedArticleIndex]}</Button>
+                <ButtonGroup className={classes.buttonGroup} variant="contained" color="primary" ref={articleAnchorRef} aria-label="split button">
+                    <Button className={classes.buttonGroup} onClick={handleArticleClick}>{articleOptions[selectedArticleIndex]}</Button>
                     <Button
                         color="primary"
                         size="small"
@@ -225,8 +231,8 @@ export const News = ({ article, categories, idx }) => {
                         </Grow>
                     )}
                 </Popper>
-                <ButtonGroup variant="contained" color="primary" ref={snippetAnchorRef} aria-label="split button">
-                    <Button onClick={handleSnippetClick}>{snippetOptions[selectedSnippetIndex]}</Button>
+                <ButtonGroup className={classes.buttonGroup} variant="contained" color="primary" ref={snippetAnchorRef} aria-label="split button">
+                    <Button className={classes.buttonGroup} onClick={handleSnippetClick}>{snippetOptions[selectedSnippetIndex]}</Button>
                     <Button
                         color="primary"
                         size="small"
@@ -269,45 +275,3 @@ export const News = ({ article, categories, idx }) => {
         </Card>
     )
 }
-
-{/* 
-                            <Link href={article.url} target="_blank" size="small">Visit Article</Link>
-                        </CardActions>
-                    </Typography>
-                    <Typography variant="h5" component="h2" className={classes.author} color="textSecondary" >
-                        Author: {article.author}
-                    </Typography>
-                    <Typography component={'ul'} className={classes.pos} color="textSecondary">
-                        {
-                            (article.category).map((c, idx) => <li key={article.category[idx]} style={{ display: 'inline', margin: '0 0.5em' }}>{c}</li>)
-                        }
-                    </Typography>
-                    <Accordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                        >
-                            <Typography className={classes.heading}>Additional Details</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', }}>
-                            {
-                                (article.image !== "None")
-                                    ? <div><img style={{ maxWidth: '75%', maxHeight: 'auto', }} src={article.image} alt="photograph" /></div>
-                                    : ""
-                            }
-                            <Typography component={'div'} style={{ maxWidth: '50%', textAlign: 'left', textIndent: '1em' }}>
-                                {
-                                    (article.description !== "")
-                                        ? <p>{article.description}</p>
-                                        : ""
-                                }
-                            </Typography>
-                            <Typography component={'div'}>
-                                {formatedDate}
-                            </Typography>
-                            
-                        </AccordionDetails>
-                    </Accordion>
-                </CardContent>
-            </Card>
-        </Paper> */}
