@@ -6,6 +6,7 @@ import { UserProfileProvider } from "./providers/UserProfileProvider";
 import { CategoryProvider } from "./providers/CategoryProvider";
 // import logo from './logo.svg';
 import './App.css';
+import { SnippetProvider } from './providers/SnippetProvider';
 
 export const App = () => {
 
@@ -13,9 +14,11 @@ export const App = () => {
     <Router>
       <UserProfileProvider>
         <NewsProvider>
-          <CategoryProvider>
-            <ApplicationViews />
-          </CategoryProvider>
+          <SnippetProvider>
+            <CategoryProvider>
+              <ApplicationViews />
+            </CategoryProvider>
+          </SnippetProvider>
         </NewsProvider>
       </UserProfileProvider>
     </Router>

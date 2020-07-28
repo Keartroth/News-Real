@@ -1,11 +1,13 @@
 ﻿using NewsReal.Models;
+using NewsReal.Repositories;
 using System;
+using Xunit;
 
 namespace NewsReal.Tests
 {
-    class NewsRepositoryTests : EFTestFixture
+    public class SnippetRepositoryTests : EFTestFixture
     {
-        public NewsRepositoryTests()
+        public SnippetRepositoryTests()
         {
             AddSampleData();
         }

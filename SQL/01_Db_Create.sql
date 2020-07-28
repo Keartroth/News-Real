@@ -35,15 +35,15 @@ CREATE TABLE [Article] (
   [Publisher] nvarchar(255),
   [CurrentsId] nvarchar(255) NOT NULL,
   [Title] varchar(255) NOT NULL,
-  [Description] varchar(500) NOT NULL,
+  [Description] varchar(5000) NOT NULL,
   [Url] nvarchar(255) NOT NULL,
-  [UserTitle] varchar(50),
-  [Content] varchar(1000),
+  [UserTitle] varchar(500),
+  [Content] varchar(max),
   [CreateDateTime] datetime,
   [Image] nvarchar(max),
   [Language] nvarchar(2),
   [Published] datetime NOT NULL,
-  [Ojectivity] float,
+  [Objectivity] float,
   [Sentimentality] float
 )
 GO

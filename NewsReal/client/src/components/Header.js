@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Header = ({ handleSearchInput, setNewsReady }) => {
+export const Header = ({ categories, handleSearchInput, setNewsReady }) => {
     const { logout } = useContext(UserProfileContext);
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -203,7 +203,7 @@ export const Header = ({ handleSearchInput, setNewsReady }) => {
                     </IconButton>
                 </div>
                 <Divider />
-                <Search open={open} classes={classes} handleDrawerChange={handleDrawerChange} setNewsReady={setNewsReady} />
+                <Search open={open} categories={categories} classes={classes} handleDrawerChange={handleDrawerChange} setNewsReady={setNewsReady} />
             </Drawer>
         </div>
     );

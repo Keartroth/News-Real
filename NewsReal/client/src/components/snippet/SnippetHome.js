@@ -3,12 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { CircularProgress } from '@material-ui/core';
-import { ArticleList } from '../article/ArticleList';
-import { NewsContext } from '../../providers/NewsProvider';
+import { SnippetList } from './SnippetList';
 import { Footer } from '../Footer';
 import { Header } from '../Header';
 import debounce from 'lodash.debounce'
-import { dummyData } from '../../providers/DummyData'
+import { SnippetContext } from '../../providers/SnippetProvider';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,54 +24,56 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Home = () => {
+export const SnippetHome = () => {
     const classes = useStyles();
-    const { news, getRecentNews } = useContext(NewsContext);
-    const [newsReady, setNewsReady] = useState(false);
+    const { snippets, getSnippets } = useContext(SnippetContext);
+    const [snippetsReady, setSnippetsReady] = useState(false);
+    const [searching, setSearching] = useState(false);
 
     useEffect(() => {
-        getRecentNews();
+        getSnippets();
     }, []);
 
     useEffect(() => {
-        if (news !== null && news.length > 0) {
-            setNewsReady(true);
-        } else if (news === null || news.length === 0) {
-            setNewsReady(false);
+        if (snippets !== null && snippets.length > 0) {
+            setSnippetsReady(true);
+            setSearching(false);
+        } else if (snippets === null || snippets.length === 0) {
+            setSnippetsReady(false);
         }
-    }, [news]);
+    }, [snippets]);
 
     const [searchTerms, setSearchTerms] = useState(null);
-    const [filteredArticles, setFilteredArticles] = useState(null);
-    const debounceSearchNews = debounce(setSearchTerms, 500);
+    const [filteredSnippets, setFilteredSnippets] = useState(null);
+    const debounceSearchsnippets = debounce(setSearchTerms, 500);
 
     const handleSearchInput = (e) => {
         e.preventDefault();
-        debounceSearchNews(e.target.value);
+        debounceSearchsnippets(e.target.value);
     };
 
     useEffect(() => {
         if (searchTerms === null || searchTerms === "") {
-            setFilteredArticles(news);
+            setFilteredSnippets(snippets);
         } else {
             const toLowerCriteria = searchTerms.toLowerCase();
-            const articleSubset = news.filter((a) => a.title.toLowerCase().includes(toLowerCriteria) || a.description.toLowerCase().includes(toLowerCriteria));
-            setFilteredArticles(articleSubset);
+            const articleSubset = snippets.filter((a) => a.title.toLowerCase().includes(toLowerCriteria) || a.description.toLowerCase().includes(toLowerCriteria));
+            setFilteredSnippets(articleSubset);
         }
     }, [searchTerms]);
 
     return (
         <>
-            <Header handleSearchInput={handleSearchInput} setNewsReady={setNewsReady} />
+            <Header handleSearchInput={handleSearchInput} setSnippetsReady={setSnippetsReady} />
             <div className={classes.root}>
                 <CssBaseline />
                 <div className={classes.content}>
                     <div className={classes.appBarSpacer} />
                     <Container maxWidth="lg" className={classes.container}>
                         {
-                            (newsReady === true)
-                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><ArticleList news={(filteredArticles !== null) ? filteredArticles : news} /></div>
-                                : <div style={{ display: 'flex', justifyContent: 'center' }}><CircularProgress status="loading" /></div>
+                            (snippetsReady === true)
+                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><SnippetList searching={searching} snippets={(filteredSnippets !== null) ? filteredSnippets : snippets} /></div>
+                                : <div style={{ margin: 'auto' }}><CircularProgress status="loading" /></div>
                         }
                     </Container>
                     <Footer />
