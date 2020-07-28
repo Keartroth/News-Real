@@ -32,7 +32,6 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import { NewsContext } from '../../providers/NewsProvider';
-import { CategoryContext } from '../../providers/CategoryProvider';
 
 const useStyles = makeStyles((theme) => ({
     searchTitle: {
@@ -41,14 +40,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Search = ({ open, handleDrawerChange, setNewsReady }) => {
+export const Search = ({ categories, open, handleDrawerChange, setNewsReady }) => {
     const classes = useStyles();
     const { getNewsByDefinedParameters } = useContext(NewsContext);
-    const { categories, getCategories } = useContext(CategoryContext);
-
-    useEffect(() => {
-        getCategories();
-    }, []);
 
     const initialSearchState = {
         language: "en",

@@ -60,6 +60,6 @@ namespace NewsReal.Models
 
         public UserProfile UserProile { get; set; }
 
-        public List<ArticleCategory> ArticleCategories { get; set; }
+        public List<ArticleCategory> ArticleCategory { get; set; }
     }
 }

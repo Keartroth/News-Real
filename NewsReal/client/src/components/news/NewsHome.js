@@ -8,6 +8,7 @@ import { NewsContext } from '../../providers/NewsProvider';
 import { Footer } from '../Footer';
 import { Header } from '../Header';
 import debounce from 'lodash.debounce'
+import { CategoryContext } from '../../providers/CategoryProvider';
 import { dummyData } from '../../providers/DummyData'
 
 const useStyles = makeStyles((theme) => ({
@@ -22,13 +23,20 @@ const useStyles = makeStyles((theme) => ({
     container: {
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
+        padding: theme.spacing(1),
     },
 }));
 
 export const NewsHome = () => {
     const classes = useStyles();
     const { news, getRecentNews } = useContext(NewsContext);
+    const { categories, getCategories } = useContext(CategoryContext);
+
     const [newsReady, setNewsReady] = useState(true);
+
+    useEffect(() => {
+        getCategories();
+    }, []);
 
     // useEffect(() => {
     //     getRecentNews();
@@ -63,7 +71,7 @@ export const NewsHome = () => {
 
     return (
         <>
-            <Header handleSearchInput={handleSearchInput} setNewsReady={setNewsReady} />
+            <Header categories={categories} handleSearchInput={handleSearchInput} setNewsReady={setNewsReady} />
             <div className={classes.root}>
                 <CssBaseline />
                 <div className={classes.content}>
@@ -71,7 +79,7 @@ export const NewsHome = () => {
                     <Container maxWidth="lg" className={classes.container}>
                         {
                             (newsReady === true)
-                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><NewsList news={(filteredArticles !== null) ? filteredArticles : dummyData} /></div>
+                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><NewsList categories={categories} news={(filteredArticles !== null) ? filteredArticles : dummyData} /></div>
                                 : <div style={{ display: 'flex', justifyContent: 'center' }}><CircularProgress status="loading" /></div>
                         }
                     </Container>

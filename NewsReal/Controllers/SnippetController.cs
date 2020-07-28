@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NewsReal.Data;
 using NewsReal.Models;
 using NewsReal.Repositories;
@@ -19,11 +20,13 @@ namespace NewsReal.Controllers
     {
         private readonly SnippetRepository _snippetRepository;
         private readonly UserProfileRepository _userProfileRepository;
+        private readonly CategoryRepository _categoryRepository;
 
         public SnippetController(ApplicationDbContext context)
         {
             _snippetRepository = new SnippetRepository(context);
             _userProfileRepository = new UserProfileRepository(context);
+            _categoryRepository = new CategoryRepository(context);
         }
 
         [HttpGet]
@@ -65,7 +68,49 @@ namespace NewsReal.Controllers
             snippet.CreateDateTime = DateTime.Now;
 
             _snippetRepository.Add(snippet);
+
+            foreach (var articleCategory in snippet.ArticleCategory)
+            {
+                articleCategory.ArticleId = snippet.Id;
+
+                _categoryRepository.AddArticleCategory(articleCategory);
+            }
+
             return CreatedAtAction("Get", new { id = snippet.Id }, snippet);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, Article snippet)
+        {
+            var currentUserProfile = GetCurrentUserProfile();
+
+            if (currentUserProfile.Id != snippet.UserProfileId)
+            {
+                return Unauthorized();
+            }
+
+            if (id != snippet.Id)
+            {
+                return BadRequest();
+            }
+
+            _snippetRepository.Update(snippet);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var currentUserProfile = GetCurrentUserProfile();
+            var snippet = _snippetRepository.GetSnippetById(id);
+
+            if (currentUserProfile.Id != snippet.UserProfileId)
+            {
+                return Unauthorized();
+            }
+
+            _snippetRepository.Delete(id);
+            return NoContent();
         }
 
         private UserProfile GetCurrentUserProfile()

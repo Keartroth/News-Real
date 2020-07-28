@@ -21,7 +21,7 @@ namespace NewsReal.Repositories
         {
             return _context.Article
                             .Include(a => a.UserProile)
-                            .Include(a => a.ArticleCategories)
+                            .Include(a => a.ArticleCategory)
                                 .ThenInclude(ac => ac.Category)
                             .Where(a => a.UserProfileId == id)
                             .OrderByDescending(a => a.CreateDateTime).ToList();
@@ -31,21 +31,21 @@ namespace NewsReal.Repositories
         {
             return _context.Article
                             .Include(a => a.UserProile)
-                            .Include(a => a.ArticleCategories)
+                            .Include(a => a.ArticleCategory)
                                 .ThenInclude(ac => ac.Category)
                             .FirstOrDefault(a => a.Id == id);
         }
 
-        public void Add(Article article)
+        public void Add(Article snippet)
         {
-            article.CreateDateTime = DateTime.Now;
-            _context.Add(article);
+            snippet.CreateDateTime = DateTime.Now;
+            _context.Add(snippet);
             _context.SaveChanges();
         }
 
-        public void Update(Article article)
+        public void Update(Article snippet)
         {
-            _context.Entry(article).State = EntityState.Modified;
+            _context.Entry(snippet).State = EntityState.Modified;
             _context.SaveChanges();
         }
 
@@ -58,7 +58,7 @@ namespace NewsReal.Repositories
 
             if (articleCategories != null)
             {
-                _context.ArticleCategories.RemoveRange(articleCategories);
+                _context.ArticleCategory.RemoveRange(articleCategories);
             }
 
             if (articleReferences != null)
@@ -82,7 +82,7 @@ namespace NewsReal.Repositories
 
         private List<ArticleCategory> GetArticleCategoriesByArticleId(int id)
         {
-            return _context.ArticleCategories.Where(ac => ac.ArticleId == id).ToList();
+            return _context.ArticleCategory.Where(ac => ac.ArticleId == id).ToList();
         }
 
         private List<ArticleReferrence> GetArticleReferencesByArticleId(int id)

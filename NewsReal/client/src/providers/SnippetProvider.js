@@ -20,8 +20,72 @@ export const SnippetProvider = (props) => {
                 .then(setSnippets));
     };
 
+    const getSnippetById = (id) => {
+        return getToken().then((token) =>
+            fetch(apiUrl + `/${id}`, {
+                method: "Get",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            }).then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                }
+                else { throw new Error("Unauthorized"); }
+            }));
+    }
+
+    const addSnippet = (snippet, articleCategories) =>
+        getToken().then((token) =>
+            fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(snippet, articleCategories),
+            }).then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                }
+                throw new Error("Unauthorized");
+            }));
+
+    const deleteSnippet = (id) => {
+        return getToken().then((token) =>
+            fetch(apiUrl + `/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then((resp) => {
+                if (resp.ok) {
+                    return;
+                }
+                throw new Error("Failed to delete snippet.")
+            })
+        );
+    };
+
+    const editSnippet = (id, snippet) => {
+        return getToken().then((token) =>
+            fetch(apiUrl + `/${id}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(snippet),
+            }).then(resp => {
+                if (resp.ok) {
+                    return;
+                }
+                throw new Error("Unauthorized");
+            }))
+    };
+
     return (
-        <SnippetContext.Provider value={{ snippets, getSnippets }}>
+        <SnippetContext.Provider value={{ snippets, getSnippets, addSnippet, getSnippetById, deleteSnippet, editSnippet }}>
             {props.children}
         </SnippetContext.Provider>
     );

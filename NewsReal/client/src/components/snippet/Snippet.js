@@ -35,53 +35,71 @@ const useStyles = makeStyles({
     },
 });
 
-export const Snippet = ({ article, idx }) => {
+export const Snippet = ({ snippet, idx }) => {
     const classes = useStyles();
-    const formatedDate = parseISO(article.published).toDateString();;
+    const formatedDate = parseISO(snippet.published).toDateString();;
 
     return (
-        <Paper id={`articleDetails--${idx}`} elevation={3} variant="outlined" style={{ width: '40%', minWidth: '450px', margin: '2rem' }}>
+        <Paper id={`snippetDetails--${idx}`} elevation={3} variant="outlined" style={{ width: '40%', minWidth: '450px', margin: '2rem' }}>
             <Card className={classes.root} style={{ height: '100%', }}>
                 <CardContent>
                     <Typography component={'div'} style={{ display: 'flex', flexWrap: 'nowrap', justifyContent: 'space-between' }}>
-                        {article.title}
-                        <CardActions component={'p'} style={{ minWidth: 'max-content', }}>
-                            <Link href={article.url} target="_blank" size="small">Visit Article</Link>
-                        </CardActions>
+                        Title: {snippet.userTitle}
                     </Typography>
-                    <Typography variant="h5" component="h2" className={classes.author} color="textSecondary" >
-                        Author: {article.author}
-                    </Typography>
-                    <Typography component={'ul'} className={classes.pos} color="textSecondary">
-                        {
-                            (article.category).map((c, idx) => <li key={article.category[idx]} style={{ display: 'inline', margin: '0 0.5em' }}>{c}</li>)
-                        }
-                    </Typography>
+                    <CardActions component={'p'} style={{ minWidth: 'max-content', }}>
+                        <Link href={snippet.url} target="_blank" size="small">Visit Article</Link>
+                    </CardActions>
                     {
-                        (article.description !== "")
-                            ? <Accordion>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                >
-                                    <Typography className={classes.heading}>Additional Details</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', }}>
-                                    {
-                                        (article.image !== "None")
-                                            ? <div><img style={{ maxWidth: '75%', maxHeight: 'auto', }} src={article.image} alt="photograph" /></div>
-                                            : ""
-                                    }
-                                    <Typography component={'div'} style={{ maxWidth: '50%', textAlign: 'left', textIndent: '1em' }}>
-                                        {article.description}
-                                    </Typography>
-                                    <Typography component={'div'}>
-                                        {formatedDate}
-                                    </Typography>
-                                </AccordionDetails>
-                            </Accordion>
+                        (snippet.image !== "None")
+                            ? <div><img style={{ maxWidth: '75%', maxHeight: 'auto', }} src={snippet.image} alt="photograph" /></div>
                             : ""
                     }
+                    <Typography component={'div'} style={{ maxWidth: '90%', textAlign: 'left', textIndent: '1em' }}>
+                        {snippet.content}
+                    </Typography>
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                        >
+                            <Typography className={classes.heading}>Article Details</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', }}>
+                            <Typography component="h2">
+                                Headline: {snippet.title}
+                            </Typography>
+                            <Typography variant="h5" component="h2" className={classes.author} color="textSecondary" >
+                                Author: {snippet.author}
+                                Published: {formatedDate}
+                            </Typography>
+                            <Typography component={'ul'} className={classes.pos} color="textSecondary">
+                                {
+                                    (snippet.articleCategory).map((c, idx) => <li key={snippet.articleCategory[idx]} style={{ display: 'inline', margin: '0 0.5em' }}>{c.category.name}</li>)
+                                }
+                            </Typography>
+                            {
+                                (snippet.description !== "")
+                                    ? <Typography component={'div'} style={{ maxWidth: '90%', textAlign: 'left', textIndent: '1em' }}>
+                                        {snippet.description}
+                                    </Typography>
+                                    : ""
+                            }
+                            {
+                                (snippet.objectivity !== null)
+                                    ? <Typography component={'div'} style={{ display: 'inline' }}>
+                                        {"Objectvitity Rating: " + ((1 - snippet.objectivity) * 100).toString() + "%"}
+                                    </Typography>
+                                    : ""
+                            }
+                            {
+                                (snippet.sentimentality !== null)
+                                    ? <Typography component={'div'} style={{ display: 'inline' }}>
+                                        {"Sentimentality: " + (snippet.sentimentality > 0) ? ((1 - snippet.sentimentality) * 100).toString() + "% Positive" : ((1 - snippet.sentimentality) * 100).toString() + "% Negative"}
+                                    </Typography>
+                                    : ""
+                            }
+                        </AccordionDetails>
+                    </Accordion>
                 </CardContent>
             </Card>
         </Paper>

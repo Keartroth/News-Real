@@ -7,7 +7,6 @@ import { SnippetList } from './SnippetList';
 import { Footer } from '../Footer';
 import { Header } from '../Header';
 import debounce from 'lodash.debounce'
-import { dummyData } from '../../providers/DummyData'
 import { SnippetContext } from '../../providers/SnippetProvider';
 
 const useStyles = makeStyles((theme) => ({
@@ -29,6 +28,7 @@ export const SnippetHome = () => {
     const classes = useStyles();
     const { snippets, getSnippets } = useContext(SnippetContext);
     const [snippetsReady, setSnippetsReady] = useState(false);
+    const [searching, setSearching] = useState(false);
 
     useEffect(() => {
         getSnippets();
@@ -37,6 +37,7 @@ export const SnippetHome = () => {
     useEffect(() => {
         if (snippets !== null && snippets.length > 0) {
             setSnippetsReady(true);
+            setSearching(false);
         } else if (snippets === null || snippets.length === 0) {
             setSnippetsReady(false);
         }
@@ -71,7 +72,7 @@ export const SnippetHome = () => {
                     <Container maxWidth="lg" className={classes.container}>
                         {
                             (snippetsReady === true)
-                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><SnippetList snippets={(filteredSnippets !== null) ? filteredSnippets : snippets} /></div>
+                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><SnippetList searching={searching} snippets={(filteredSnippets !== null) ? filteredSnippets : snippets} /></div>
                                 : <div style={{ margin: 'auto' }}><CircularProgress status="loading" /></div>
                         }
                     </Container>

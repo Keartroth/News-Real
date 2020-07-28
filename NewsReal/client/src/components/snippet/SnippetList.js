@@ -2,16 +2,17 @@ import React from 'react';
 import { Snippet } from './Snippet';
 
 export const SnippetList = props => {
-    const news = props.news;
+    const snippets = props.snippets;
+    const searching = props.searching
 
     return (
         <>
             {
-                (news.length > 0)
-                    ? news.map((a, idx) => {
-                        return <Snippet key={a.id} article={a} idx={idx} />
+                (snippets.length > 0)
+                    ? snippets.map((s, idx) => {
+                        return <Snippet key={s.id} snippet={s} idx={idx} />
                     })
-                    : <div>No Results Match Your Search</div>
+                    : (searching) ? <div>No Results Match Your Search</div> : <div>You have no saved snippets</div>
             }
         </>
     )

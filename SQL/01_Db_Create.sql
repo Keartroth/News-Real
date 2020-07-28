@@ -43,7 +43,7 @@ CREATE TABLE [Article] (
   [Image] nvarchar(max),
   [Language] nvarchar(2),
   [Published] datetime NOT NULL,
-  [Ojectivity] float,
+  [Objectivity] float,
   [Sentimentality] float
 )
 GO
