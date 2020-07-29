@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NewsReal.Models
 {
@@ -59,5 +60,8 @@ namespace NewsReal.Models
         public UserProfile UserProile { get; set; }
 
         public List<ArticleCategory> ArticleCategory { get; set; }
+
+        [NotMapped]
+        public List<ArticleReferrence> ArticleReferrences { get; set; }
     }
 }

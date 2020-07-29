@@ -42,6 +42,5 @@ namespace NewsReal.Models
                 return $"{FirstName} {LastName}";
             }
         }
-
     }
 }
