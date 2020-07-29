@@ -57,7 +57,6 @@ export const SnippetEditDialog = ({ openSnippetEditModal, snippetEditState, hand
     };
 
     const editSnippet = () => {
-        debugger
         updateSnippet(snippet.id, newEditState).then(getSnippets).then(() => {
             handleSnippetEditModalChange()
         });

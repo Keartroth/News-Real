@@ -69,7 +69,6 @@ export const SnippetProvider = (props) => {
     };
 
     const updateSnippet = (id, snippet) => {
-        debugger
         return getToken().then((token) =>
             fetch(apiUrl + `/${id}`, {
                 method: "PUT",
@@ -79,7 +78,6 @@ export const SnippetProvider = (props) => {
                 },
                 body: JSON.stringify(snippet),
             }).then(resp => {
-                debugger
                 if (resp.ok) {
                     return;
                 }

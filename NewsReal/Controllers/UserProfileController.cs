@@ -29,8 +29,8 @@ namespace NewsReal.Controllers
             return Ok(userProfile);
         }
 
-        [Authorize]
-        [HttpGet("{firebaseUserId}")]
+
+        [HttpGet("getbyfirebaseid/{firebaseUserId}")]
         public IActionResult GetByFirebaseUserId(string firebaseUserId)
         {
             var userProfile = _userProfileRepository.GetByFirebaseUserId(firebaseUserId);

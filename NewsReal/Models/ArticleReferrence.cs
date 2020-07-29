@@ -6,10 +6,10 @@ namespace NewsReal.Models
     {
         public int Id { get; set; }
 
-        [ForeignKey("Article")]
+        [ForeignKey("Id")]
         public int ArticleId { get; set; }
 
-        [ForeignKey("Article")]
+        [ForeignKey("Id")]
         public int ReferenceArticleId { get; set; }
 
         public Article Article { get; set; }

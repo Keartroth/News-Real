@@ -101,36 +101,40 @@ namespace NewsReal.Repositories
                                 UserProile = userProfile,
                             };
 
-                            if (ReaderHelpers.GetNullableString(reader, "ArticleCategoryId") != null)
-                            {
-                                ArticleCategory articleCategory = new ArticleCategory
-                                {
-                                    Id = reader.GetInt32(reader.GetOrdinal("ArticleCategoryId")),
-                                    CategoryId = reader.GetInt32(reader.GetOrdinal("CategoryId")),
-                                    ArticleId = reader.GetInt32(reader.GetOrdinal("Id")),
-                                    Category = new Category
-                                    {
-                                        Id = reader.GetInt32(reader.GetOrdinal("CategoryId")),
-                                        Name = reader.GetString(reader.GetOrdinal("Name")),
-                                    }
-                                };
-                                article.ArticleCategory.Add(articleCategory);
-                            };
-
                             if (ReaderHelpers.GetNullableString(reader, "ArticleReferenceReferenceId") == null)
                             {
-                                ArticleReferrence articleReferrence = new ArticleReferrence
-                                {
-                                    Id = reader.GetInt32(reader.GetOrdinal("ArticleReferenceId")),
-                                    ArticleId = reader.GetInt32(reader.GetOrdinal("Id")),
-                                    ReferenceArticleId = reader.GetInt32(reader.GetOrdinal("ReferenceArticleId")),
-                                };
+                                articles.Add(article);
                             }
-
-                            articles.Add(article);
                         }
 
-                        reader.Close();
+                        foreach (var article in articles)
+                        {
+                            reader.Close();
+
+                            cmd.CommandText = @"
+                            SELECT a.Id, a.UserProfileId, a.Author, a.Publisher, 
+                                   a.CurrentsId, a.Title, a.[Description], a.[Url], 
+                                   a.UserTitle, a.Content, a.CreateDateTime, a.[Image], 
+                                   a.[Language], a.Published, a.Objectivity, a.Sentimentality, 
+                                   ac.Id AS ArticleCategoryId, c.Id AS CategoryId, c.[Name], ra.Id AS ReferenceArticleId,
+                                   ar.Id AS ArticleReferenceId, ra.Author AS ReferenceArticleAuthor, ra.[Image] AS ReferenceArticleImage, 
+                                   ra.Content AS ReferenceArticleContent, ra.CreateDateTime AS ReferenceArticleCreateDateTime, 
+                                   ra.CurrentsId AS ReferenceArticleCurrentsId, ra.[Description] AS ReferenceArticleDescription, 
+                                   ra.[Language] AS ReferenceArticleLanguage, ra.Objectivity AS ReferenceArticleObjectivity, 
+                                   ra.Publisher AS ReferenceArticlePublisher, ra.Sentimentality AS ReferenceArticleSentimentality, 
+                                   ra.[Url] AS ReferenceArticleUrl, ra.UserTitle AS ReferenceArticleUserTitle, ra.Title AS ReferenceArticleTitle, 
+                                   ra.Published AS ReferenceArticlePublished
+                              FROM Article a
+                              LEFT JOIN ArticleCategory ac ON ac.ArticleId = a.Id
+                              JOIN Category c ON c.Id = ac.CategoryID
+                             WHERE u.Id = @id AND a.id =article.id
+                            ";
+
+                            cmd.Parameters.AddWithValue("@id", id);
+                            cmd.Parameters.AddWithValue("@id", id);
+
+                            SqlDataReader categoryReader = cmd.ExecuteReader();
+                        }
 
 
                         return articles;
