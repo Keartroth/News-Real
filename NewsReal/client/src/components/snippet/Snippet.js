@@ -1,18 +1,16 @@
 import React from 'react';
 import { parseISO } from 'date-fns'
+import {
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    CardMedia,
+    Typography
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     root: {
         minWidth: 275,
     },
@@ -24,6 +22,37 @@ const useStyles = makeStyles({
         margin: '0 2px',
         transform: 'scale(0.8)',
     },
+    buttonGroup: {
+        width: '263px',
+    },
+    card: {
+        height: '575px',
+        display: 'flex',
+        flexDirection: 'column',
+        margin: theme.spacing(2),
+        width: '45%',
+    },
+    cardFull: {
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        margin: 'auto',
+        width: '75%',
+    },
+    cardMedia: {
+        paddingTop: '56.25%', // 16:9
+    },
+    cardContent: {
+        flexGrow: 1,
+        margin: 'inherit',
+    },
+    cardTitle: {
+        alignSelf: 'center',
+    },
+    content: {
+        overflow: 'scroll',
+        overflowX: 'hidden',
+    },
     expandedDetails: {
         width: '75%',
     },
@@ -33,75 +62,50 @@ const useStyles = makeStyles({
         display: 'flex',
         flexWrap: 'nowrap',
     },
-});
+    marginRight: {
+        margin: '0 0.5em 0 0'
+    },
+    marginLeft: {
+        margin: '0 0 0 0.5em'
+    }
+}));
 
-export const Snippet = ({ snippet, idx }) => {
+
+export const Snippet = ({ snippet, idx, setSnippetEditState, handleSnippetEditModalChange }) => {
     const classes = useStyles();
     const formatedDate = parseISO(snippet.published).toDateString();;
 
+    const editSnippet = (e) => {
+        e.preventDefault();
+        setSnippetEditState(snippet);
+        handleSnippetEditModalChange();
+    };
+
+    const nukeSnippet = () => {
+        console.log("All your base, are belong to us.");
+    };
+
     return (
-        <Paper id={`snippetDetails--${idx}`} elevation={3} variant="outlined" style={{ width: '40%', minWidth: '450px', margin: '2rem' }}>
-            <Card className={classes.root} style={{ height: '100%', }}>
-                <CardContent>
-                    <Typography component={'div'} style={{ display: 'flex', flexWrap: 'nowrap', justifyContent: 'space-between' }}>
-                        Title: {snippet.userTitle}
-                    </Typography>
-                    <CardActions component={'p'} style={{ minWidth: 'max-content', }}>
-                        <Link href={snippet.url} target="_blank" size="small">Visit Article</Link>
-                    </CardActions>
-                    {
-                        (snippet.image !== "None")
-                            ? <div><img style={{ maxWidth: '75%', maxHeight: 'auto', }} src={snippet.image} alt="photograph" /></div>
-                            : ""
-                    }
-                    <Typography component={'div'} style={{ maxWidth: '90%', textAlign: 'left', textIndent: '1em' }}>
-                        {snippet.content}
-                    </Typography>
-                    <Accordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                        >
-                            <Typography className={classes.heading}>Article Details</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', }}>
-                            <Typography component="h2">
-                                Headline: {snippet.title}
-                            </Typography>
-                            <Typography variant="h5" component="h2" className={classes.author} color="textSecondary" >
-                                Author: {snippet.author}
-                                Published: {formatedDate}
-                            </Typography>
-                            <Typography component={'ul'} className={classes.pos} color="textSecondary">
-                                {
-                                    (snippet.articleCategory).map((c, idx) => <li key={snippet.articleCategory[idx]} style={{ display: 'inline', margin: '0 0.5em' }}>{c.category.name}</li>)
-                                }
-                            </Typography>
-                            {
-                                (snippet.description !== "")
-                                    ? <Typography component={'div'} style={{ maxWidth: '90%', textAlign: 'left', textIndent: '1em' }}>
-                                        {snippet.description}
-                                    </Typography>
-                                    : ""
-                            }
-                            {
-                                (snippet.objectivity !== null)
-                                    ? <Typography component={'div'} style={{ display: 'inline' }}>
-                                        {"Objectvitity Rating: " + ((1 - snippet.objectivity) * 100).toString() + "%"}
-                                    </Typography>
-                                    : ""
-                            }
-                            {
-                                (snippet.sentimentality !== null)
-                                    ? <Typography component={'div'} style={{ display: 'inline' }}>
-                                        {"Sentimentality: " + (snippet.sentimentality > 0) ? ((1 - snippet.sentimentality) * 100).toString() + "% Positive" : ((1 - snippet.sentimentality) * 100).toString() + "% Negative"}
-                                    </Typography>
-                                    : ""
-                            }
-                        </AccordionDetails>
-                    </Accordion>
-                </CardContent>
-            </Card>
-        </Paper>
+        <Card className={classes.card}>
+            <Typography className={classes.cardTitle} gutterBottom variant="h5" component="h2">
+                {snippet.userTitle}
+            </Typography>
+            <CardMedia
+                className={classes.cardMedia}
+                image={(snippet.image !== "None") ? snippet.image : "https://source.unsplash.com/random/?newspaper"}
+                title="Image title"
+            />
+            <CardContent>
+                <CardActions>
+                    <Button onClick={editSnippet}>Edit Snippet</Button>
+                    <Button onClick={nukeSnippet}>Delete Snippet</Button>
+                </CardActions>
+            </CardContent>
+            <CardContent className={classes.content}>
+                <Typography >{snippet.content}</Typography>
+            </CardContent>
+            <CardActions>
+            </CardActions>
+        </Card>
     )
 }

@@ -98,6 +98,15 @@ namespace NewsReal.Controllers
             return NoContent();
         }
 
+        // Start of SnippetRefernce methods
+        [HttpPost("addsnippetreferrence")]
+        public IActionResult Post(ArticleReferrence snippetReferrence)
+        {
+            _snippetRepository.AddArticleReference(snippetReferrence);
+
+            return CreatedAtAction("Get", new { id = snippetReferrence.Id }, snippetReferrence);
+        }
+
         private UserProfile GetCurrentUserProfile()
         {
             var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;

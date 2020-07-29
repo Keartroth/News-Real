@@ -1,15 +1,18 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { CssBaseline } from '@material-ui/core';
-import Container from '@material-ui/core/Container';
-import { CircularProgress } from '@material-ui/core';
-import { NewsList } from './NewsList';
-import { NewsContext } from '../../providers/NewsProvider';
-import { Footer } from '../Footer';
-import { Header } from '../Header';
 import debounce from 'lodash.debounce'
 import { CategoryContext } from '../../providers/CategoryProvider';
 import { dummyData } from '../../providers/DummyData'
+import { NewsContext } from '../../providers/NewsProvider';
+import { Footer } from '../Footer';
+import { Header } from '../Header';
+import { NewsList } from './NewsList';
+import {
+    Container,
+    CssBaseline,
+    CircularProgress,
+
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {

@@ -1,20 +1,22 @@
 import React, { useState, useRef } from 'react';
 import { parseISO } from 'date-fns'
+import {
+    Button,
+    ButtonGroup,
+    Card,
+    CardActions,
+    CardContent,
+    CardMedia,
+    ClickAwayListener,
+    Grow,
+    MenuItem,
+    MenuList,
+    Paper,
+    Popper,
+    Typography
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import { Button } from '@material-ui/core';
-import { ButtonGroup } from '@material-ui/core';
-import { Card } from '@material-ui/core';
-import { CardActions } from '@material-ui/core';
-import { CardContent } from '@material-ui/core';
-import { CardMedia } from '@material-ui/core';
-import { ClickAwayListener } from '@material-ui/core';
-import { Grow } from '@material-ui/core';
-import { MenuItem } from '@material-ui/core';
-import { MenuList } from '@material-ui/core';
-import { Paper } from '@material-ui/core';
-import { Popper } from '@material-ui/core';
-import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -74,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
 const snippetOptions = ['Create New Snippet', 'Append Existing Snippet'];
 const articleOptions = ['View Description', 'Visit Article Home'];
 
-export const News = ({ article, handleModalChange, setdialogNewsState }) => {
+export const News = ({ article, handleModalChange, setDialogNewsState, setDialogSnippetAppendState, handleSnippetAppendModalChange }) => {
     const classes = useStyles();
     const [articleOpen, setArticleOpen] = useState(false);
     const [snippetOpen, setSnippetOpen] = useState(false);
@@ -92,10 +94,11 @@ export const News = ({ article, handleModalChange, setdialogNewsState }) => {
     const handleSnippetClick = (e) => {
         e.preventDefault();
         if (snippetOptions[selectedSnippetIndex] === 'Create New Snippet') {
-            setdialogNewsState(article)
+            setDialogNewsState(article)
             handleModalChange();
         } else {
-            console.log(snippetOptions[selectedSnippetIndex]);
+            setDialogSnippetAppendState(article);
+            handleSnippetAppendModalChange();
         }
     };
 
@@ -113,7 +116,7 @@ export const News = ({ article, handleModalChange, setdialogNewsState }) => {
                     e.target.parentElement.parentElement.parentElement.scrollIntoView();
                     articleOptions[selectedArticleIndex] = 'View Article Details';
                 } else {
-                    alert('This article has no additional provided description.');
+                    alert('This article has no additional description provided.\nVisit the article in question for more information.');
                 }
             }
         } else {

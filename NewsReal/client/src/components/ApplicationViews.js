@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { UserProfileContext } from "../providers/UserProfileProvider";
 import { Login } from "./auth/Login";
-import { Register } from "./auth/Register";
 import { NewsHome } from "./news/NewsHome";
+import { Register } from "./auth/Register";
 import { SnippetHome } from "./snippet/SnippetHome";
+import { UserProfileContext } from "../providers/UserProfileProvider";
 
 export const ApplicationViews = props => {
     const { isLoggedIn } = useContext(UserProfileContext);

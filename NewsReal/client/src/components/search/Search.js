@@ -3,35 +3,35 @@ import React, {
     useState,
     useEffect
 } from 'react';
-import {
-    CssBaseline,
-    Button
-} from '@material-ui/core';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import ClassIcon from '@material-ui/icons/Class';
-import DateFnsUtils from '@date-io/date-fns';
-import Divider from '@material-ui/core/Divider';
-import DomainIcon from '@material-ui/icons/Domain';
-import DomainDisabledIcon from '@material-ui/icons/DomainDisabled';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
 import format from 'date-fns/format'
-import Grid from '@material-ui/core/Grid';
-import InputLabel from '@material-ui/core/InputLabel';
+import DateFnsUtils from '@date-io/date-fns';
+import { NewsContext } from '../../providers/NewsProvider';
+import {
+    Button,
+    CssBaseline,
+    Divider,
+    Grid,
+    InputLabel,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    ListSubheader,
+    MenuItem,
+    Select,
+    TextField
+} from '@material-ui/core';
 import {
     KeyboardDatePicker,
     MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import { makeStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import ClassIcon from '@material-ui/icons/Class';
+import DomainIcon from '@material-ui/icons/Domain';
+import DomainDisabledIcon from '@material-ui/icons/DomainDisabled';
+// import FileCopyIcon from '@material-ui/icons/FileCopy';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import { NewsContext } from '../../providers/NewsProvider';
 
 const useStyles = makeStyles((theme) => ({
     searchTitle: {

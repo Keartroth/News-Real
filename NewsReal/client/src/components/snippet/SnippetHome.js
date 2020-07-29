@@ -1,13 +1,15 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { CssBaseline } from '@material-ui/core';
-import Container from '@material-ui/core/Container';
-import { CircularProgress } from '@material-ui/core';
+import debounce from 'lodash.debounce'
+import { SnippetContext } from '../../providers/SnippetProvider';
 import { SnippetList } from './SnippetList';
 import { Footer } from '../Footer';
 import { Header } from '../Header';
-import debounce from 'lodash.debounce'
-import { SnippetContext } from '../../providers/SnippetProvider';
+import {
+    CircularProgress,
+    Container,
+    CssBaseline
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     container: {
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
+        padding: theme.spacing(1),
     },
 }));
 
