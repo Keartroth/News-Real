@@ -65,7 +65,7 @@ namespace NewsReal.Repositories
                 foreach (var reference in articleReferences)
                 {
                     int referenceArticleId = reference.ReferenceArticleId;
-                    var referenceArticle = GetReferenceArticleByArticleReferenceId(referenceArticleId);
+                    var referenceArticle = GetArticleById(referenceArticleId);
                     referenceArticles.Add(referenceArticle);
                 }
 
@@ -77,6 +77,26 @@ namespace NewsReal.Repositories
             _context.SaveChanges();
         }
 
+        //Beginning of ArticleReference methods.
+        public void AddArticleReference(ArticleReferrence articleReferrence)
+        {
+            _context.Add(articleReferrence);
+            _context.SaveChanges();
+        }
+
+        public void DeleteArticleReference(int articleId, int referenceArticleId)
+        {
+            var articleReferrence = GetArticleReferenceByArticleIdAndReferenceArticleId(articleId, referenceArticleId);
+            var referenceArticle = GetArticleById(referenceArticleId);
+
+            _context.ArticleReferrence.Remove(articleReferrence);
+
+            _context.Article.Remove(referenceArticle);
+            _context.SaveChanges();
+        }
+
+        //Private methods for returning data.
+
         private List<ArticleCategory> GetArticleCategoriesByArticleId(int id)
         {
             return _context.ArticleCategory.Where(ac => ac.ArticleId == id).ToList();
@@ -87,9 +107,14 @@ namespace NewsReal.Repositories
             return _context.ArticleReferrence.Where(ac => ac.ArticleId == id).ToList();
         }
 
-        private Article GetReferenceArticleByArticleReferenceId(int id)
+        private Article GetArticleById(int id)
         {
             return _context.Article.FirstOrDefault(a => a.Id == id);
+        }
+
+        private ArticleReferrence GetArticleReferenceByArticleIdAndReferenceArticleId(int articleId, int referenceArticleId)
+        {
+            return _context.ArticleReferrence.FirstOrDefault(ar => ar.ArticleId == articleId && ar.ReferenceArticleId == referenceArticleId);
         }
     }
 }

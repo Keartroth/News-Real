@@ -1,22 +1,27 @@
 import React, { useContext } from 'react';
+import { UserProfileContext } from "../providers/UserProfileProvider";
+import { Search } from './search/Search';
 import clsx from 'clsx';
+import {
+    AppBar,
+    Divider,
+    Drawer,
+    IconButton,
+    InputBase,
+    Link,
+    Toolbar,
+    Typography,
+    CssBaseline
+} from '@material-ui/core';
+import {
+    fade,
+    makeStyles
+} from '@material-ui/core/styles';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import AppBar from '@material-ui/core/AppBar';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
 import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
-import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
-import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import { CssBaseline } from '@material-ui/core';
-import { fade, makeStyles } from '@material-ui/core/styles';
-import { Search } from './search/Search';
-import { UserProfileContext } from "../providers/UserProfileProvider";
 
 const drawerWidth = 240;
 

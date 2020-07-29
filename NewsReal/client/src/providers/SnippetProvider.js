@@ -68,7 +68,8 @@ export const SnippetProvider = (props) => {
         );
     };
 
-    const editSnippet = (id, snippet) => {
+    const updateSnippet = (id, snippet) => {
+        debugger
         return getToken().then((token) =>
             fetch(apiUrl + `/${id}`, {
                 method: "PUT",
@@ -78,6 +79,7 @@ export const SnippetProvider = (props) => {
                 },
                 body: JSON.stringify(snippet),
             }).then(resp => {
+                debugger
                 if (resp.ok) {
                     return;
                 }
@@ -85,8 +87,42 @@ export const SnippetProvider = (props) => {
             }))
     };
 
+    // snippetReference functions
+    const addSnippetReference = (snippetReference) => {
+        return getToken().then((token) =>
+            fetch(apiUrl + '/addsnippetreferrence', {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(snippetReference),
+            }).then(resp => {
+                if (resp.ok) {
+                    return resp.json();
+                }
+                throw new Error("Unauthorized");
+            }))
+    };
+
+    const deleteSnippetReference = (articleId, referenceArticleId) => {
+        return getToken().then((token) =>
+            fetch(apiUrl + `/id=${articleId}&referenceArticleId=${referenceArticleId}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then((resp) => {
+                if (resp.ok) {
+                    return;
+                }
+                throw new Error("Failed to delete snippet.")
+            })
+        );
+    };
+
     return (
-        <SnippetContext.Provider value={{ snippets, getSnippets, addSnippet, getSnippetById, deleteSnippet, editSnippet }}>
+        <SnippetContext.Provider value={{ snippets, getSnippets, addSnippet, getSnippetById, deleteSnippet, updateSnippet, addSnippetReference, deleteSnippetReference }}>
             {props.children}
         </SnippetContext.Provider>
     );

@@ -1,17 +1,19 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import { Dialog } from '@material-ui/core';
-import { DialogActions } from '@material-ui/core';
-import { DialogContent } from '@material-ui/core';
-import { DialogContentText } from '@material-ui/core';
-import { IconButton } from '@material-ui/core';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import { TextField } from '@material-ui/core';
-import { Typography } from '@material-ui/core';
 import { SnippetContext } from '../../providers/SnippetProvider';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    IconButton,
+    TextField,
+    Typography
+} from '@material-ui/core';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import CloseIcon from '@material-ui/icons/Close';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -103,11 +105,11 @@ export const NewsDialog = ({ openModal, handleModalChange, dialogNewsState, cate
     return (
         <Dialog onClose={handleModalChange} aria-labelledby="customized-dialog-title" open={openModal}>
             <DialogTitle classes={classes} id="customized-dialog-title" onClose={handleModalChange}>
-                Modal title
+                Save Snippet
             </DialogTitle>
             <DialogContent dividers>
                 <DialogContentText>
-                    Create a new snippet from article: {(dialogNewsState !== null) ? article.title : ""}.
+                    Article Title: {(dialogNewsState !== null) ? article.title : ""}.
                 </DialogContentText>
                 <TextField
                     autoFocus
