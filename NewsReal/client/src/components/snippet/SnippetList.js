@@ -13,6 +13,7 @@ export const SnippetList = props => {
         setOpenSnippetEditModal(!openSnippetEditModal);
     }
 
+    console.log(snippets);
 
     return (
         <>

@@ -59,9 +59,11 @@ namespace NewsReal.Models
 
         public UserProfile UserProile { get; set; }
 
+        public List<Category> Categories { get; set; }
+
         public List<ArticleCategory> ArticleCategory { get; set; }
 
         [NotMapped]
-        public List<ArticleReferrence> ArticleReferrences { get; set; }
+        public List<ArticleReference> ArticleReferrences { get; set; }
     }
 }

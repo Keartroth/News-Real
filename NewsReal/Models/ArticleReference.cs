@@ -2,7 +2,7 @@
 
 namespace NewsReal.Models
 {
-    public class ArticleReferrence
+    public class ArticleReference
     {
         public int Id { get; set; }
 

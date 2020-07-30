@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using NewsReal.Utilities;
 using System.Net;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace NewsReal.Repositories
 {
@@ -29,123 +30,216 @@ namespace NewsReal.Repositories
 
         public List<Article> GetCurrentUsersSnippets(int id)
         {
+            List<Article> articles = new List<Article>();
+
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT a.Id, a.UserProfileId, a.Author, a.Publisher, 
-                               a.CurrentsId, a.Title, a.[Description], a.[Url], 
-                               a.UserTitle, a.Content, a.CreateDateTime, a.[Image], 
-                               a.[Language], a.Published, a.Objectivity, a.Sentimentality, 
-                               u.Id AS UserId, u.CreateDateTime AS UserCreateDateTime, u.DisplayName, 
-                               u.Email, u.FirebaseUserId, u.FirstName, u.ImageLocation, u.LastName, 
-                               ac.Id AS ArticleCategoryId, c.Id AS CategoryId, c.[Name], ra.Id AS ReferenceArticleId,
-                               ar.Id AS ArticleReferenceId, ra.Author AS ReferenceArticleAuthor, ra.[Image] AS ReferenceArticleImage, 
-                               ra.Content AS ReferenceArticleContent, ra.CreateDateTime AS ReferenceArticleCreateDateTime, 
-                               ra.CurrentsId AS ReferenceArticleCurrentsId, ra.[Description] AS ReferenceArticleDescription, 
-                               ra.[Language] AS ReferenceArticleLanguage, ra.Objectivity AS ReferenceArticleObjectivity, 
-                               ra.Publisher AS ReferenceArticlePublisher, ra.Sentimentality AS ReferenceArticleSentimentality, 
-                               ra.[Url] AS ReferenceArticleUrl, ra.UserTitle AS ReferenceArticleUserTitle, ra.Title AS ReferenceArticleTitle, 
-                               ra.Published AS ReferenceArticlePublished
-                          FROM Article a
-                          JOIN UserProfile u ON u.Id = a.UserProfileId
-                          LEFT JOIN ArticleCategory ac ON ac.ArticleId = a.Id
-                          JOIN Category c ON c.Id = ac.CategoryID
-                          LEFT JOIN ArticleReferrence ar ON ar.ArticleId = a.Id
-                          LEFT JOIN Article ra ON ra.Id = ar.ReferenceArticleId
-                         WHERE u.Id = @id
+                            SELECT
+                                 a.Id, 
+                                 a.UserProfileId, a.Author, a.Published, a.CurrentsId, a.Title, 
+                                 a.[Description], a.[Url], a.UserTitle, a.Content, a.CreateDateTime, 
+                                 a.[Image], a.[Language], a.Publisher, a.Objectivity, a.Sentimentality,
+                                 up.FirebaseUserId, up.FirstName, up.LastName, up.DisplayName, up.CreateDateTime,
+                                 up.ImageLocation, up.CreateDateTime, up.Email, ar.ArticleId, ar.ReferenceArticleId 
+                            FROM Article a
+                            JOIN UserProfile up ON up.Id = a.UserProfileId
+                       LEFT JOIN ArticleReference ar ON ar.ReferenceArticleId = a.Id
+                           WHERE a.UserProfileId = @id AND ReferenceArticleId IS NULL
                     ";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        List<Article> articles = new List<Article>();
-
-                        UserProfile userProfile = new UserProfile
+                        var testing = reader.Read();
+                        if (reader.Read())
                         {
-                            Id = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
-                            FirebaseUserId = reader.GetString(reader.GetOrdinal("FirebaseUserId")),
-                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            DisplayName = reader.GetString(reader.GetOrdinal("DisplayName")),
-                            Email = reader.GetString(reader.GetOrdinal("Email")),
-                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
-                            ImageLocation = ReaderHelpers.GetNullableString(reader, "ImageLocation"),
-                        };
-
-                        while (reader.Read())
-                        {
-                            Article article = new Article
+                            UserProfile userProfile = new UserProfile
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
-                                Author = reader.GetString(reader.GetOrdinal("Author")),
-                                Publisher = reader.GetString(reader.GetOrdinal("Publisher")),
-                                CurrentsId = reader.GetString(reader.GetOrdinal("CurrentsId")),
-                                Title = reader.GetString(reader.GetOrdinal("Title")),
-                                Description = reader.GetString(reader.GetOrdinal("Description")),
-                                Url = reader.GetString(reader.GetOrdinal("Url")),
-                                UserTitle = ReaderHelpers.GetNullableString(reader, "UserTitle"),
-                                Content = ReaderHelpers.GetNullableString(reader, "Content"),
-                                CreateDateTime = ReaderHelpers.GetNullableDateTime(reader, "CreateDateTime"),
-                                Image = ReaderHelpers.GetNullableString(reader, "Image"),
-                                Language = ReaderHelpers.GetNullableString(reader, "Language"),
-                                Published = ReaderHelpers.GetNullableDateTime(reader, "Published"),
-                                Objectivity = ReaderHelpers.GetNullableDouble(reader, "Objectivity"),
-                                Sentimentality = ReaderHelpers.GetNullableDouble(reader, "Sentimentality"),
-                                UserProile = userProfile,
+                                Id = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
+                                FirebaseUserId = reader.GetString(reader.GetOrdinal("FirebaseUserId")),
+                                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                                LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                                DisplayName = reader.GetString(reader.GetOrdinal("DisplayName")),
+                                Email = reader.GetString(reader.GetOrdinal("Email")),
+                                CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                                ImageLocation = ReaderHelpers.GetNullableString(reader, "ImageLocation"),
                             };
 
-                            if (ReaderHelpers.GetNullableString(reader, "ArticleReferenceReferenceId") == null)
+                            while (reader.Read())
                             {
+                                Article article = new Article
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                    UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
+                                    Author = reader.GetString(reader.GetOrdinal("Author")),
+                                    Publisher = reader.GetString(reader.GetOrdinal("Publisher")),
+                                    CurrentsId = reader.GetString(reader.GetOrdinal("CurrentsId")),
+                                    Title = reader.GetString(reader.GetOrdinal("Title")),
+                                    Description = ReaderHelpers.GetNullableString(reader, "Description"),
+                                    Url = reader.GetString(reader.GetOrdinal("Url")),
+                                    UserTitle = ReaderHelpers.GetNullableString(reader, "UserTitle"),
+                                    Content = ReaderHelpers.GetNullableString(reader, "Content"),
+                                    CreateDateTime = ReaderHelpers.GetNullableDateTime(reader, "CreateDateTime"),
+                                    Image = ReaderHelpers.GetNullableString(reader, "Image"),
+                                    Language = ReaderHelpers.GetNullableString(reader, "Language"),
+                                    Published = ReaderHelpers.GetNullableDateTime(reader, "Published"),
+                                    Objectivity = ReaderHelpers.GetNullableDouble(reader, "Objectivity"),
+                                    Sentimentality = ReaderHelpers.GetNullableDouble(reader, "Sentimentality"),
+                                    Categories = new List<Category>(),
+                                    ArticleReferrences = null,
+                                    UserProile = userProfile,
+                                };
+
                                 articles.Add(article);
                             }
                         }
-
-                        foreach (var article in articles)
+                        else
                         {
-                            reader.Close();
-
-                            cmd.CommandText = @"
-                            SELECT a.Id, a.UserProfileId, a.Author, a.Publisher, 
-                                   a.CurrentsId, a.Title, a.[Description], a.[Url], 
-                                   a.UserTitle, a.Content, a.CreateDateTime, a.[Image], 
-                                   a.[Language], a.Published, a.Objectivity, a.Sentimentality, 
-                                   ac.Id AS ArticleCategoryId, c.Id AS CategoryId, c.[Name], ra.Id AS ReferenceArticleId,
-                                   ar.Id AS ArticleReferenceId, ra.Author AS ReferenceArticleAuthor, ra.[Image] AS ReferenceArticleImage, 
-                                   ra.Content AS ReferenceArticleContent, ra.CreateDateTime AS ReferenceArticleCreateDateTime, 
-                                   ra.CurrentsId AS ReferenceArticleCurrentsId, ra.[Description] AS ReferenceArticleDescription, 
-                                   ra.[Language] AS ReferenceArticleLanguage, ra.Objectivity AS ReferenceArticleObjectivity, 
-                                   ra.Publisher AS ReferenceArticlePublisher, ra.Sentimentality AS ReferenceArticleSentimentality, 
-                                   ra.[Url] AS ReferenceArticleUrl, ra.UserTitle AS ReferenceArticleUserTitle, ra.Title AS ReferenceArticleTitle, 
-                                   ra.Published AS ReferenceArticlePublished
-                              FROM Article a
-                              LEFT JOIN ArticleCategory ac ON ac.ArticleId = a.Id
-                              JOIN Category c ON c.Id = ac.CategoryID
-                             WHERE u.Id = @id AND a.id =article.id
-                            ";
-
-                            cmd.Parameters.AddWithValue("@id", id);
-                            cmd.Parameters.AddWithValue("@id", id);
-
-                            SqlDataReader categoryReader = cmd.ExecuteReader();
+                            return null;
                         }
-
-
-                        return articles;
-                    }
-                    else
-                    {
-                        reader.Close();
-                        return null;
                     }
                 }
             }
+
+            foreach (var article in articles)
+            {
+                using (SqlConnection conn = Connection)
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {   
+                        cmd.CommandText = @"
+                            SELECT 
+                                   ac.Id AS ArticleCategoryId, c.Id AS CategoryId, c.[Name]
+                              FROM Article a
+                              LEFT JOIN ArticleCategory ac ON ac.ArticleId = a.Id
+                              JOIN Category c ON c.Id = ac.CategoryID
+                             WHERE a.Id = @id
+                        ";
+
+                        cmd.Parameters.AddWithValue("@id", article.Id);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            var testing2 = reader.Read();
+                            if (reader.Read())
+                            {
+                                while (reader.Read())
+                                {
+                                    Category category = new Category
+                                    {
+                                        Id = reader.GetInt32(reader.GetOrdinal("CategoryId")),
+                                        Name = reader.GetString(reader.GetOrdinal("Name")),
+                                    };
+
+                                    article.Categories.Add(category);
+                                }
+                            }
+                            //else { return null; }
+                        }
+                    }
+                }
+
+                using (SqlConnection conn = Connection)
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"
+                                SELECT ar.Id AS ArticleReferenceId,
+                                       ar.ReferenceArticleId
+                                  FROM Article a
+                            RIGHT JOIN ArticleReference ar ON ar.ArticleId = a.Id
+                                 WHERE a.Id = @id
+                        ";
+
+                        cmd.Parameters.AddWithValue("@id", article.Id);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                while (reader.Read())
+                                {
+                                    ArticleReference articleReference = new ArticleReference
+                                    {
+                                        Id = reader.GetInt32(reader.GetOrdinal("ArticleReferenceId")),
+                                        ArticleId = article.Id,
+                                        ReferenceArticleId = reader.GetInt32(reader.GetOrdinal("ReferenceArticleId")),
+                                    };
+                                }
+                            }
+                            //else { return null; }
+                        }
+                    }
+                }
+
+                if (article.ArticleReferrences != null)
+                {
+                    foreach (var articleReference in article.ArticleReferrences)
+                    {
+                        using (SqlConnection conn = Connection)
+                        {
+                            conn.Open();
+                            using (SqlCommand cmd = conn.CreateCommand())
+                            {
+                                cmd.CommandText = @"
+                                        SELECT 
+                                               a.Id, a.Author, a.[Image], 
+                                               a.Content, a.CreateDateTime, 
+                                               a.CurrentsId, a.[Description], 
+                                               a.[Language], a.Objectivity, 
+                                               a.Publisher, a.Sentimentality, 
+                                               a.[Url], a.UserTitle, a.Title, 
+                                               a.Published
+                                          FROM Article a
+                                    RIGHT JOIN ArticleReference ar ON ar.ReferenceArticleId = a.Id
+                                         WHERE a.Id = @id
+                                ";
+
+                                cmd.Parameters.AddWithValue("@id", articleReference.ReferenceArticleId);
+
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    if (reader.Read())
+                                    {
+                                        Article referenceArticle = new Article
+                                        {
+                                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                            UserProfileId = article.UserProfileId,
+                                            Author = reader.GetString(reader.GetOrdinal("Author")),
+                                            Publisher = reader.GetString(reader.GetOrdinal("Publisher")),
+                                            CurrentsId = reader.GetString(reader.GetOrdinal("CurrentsId")),
+                                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                                            Description = ReaderHelpers.GetNullableString(reader, "Description"),
+                                            Url = reader.GetString(reader.GetOrdinal("Url")),
+                                            UserTitle = ReaderHelpers.GetNullableString(reader, "UserTitle"),
+                                            Content = ReaderHelpers.GetNullableString(reader, "Content"),
+                                            CreateDateTime = ReaderHelpers.GetNullableDateTime(reader, "CreateDateTime"),
+                                            Image = ReaderHelpers.GetNullableString(reader, "Image"),
+                                            Language = ReaderHelpers.GetNullableString(reader, "Language"),
+                                            Published = ReaderHelpers.GetNullableDateTime(reader, "Published"),
+                                            Objectivity = ReaderHelpers.GetNullableDouble(reader, "Objectivity"),
+                                            Sentimentality = ReaderHelpers.GetNullableDouble(reader, "Sentimentality"),
+                                        };
+
+                                        articleReference.ReferenceArticle = referenceArticle;
+                                    }
+                                    //else { return null; }
+                                }
+                            }
+                        }
+                    }
+                }
+                //else { return null; }
+            }
+
+            return articles;
         }
 
         public Article GetSnippetById(int id)
@@ -201,7 +295,7 @@ namespace NewsReal.Repositories
         }
 
         //Beginning of ArticleReference methods.
-        public void AddArticleReference(ArticleReferrence articleReferrence)
+        public void AddArticleReference(ArticleReference articleReferrence)
         {
             _context.Add(articleReferrence);
             _context.SaveChanges();
@@ -225,7 +319,7 @@ namespace NewsReal.Repositories
             return _context.ArticleCategory.Where(ac => ac.ArticleId == id).ToList();
         }
 
-        private List<ArticleReferrence> GetArticleReferencesByArticleId(int id)
+        private List<ArticleReference> GetArticleReferencesByArticleId(int id)
         {
             return _context.ArticleReferrence.Where(ac => ac.ArticleId == id).ToList();
         }
@@ -235,7 +329,7 @@ namespace NewsReal.Repositories
             return _context.Article.FirstOrDefault(a => a.Id == id);
         }
 
-        private ArticleReferrence GetArticleReferenceByArticleIdAndReferenceArticleId(int articleId, int referenceArticleId)
+        private ArticleReference GetArticleReferenceByArticleIdAndReferenceArticleId(int articleId, int referenceArticleId)
         {
             return _context.ArticleReferrence.FirstOrDefault(ar => ar.ArticleId == articleId && ar.ReferenceArticleId == referenceArticleId);
         }

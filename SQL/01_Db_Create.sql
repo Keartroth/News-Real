@@ -9,10 +9,10 @@ USE [NewsReal]
 GO
 
 
+DROP TABLE IF EXISTS [ArticleReference];
 DROP TABLE IF EXISTS [ArticleCategory];
-DROP TABLE IF EXISTS [Category];
-DROP TABLE IF EXISTS [ArticleReferrence];
 DROP TABLE IF EXISTS [Article];
+DROP TABLE IF EXISTS [Category];
 DROP TABLE IF EXISTS [UserProfile];
 GO 
 
@@ -48,10 +48,10 @@ CREATE TABLE [Article] (
 )
 GO
 
-CREATE TABLE [ArticleReferrence] (
+CREATE TABLE [ArticleReference] (
   [Id] int PRIMARY KEY IDENTITY,
   [ArticleId] int NOT NULL,
-  [ReferenceArticleID] int NOT NULL
+  [ReferenceArticleId] int NOT NULL
 )
 GO
 
@@ -77,8 +77,8 @@ GO
 ALTER TABLE [Article] ADD FOREIGN KEY ([UserProfileId]) REFERENCES [UserProfile] ([Id])
 GO
 
-ALTER TABLE [ArticleReferrence] ADD FOREIGN KEY ([ArticleId]) REFERENCES [Article] ([Id])
+ALTER TABLE [ArticleReference] ADD FOREIGN KEY ([ArticleId]) REFERENCES [Article] ([Id])
 GO
 
-ALTER TABLE [ArticleReferrence]ADD FOREIGN KEY ([ReferenceArticleID]) REFERENCES [Article]  ([Id])
+ALTER TABLE [ArticleReference]ADD FOREIGN KEY ([ReferenceArticleId]) REFERENCES [Article]  ([Id])
 GO

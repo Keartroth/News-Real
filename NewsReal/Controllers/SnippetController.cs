@@ -101,7 +101,7 @@ namespace NewsReal.Controllers
 
         // Start of SnippetReferrence methods
         [HttpPost("addsnippetreferrence")]
-        public IActionResult Post(ArticleReferrence snippetReferrence)
+        public IActionResult Post(ArticleReference snippetReferrence)
         {
             _snippetRepository.AddArticleReference(snippetReferrence);
 
