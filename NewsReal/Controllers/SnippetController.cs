@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NewsReal.Data;
-using NewsReal.Models;
+using NewsReal.Models.EFModels;
 using NewsReal.Repositories;
 
 namespace NewsReal.Controllers
@@ -56,7 +56,7 @@ namespace NewsReal.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Article snippet)
+        public IActionResult Post(EFArticle snippet)
         {
             snippet.CreateDateTime = DateTime.Now;
 
@@ -66,7 +66,7 @@ namespace NewsReal.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, Article snippet)
+        public IActionResult Put(int id, EFArticle snippet)
         {
             var currentUserProfile = GetCurrentUserProfile();
 
@@ -101,14 +101,14 @@ namespace NewsReal.Controllers
 
         // Start of SnippetReferrence methods
         [HttpPost("addsnippetreferrence")]
-        public IActionResult Post(ArticleReference snippetReferrence)
+        public IActionResult Post(EFArticleReference snippetReferrence)
         {
             _snippetRepository.AddArticleReference(snippetReferrence);
 
             return CreatedAtAction("Get", new { id = snippetReferrence.Id }, snippetReferrence);
         }
 
-        private UserProfile GetCurrentUserProfile()
+        private EFUserProfile GetCurrentUserProfile()
         {
             var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             return _userProfileRepository.GetByFirebaseUserId(firebaseUserId);

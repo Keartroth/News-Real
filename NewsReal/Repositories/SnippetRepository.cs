@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NewsReal.Data;
-using NewsReal.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using NewsReal.Utilities;
-using System.Net;
-using System.Runtime.InteropServices.ComTypes;
+using NewsReal.Models.ADOModels;
+using NewsReal.Models.EFModels;
 
 namespace NewsReal.Repositories
 {
@@ -28,10 +27,10 @@ namespace NewsReal.Repositories
             get { return new SqlConnection(_connectionString); }
         }
 
-        public List<Article> GetCurrentUsersSnippets(int id)
+        public List<ADOArticle> GetCurrentUsersSnippets(int id)
         {
-            List<Article> articles = new List<Article>();
-            UserProfile userProfile = new UserProfile();
+            List<ADOArticle> articles = new List<ADOArticle>();
+            ADOUserProfile userProfile = new ADOUserProfile();
 
             using (SqlConnection conn = Connection)
             {
@@ -69,7 +68,7 @@ namespace NewsReal.Repositories
                                 userProfile.CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime"));
                                 userProfile.ImageLocation = ReaderHelpers.GetNullableString(reader, "ImageLocation");
 
-                                Article article = new Article
+                                ADOArticle article = new ADOArticle
                                 {
                                     Id = reader.GetInt32(reader.GetOrdinal("Id")),
                                     UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
@@ -87,8 +86,8 @@ namespace NewsReal.Repositories
                                     Published = ReaderHelpers.GetNullableDateTime(reader, "Published"),
                                     Objectivity = ReaderHelpers.GetNullableDouble(reader, "Objectivity"),
                                     Sentimentality = ReaderHelpers.GetNullableDouble(reader, "Sentimentality"),
-                                    Categories = new List<Category>(),
-                                    ArticleReferrences = new List<ArticleReference>(),
+                                    Categories = new List<ADOCategory>(),
+                                    ArticleReferences = new List<ADOArticleReference>(),
                                     UserProfile = userProfile,
                                 };
 
@@ -128,7 +127,7 @@ namespace NewsReal.Repositories
                             {
                                 while (reader.Read())
                                 {
-                                    Category category = new Category
+                                    ADOCategory category = new ADOCategory
                                     {
                                         Id = reader.GetInt32(reader.GetOrdinal("CategoryId")),
                                         Name = reader.GetString(reader.GetOrdinal("Name")),
@@ -162,23 +161,23 @@ namespace NewsReal.Repositories
                             {
                                 while (reader.Read())
                                 {
-                                    ArticleReference articleReference = new ArticleReference
+                                    ADOArticleReference articleReference = new ADOArticleReference
                                     {
                                         Id = reader.GetInt32(reader.GetOrdinal("ArticleReferenceId")),
                                         ArticleId = article.Id,
                                         ReferenceArticleId = reader.GetInt32(reader.GetOrdinal("ReferenceArticleId")),
                                     };
 
-                                    article.ArticleReferrences.Add(articleReference);
+                                    article.ArticleReferences.Add(articleReference);
                                 }
                             }
                         }
                     }
                 }
 
-                if (article.ArticleReferrences != null)
+                if (article.ArticleReferences != null)
                 {
-                    foreach (var articleReference in article.ArticleReferrences)
+                    foreach (var articleReference in article.ArticleReferences)
                     {
                         using (SqlConnection conn = Connection)
                         {
@@ -207,7 +206,7 @@ namespace NewsReal.Repositories
                                     {
                                         while(reader.Read())
                                         {
-                                            Article referenceArticle = new Article
+                                            ADOArticle referenceArticle = new ADOArticle
                                             {
                                                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
                                                 UserProfileId = article.UserProfileId,
@@ -225,7 +224,7 @@ namespace NewsReal.Repositories
                                                 Published = ReaderHelpers.GetNullableDateTime(reader, "Published"),
                                                 Objectivity = ReaderHelpers.GetNullableDouble(reader, "Objectivity"),
                                                 Sentimentality = ReaderHelpers.GetNullableDouble(reader, "Sentimentality"),
-                                                Categories = new List<Category>(),
+                                                Categories = new List<ADOCategory>(),
                                                 UserProfile = userProfile,
                                             };
 
@@ -258,7 +257,7 @@ namespace NewsReal.Repositories
                                     {
                                         while (reader.Read())
                                         {
-                                            Category category = new Category
+                                            ADOCategory category = new ADOCategory
                                             {
                                                 Id = reader.GetInt32(reader.GetOrdinal("CategoryId")),
                                                 Name = reader.GetString(reader.GetOrdinal("Name")),
@@ -277,7 +276,7 @@ namespace NewsReal.Repositories
             return articles;
         }
 
-        public Article GetSnippetById(int id)
+        public EFArticle GetSnippetById(int id)
         {
             return _context.Article
                             .Include(a => a.UserProfile)
@@ -286,13 +285,13 @@ namespace NewsReal.Repositories
                             .FirstOrDefault(a => a.Id == id);
         }
 
-        public void Add(Article snippet)
+        public void Add(EFArticle snippet)
         {
             _context.Add(snippet);
             _context.SaveChanges();
         }
 
-        public void Update(Article snippet)
+        public void Update(EFArticle snippet)
         {
             _context.Entry(snippet).State = EntityState.Modified;
             _context.SaveChanges();
@@ -312,7 +311,7 @@ namespace NewsReal.Repositories
 
             if (articleReferences != null)
             {
-                List<Article> referenceArticles = new List<Article>();
+                List<EFArticle> referenceArticles = new List<EFArticle>();
 
                 foreach (var reference in articleReferences)
                 {
@@ -321,7 +320,7 @@ namespace NewsReal.Repositories
                     referenceArticles.Add(referenceArticle);
                 }
 
-                _context.ArticleReferrence.RemoveRange(articleReferences);
+                _context.ArticleReference.RemoveRange(articleReferences);
                 _context.Article.RemoveRange(referenceArticles);
             }
 
@@ -330,7 +329,7 @@ namespace NewsReal.Repositories
         }
 
         //Beginning of ArticleReference methods.
-        public void AddArticleReference(ArticleReference articleReferrence)
+        public void AddArticleReference(EFArticleReference articleReferrence)
         {
             _context.Add(articleReferrence);
             _context.SaveChanges();
@@ -341,7 +340,7 @@ namespace NewsReal.Repositories
             var articleReferrence = GetArticleReferenceByArticleIdAndReferenceArticleId(articleId, referenceArticleId);
             var referenceArticle = GetArticleById(referenceArticleId);
 
-            _context.ArticleReferrence.Remove(articleReferrence);
+            _context.ArticleReference.Remove(articleReferrence);
 
             _context.Article.Remove(referenceArticle);
             _context.SaveChanges();
@@ -349,24 +348,24 @@ namespace NewsReal.Repositories
 
         //Private methods for returning data.
 
-        private List<ArticleCategory> GetArticleCategoriesByArticleId(int id)
+        private List<EFArticleCategory> GetArticleCategoriesByArticleId(int id)
         {
             return _context.ArticleCategory.Where(ac => ac.ArticleId == id).ToList();
         }
 
-        private List<ArticleReference> GetArticleReferencesByArticleId(int id)
+        private List<EFArticleReference> GetArticleReferencesByArticleId(int id)
         {
-            return _context.ArticleReferrence.Where(ac => ac.ArticleId == id).ToList();
+            return _context.ArticleReference.Where(ac => ac.ArticleId == id).ToList();
         }
 
-        private Article GetArticleById(int id)
+        private EFArticle GetArticleById(int id)
         {
             return _context.Article.FirstOrDefault(a => a.Id == id);
         }
 
-        private ArticleReference GetArticleReferenceByArticleIdAndReferenceArticleId(int articleId, int referenceArticleId)
+        private EFArticleReference GetArticleReferenceByArticleIdAndReferenceArticleId(int articleId, int referenceArticleId)
         {
-            return _context.ArticleReferrence.FirstOrDefault(ar => ar.ArticleId == articleId && ar.ReferenceArticleId == referenceArticleId);
+            return _context.ArticleReference.FirstOrDefault(ar => ar.ArticleId == articleId && ar.ReferenceArticleId == referenceArticleId);
         }
     }
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NewsReal.Models
+namespace NewsReal.Models.EFModels
 {
-    public class Article
+    public class EFArticle
     {
         public int Id { get; set; }
 
@@ -57,13 +57,11 @@ namespace NewsReal.Models
 
         public double? Sentimentality { get; set; }
 
-        public UserProfile UserProfile { get; set; }
+        public EFUserProfile UserProfile { get; set; }
 
-        public List<Category> Categories { get; set; }
-
-        public List<ArticleCategory> ArticleCategory { get; set; }
+        public List<EFArticleCategory> ArticleCategory { get; set; }
 
         [NotMapped]
-        public List<ArticleReference> ArticleReferrences { get; set; }
+        public List<EFArticleReference> ArticleReferences { get; set; }
     }
 }

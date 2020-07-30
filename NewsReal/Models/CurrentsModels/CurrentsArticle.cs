@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace NewsReal.Models
+namespace NewsReal.Models.CurrentsModels
 {
     public class CurrentsArticle
     {

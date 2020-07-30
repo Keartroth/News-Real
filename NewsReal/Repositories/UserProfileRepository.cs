@@ -1,5 +1,5 @@
 ﻿using NewsReal.Data;
-using NewsReal.Models;
+using NewsReal.Models.EFModels;
 using System.Linq;
 
 namespace NewsReal.Repositories
@@ -13,17 +13,17 @@ namespace NewsReal.Repositories
             _context = context;
         }
 
-        public UserProfile GetByFirebaseUserId(string firebaseUserId)
+        public EFUserProfile GetByFirebaseUserId(string firebaseUserId)
         {
             return _context.UserProfile.FirstOrDefault(up => up.FirebaseUserId == firebaseUserId);
         }
 
-        public UserProfile GetByEmail(string email, string displayName)
+        public EFUserProfile GetByEmail(string email, string displayName)
         {
             return _context.UserProfile.FirstOrDefault(up => up.Email == email || up.DisplayName == displayName);
         }
 
-        public void Add(UserProfile userProfile)
+        public void Add(EFUserProfile userProfile)
         {
             _context.Add(userProfile);
             _context.SaveChanges();

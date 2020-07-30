@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NewsReal.Data;
-using NewsReal.Models;
+using NewsReal.Models.EFModels;
 using NewsReal.Repositories;
 using System;
 using System.Security.Claims;
@@ -43,7 +43,7 @@ namespace NewsReal.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult Register(UserProfile userProfile)
+        public IActionResult Register(EFUserProfile userProfile)
         {
             userProfile.CreateDateTime = DateTime.Now;
             _userProfileRepository.Add(userProfile);
@@ -51,7 +51,7 @@ namespace NewsReal.Controllers
                 nameof(GetByFirebaseUserId), new { firebaseUserId = userProfile.FirebaseUserId }, userProfile);
         }
 
-        private UserProfile GetCurrentUserProfile()
+        private EFUserProfile GetCurrentUserProfile()
         {
             var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             return _userProfileRepository.GetByFirebaseUserId(firebaseUserId);

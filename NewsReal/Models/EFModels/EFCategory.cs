@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NewsReal.Models
+namespace NewsReal.Models.EFModels
 {
-    public class Category
+    public class EFCategory
     {
         public int Id { get; set; }
 

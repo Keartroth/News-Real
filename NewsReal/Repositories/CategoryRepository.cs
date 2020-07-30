@@ -1,5 +1,5 @@
 ﻿using NewsReal.Data;
-using NewsReal.Models;
+using NewsReal.Models.EFModels;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,17 +14,17 @@ namespace NewsReal.Repositories
             _context = context;
         }
 
-        public List<Category> GetCategories()
+        public List<EFCategory> GetCategories()
         {
             return _context.Category.OrderBy(c => c.Name).ToList();
         }
 
-        public Category GetCategoryByName(string categoryName)
+        public EFCategory GetCategoryByName(string categoryName)
         {
             return _context.Category.FirstOrDefault(c => c.Name == categoryName);
         }
 
-        public void AddArticleCategory(ArticleCategory articleCategory)
+        public void AddArticleCategory(EFArticleCategory articleCategory)
         {
             _context.Add(articleCategory);
             _context.SaveChanges();
