@@ -57,7 +57,7 @@ namespace NewsReal.Models
 
         public double? Sentimentality { get; set; }
 
-        public UserProfile UserProile { get; set; }
+        public UserProfile UserProfile { get; set; }
 
         public List<Category> Categories { get; set; }
 

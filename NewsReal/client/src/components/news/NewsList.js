@@ -21,12 +21,12 @@ export const NewsList = props => {
 
     return (
         <>
-            {/* <SnippetAppendDialog
+            <SnippetAppendDialog
                 categories={categories}
                 dialogSnippetAppendState={dialogSnippetAppendState}
                 handleSnippetAppendModalChange={handleSnippetAppendModalChange}
                 openSnippetAppendModal={openSnippetAppendModal}
-            /> */}
+            />
             <NewsDialog
                 categories={categories}
                 dialogNewsState={dialogNewsState}

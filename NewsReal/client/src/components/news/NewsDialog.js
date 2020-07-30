@@ -98,7 +98,7 @@ export const NewsDialog = ({ openModal, handleModalChange, dialogNewsState, cate
 
         addSnippet(newSnippet).then(() => {
             handleModalChange();
-            // history.push(`/snippets`)
+            history.push(`/snippets`)
         });
     }
 

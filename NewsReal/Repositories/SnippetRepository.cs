@@ -31,6 +31,7 @@ namespace NewsReal.Repositories
         public List<Article> GetCurrentUsersSnippets(int id)
         {
             List<Article> articles = new List<Article>();
+            UserProfile userProfile = new UserProfile();
 
             using (SqlConnection conn = Connection)
             {
@@ -55,23 +56,19 @@ namespace NewsReal.Repositories
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        var testing = reader.Read();
-                        if (reader.Read())
+                        if (reader.HasRows)
                         {
-                            UserProfile userProfile = new UserProfile
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
-                                FirebaseUserId = reader.GetString(reader.GetOrdinal("FirebaseUserId")),
-                                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                                LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                                DisplayName = reader.GetString(reader.GetOrdinal("DisplayName")),
-                                Email = reader.GetString(reader.GetOrdinal("Email")),
-                                CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
-                                ImageLocation = ReaderHelpers.GetNullableString(reader, "ImageLocation"),
-                            };
-
                             while (reader.Read())
                             {
+                                userProfile.Id = reader.GetInt32(reader.GetOrdinal("UserProfileId"));
+                                userProfile.FirebaseUserId = reader.GetString(reader.GetOrdinal("FirebaseUserId"));
+                                userProfile.FirstName = reader.GetString(reader.GetOrdinal("FirstName"));
+                                userProfile.LastName = reader.GetString(reader.GetOrdinal("LastName"));
+                                userProfile.DisplayName = reader.GetString(reader.GetOrdinal("DisplayName"));
+                                userProfile.Email = reader.GetString(reader.GetOrdinal("Email"));
+                                userProfile.CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime"));
+                                userProfile.ImageLocation = ReaderHelpers.GetNullableString(reader, "ImageLocation");
+
                                 Article article = new Article
                                 {
                                     Id = reader.GetInt32(reader.GetOrdinal("Id")),
@@ -91,12 +88,13 @@ namespace NewsReal.Repositories
                                     Objectivity = ReaderHelpers.GetNullableDouble(reader, "Objectivity"),
                                     Sentimentality = ReaderHelpers.GetNullableDouble(reader, "Sentimentality"),
                                     Categories = new List<Category>(),
-                                    ArticleReferrences = null,
-                                    UserProile = userProfile,
+                                    ArticleReferrences = new List<ArticleReference>(),
+                                    UserProfile = userProfile,
                                 };
 
                                 articles.Add(article);
                             }
+                            reader.Close();
                         }
                         else
                         {
@@ -126,8 +124,7 @@ namespace NewsReal.Repositories
 
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            var testing2 = reader.Read();
-                            if (reader.Read())
+                            if (reader.HasRows)
                             {
                                 while (reader.Read())
                                 {
@@ -140,7 +137,6 @@ namespace NewsReal.Repositories
                                     article.Categories.Add(category);
                                 }
                             }
-                            //else { return null; }
                         }
                     }
                 }
@@ -153,8 +149,8 @@ namespace NewsReal.Repositories
                         cmd.CommandText = @"
                                 SELECT ar.Id AS ArticleReferenceId,
                                        ar.ReferenceArticleId
-                                  FROM Article a
-                            RIGHT JOIN ArticleReference ar ON ar.ArticleId = a.Id
+                                  FROM ArticleReference ar
+                            LEFT JOIN Article a ON ar.ArticleId = a.Id
                                  WHERE a.Id = @id
                         ";
 
@@ -162,7 +158,7 @@ namespace NewsReal.Repositories
 
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            if (reader.Read())
+                            if (reader.HasRows)
                             {
                                 while (reader.Read())
                                 {
@@ -172,9 +168,10 @@ namespace NewsReal.Repositories
                                         ArticleId = article.Id,
                                         ReferenceArticleId = reader.GetInt32(reader.GetOrdinal("ReferenceArticleId")),
                                     };
+
+                                    article.ArticleReferrences.Add(articleReference);
                                 }
                             }
-                            //else { return null; }
                         }
                     }
                 }
@@ -206,37 +203,75 @@ namespace NewsReal.Repositories
 
                                 using (SqlDataReader reader = cmd.ExecuteReader())
                                 {
-                                    if (reader.Read())
+                                    if (reader.HasRows)
                                     {
-                                        Article referenceArticle = new Article
+                                        while(reader.Read())
                                         {
-                                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                            UserProfileId = article.UserProfileId,
-                                            Author = reader.GetString(reader.GetOrdinal("Author")),
-                                            Publisher = reader.GetString(reader.GetOrdinal("Publisher")),
-                                            CurrentsId = reader.GetString(reader.GetOrdinal("CurrentsId")),
-                                            Title = reader.GetString(reader.GetOrdinal("Title")),
-                                            Description = ReaderHelpers.GetNullableString(reader, "Description"),
-                                            Url = reader.GetString(reader.GetOrdinal("Url")),
-                                            UserTitle = ReaderHelpers.GetNullableString(reader, "UserTitle"),
-                                            Content = ReaderHelpers.GetNullableString(reader, "Content"),
-                                            CreateDateTime = ReaderHelpers.GetNullableDateTime(reader, "CreateDateTime"),
-                                            Image = ReaderHelpers.GetNullableString(reader, "Image"),
-                                            Language = ReaderHelpers.GetNullableString(reader, "Language"),
-                                            Published = ReaderHelpers.GetNullableDateTime(reader, "Published"),
-                                            Objectivity = ReaderHelpers.GetNullableDouble(reader, "Objectivity"),
-                                            Sentimentality = ReaderHelpers.GetNullableDouble(reader, "Sentimentality"),
-                                        };
+                                            Article referenceArticle = new Article
+                                            {
+                                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                                UserProfileId = article.UserProfileId,
+                                                Author = ReaderHelpers.GetNullableString(reader, "Author"),
+                                                Publisher = ReaderHelpers.GetNullableString(reader, "Publisher"),
+                                                CurrentsId = ReaderHelpers.GetNullableString(reader, "CurrentsId"),
+                                                Title = ReaderHelpers.GetNullableString(reader, "Title"),
+                                                Description = ReaderHelpers.GetNullableString(reader, "Description"),
+                                                Url = ReaderHelpers.GetNullableString(reader, "Url"),
+                                                UserTitle = ReaderHelpers.GetNullableString(reader, "UserTitle"),
+                                                Content = ReaderHelpers.GetNullableString(reader, "Content"),
+                                                CreateDateTime = ReaderHelpers.GetNullableDateTime(reader, "CreateDateTime"),
+                                                Image = ReaderHelpers.GetNullableString(reader, "Image"),
+                                                Language = ReaderHelpers.GetNullableString(reader, "Language"),
+                                                Published = ReaderHelpers.GetNullableDateTime(reader, "Published"),
+                                                Objectivity = ReaderHelpers.GetNullableDouble(reader, "Objectivity"),
+                                                Sentimentality = ReaderHelpers.GetNullableDouble(reader, "Sentimentality"),
+                                                Categories = new List<Category>(),
+                                                UserProfile = userProfile,
+                                            };
 
-                                        articleReference.ReferenceArticle = referenceArticle;
+                                            articleReference.ReferenceArticle = referenceArticle;
+                                        }
                                     }
-                                    //else { return null; }
+                                }
+                            }
+                        }
+
+                        using (SqlConnection conn = Connection)
+                        {
+                            conn.Open();
+                            using (SqlCommand cmd = conn.CreateCommand())
+                            {
+                                cmd.CommandText = @"
+                                    SELECT 
+                                           ac.Id AS ArticleCategoryId, c.Id AS CategoryId, c.[Name]
+                                      FROM Article a
+                                      LEFT JOIN ArticleCategory ac ON ac.ArticleId = a.Id
+                                      JOIN Category c ON c.Id = ac.CategoryID
+                                     WHERE a.Id = @id
+                                ";
+
+                                cmd.Parameters.AddWithValue("@id", articleReference.ReferenceArticle.Id);
+
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    if (reader.HasRows)
+                                    {
+                                        while (reader.Read())
+                                        {
+                                            Category category = new Category
+                                            {
+                                                Id = reader.GetInt32(reader.GetOrdinal("CategoryId")),
+                                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                            };
+
+                                            articleReference.ReferenceArticle.Categories.Add(category);
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
-                //else { return null; }
             }
 
             return articles;
@@ -245,7 +280,7 @@ namespace NewsReal.Repositories
         public Article GetSnippetById(int id)
         {
             return _context.Article
-                            .Include(a => a.UserProile)
+                            .Include(a => a.UserProfile)
                             .Include(a => a.ArticleCategory)
                                 .ThenInclude(ac => ac.Category)
                             .FirstOrDefault(a => a.Id == id);
