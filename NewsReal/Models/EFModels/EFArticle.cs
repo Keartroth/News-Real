@@ -5,10 +5,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NewsReal.Models.EFModels
 {
+    [Table("Article")]
+
     public class EFArticle
     {
+        [Column("Id")]
         public int Id { get; set; }
 
+        [Column("UserProfileId")]
+        [ForeignKey("UserProfileId")]
         [Required]
         public int UserProfileId { get; set; }
 

@@ -300,9 +300,8 @@ namespace NewsReal.Repositories
         public void Delete(int id)
         {
             var snippet = GetSnippetById(id);
-            int snippetId = snippet.Id;
-            var articleCategories = GetArticleCategoriesByArticleId(snippetId);
-            var articleReferences = GetArticleReferencesByArticleId(snippetId);
+            var articleCategories = GetArticleCategoriesByArticleId(id);
+            var articleReferences = GetArticleReferencesByArticleId(id);
 
             if (articleCategories != null)
             {

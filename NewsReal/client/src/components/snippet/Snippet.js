@@ -70,10 +70,17 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const capitalizeCategory = (s) => {
+    if (typeof s !== 'string') {
+        return s;
+    } else {
+        return s.charAt(0).toUpperCase() + s.slice(1)
+    }
+}
 
-export const Snippet = ({ snippet, idx, setSnippetEditState, handleSnippetEditModalChange }) => {
+export const Snippet = ({ snippet, idx, setSnippetEditState, handleSnippetEditModalChange, handleSnackClick, setSnippetDeleteState }) => {
     const classes = useStyles();
-    const formatedDate = parseISO(snippet.published).toDateString();;
+    const formatedDate = parseISO(snippet.published).toDateString();
 
     const editSnippet = (e) => {
         e.preventDefault();
@@ -81,8 +88,11 @@ export const Snippet = ({ snippet, idx, setSnippetEditState, handleSnippetEditMo
         handleSnippetEditModalChange();
     };
 
-    const nukeSnippet = () => {
-        console.log("All your base, are belong to us.");
+    const setNukeSnippet = (e) => {
+        e.preventDefault();
+        debugger
+        setSnippetDeleteState(snippet);
+        handleSnackClick(snippet.userTitle);
     };
 
     return (
@@ -98,7 +108,7 @@ export const Snippet = ({ snippet, idx, setSnippetEditState, handleSnippetEditMo
             <CardContent>
                 <CardActions>
                     <Button onClick={editSnippet}>Edit Snippet</Button>
-                    <Button onClick={nukeSnippet}>Delete Snippet</Button>
+                    <Button onClick={setNukeSnippet}>Delete Snippet</Button>
                 </CardActions>
             </CardContent>
             <CardContent className={classes.content}>

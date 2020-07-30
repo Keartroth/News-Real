@@ -91,6 +91,14 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
         return new URL(url).hostname;
     }
 
+    const capitalizeCategory = (s) => {
+        if (typeof s !== 'string') {
+            return s;
+        } else {
+            return s.charAt(0).toUpperCase() + s.slice(1)
+        }
+    }
+
     const handleSnippetClick = (e) => {
         e.preventDefault();
         if (snippetOptions[selectedSnippetIndex] === 'Create New Snippet') {
@@ -179,13 +187,14 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
                                 <span className={classes.marginLeft}><strong>Category:</strong> {
                                     article.category.map((c, idx) => {
                                         const length = article.category.length;
+                                        const cc = capitalizeCategory(c);
                                         if (length === 1) {
-                                            return <span key={idx}>{c}</span>
+                                            return <span key={idx}>{cc}</span>
                                         } else {
                                             if (idx < length - 1) {
-                                                return <span key={idx}>{c}, </span>
+                                                return <span key={idx}>{cc}, </span>
                                             } else {
-                                                return <span key={idx}>{c}</span>
+                                                return <span key={idx}>{cc}</span>
                                             }
                                         }
                                     })

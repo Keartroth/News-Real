@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NewsReal.Models.EFModels
 {
+    [Table("UserProfile")]
     public class EFUserProfile
     {
         public int Id { get; set; }
