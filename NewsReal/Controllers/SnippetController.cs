@@ -84,20 +84,20 @@ namespace NewsReal.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            var currentUserProfile = GetCurrentUserProfile();
-            var snippet = _snippetRepository.GetSnippetById(id);
+        //[HttpDelete("{id}")]
+        //public IActionResult Delete(int id)
+        //{
+        //    var currentUserProfile = GetCurrentUserProfile();
+        //    var snippet = _snippetRepository.GetSnippetById(id);
 
-            if (currentUserProfile.Id != snippet.UserProfileId)
-            {
-                return Unauthorized();
-            }
+        //    if (currentUserProfile.Id != snippet.UserProfileId)
+        //    {
+        //        return Unauthorized();
+        //    }
 
-            _snippetRepository.Delete(id);
-            return NoContent();
-        }
+        //    _snippetRepository.Delete(id);
+        //    return NoContent();
+        //}
 
         // Start of SnippetReferrence methods
         [HttpPost("addsnippetreferrence")]

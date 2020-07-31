@@ -25,20 +25,14 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export const SnippetList = props => {
+export const SnippetList = (props, { openSnippetEditModal }) => {
     const snippets = props.snippets;
     const searching = props.searching
     const { deleteSnippet } = useContext(SnippetContext);
     const classes = useStyles();
-    const [openSnippetEditModal, setOpenSnippetEditModal] = useState(false);
-    const [snippetEditState, setSnippetEditState] = useState(null);
     const [snippetDeleteState, setSnippetDeleteState] = useState({
         articleReferences: [],
     });
-
-    const handleSnippetEditModalChange = () => {
-        setOpenSnippetEditModal(!openSnippetEditModal);
-    }
 
     const [snackState, setSnackState] = useState({
         snackOpen: false,
@@ -61,8 +55,6 @@ export const SnippetList = props => {
         debugger
         deleteSnippet(snippetDeleteState.id);
     }
-
-    console.log(snippets);
 
     return (
         <>
@@ -102,24 +94,18 @@ export const SnippetList = props => {
             />
             {
                 (openSnippetEditModal)
-                    ? <SnippetEditDialog
-                        openSnippetEditModal={openSnippetEditModal}
-                        snippetEditState={snippetEditState}
-                        handleSnippetEditModalChange={handleSnippetEditModalChange}
-                    />
+                    ? <SnippetEditDialog {...props} />
                     : ""
             }
             {
                 (snippets.length > 0)
                     ? snippets.map((s, idx) => {
                         return <Snippet
-                            key={s.id}
+                            key={idx}
                             snippet={s}
-                            idx={idx}
+                            {...props}
                             handleSnackClick={handleSnackClick}
                             setSnippetDeleteState={setSnippetDeleteState}
-                            setSnippetEditState={setSnippetEditState}
-                            handleSnippetEditModalChange={handleSnippetEditModalChange}
                         />
                     })
                     : (searching) ? <div>No Results Match Your Search</div> : <div>You have no saved snippets</div>

@@ -78,15 +78,9 @@ const capitalizeCategory = (s) => {
     }
 }
 
-export const Snippet = ({ snippet, idx, setSnippetEditState, handleSnippetEditModalChange, handleSnackClick, setSnippetDeleteState }) => {
+export const Snippet = ({ snippet, handleSnackClick, setSnippetDeleteState }) => {
     const classes = useStyles();
     const formatedDate = parseISO(snippet.published).toDateString();
-
-    const editSnippet = (e) => {
-        e.preventDefault();
-        setSnippetEditState(snippet);
-        handleSnippetEditModalChange();
-    };
 
     const setNukeSnippet = (e) => {
         e.preventDefault();
@@ -98,7 +92,8 @@ export const Snippet = ({ snippet, idx, setSnippetEditState, handleSnippetEditMo
     return (
         <Card className={classes.card}>
             <Typography className={classes.cardTitle} gutterBottom variant="h5" component="h2">
-                {snippet.userTitle}
+                Title: {snippet.userTitle}
+                Published: {formatedDate}
             </Typography>
             <CardMedia
                 className={classes.cardMedia}
@@ -107,7 +102,10 @@ export const Snippet = ({ snippet, idx, setSnippetEditState, handleSnippetEditMo
             />
             <CardContent>
                 <CardActions>
-                    <Button onClick={editSnippet}>Edit Snippet</Button>
+                    <Button onClick={(e) => {
+                        e.preventDefault();
+                        window.location.href = `/snippet/${snippet.id}`;
+                    }}>View Snippet Details</Button>
                     <Button onClick={setNukeSnippet}>Delete Snippet</Button>
                 </CardActions>
             </CardContent>

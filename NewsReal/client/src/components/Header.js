@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { useLocation } from "react-router-dom";
 import { UserProfileContext } from "../providers/UserProfileProvider";
 import { Search } from './search/Search';
 import clsx from 'clsx';
@@ -129,6 +130,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Header = ({ categories, handleSearchInput, setNewsReady }) => {
     const { logout } = useContext(UserProfileContext);
+    let pathname = useLocation().pathname;
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const handleDrawerChange = () => {
@@ -189,27 +191,31 @@ export const Header = ({ categories, handleSearchInput, setNewsReady }) => {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <Drawer
-                variant="permanent"
-                className={clsx(classes.drawer, {
-                    [classes.drawerOpen]: open,
-                    [classes.drawerClose]: !open,
-                })}
-                classes={{
-                    paper: clsx({
-                        [classes.drawerOpen]: open,
-                        [classes.drawerClose]: !open,
-                    }),
-                }}
-            >
-                <div className={classes.toolbarIcon}>
-                    <IconButton onClick={handleDrawerChange}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
-                <Divider />
-                <Search open={open} categories={categories} classes={classes} handleDrawerChange={handleDrawerChange} setNewsReady={setNewsReady} />
-            </Drawer>
+            {
+                (pathname === "/" || pathname === "/snippets")
+                    ? <Drawer
+                        variant="permanent"
+                        className={clsx(classes.drawer, {
+                            [classes.drawerOpen]: open,
+                            [classes.drawerClose]: !open,
+                        })}
+                        classes={{
+                            paper: clsx({
+                                [classes.drawerOpen]: open,
+                                [classes.drawerClose]: !open,
+                            }),
+                        }}
+                    >
+                        <div className={classes.toolbarIcon}>
+                            <IconButton onClick={handleDrawerChange}>
+                                <ChevronLeftIcon />
+                            </IconButton>
+                        </div>
+                        <Divider />
+                        <Search open={open} categories={categories} classes={classes} handleDrawerChange={handleDrawerChange} setNewsReady={setNewsReady} />
+                    </Drawer>
+                    : ""
+            }
         </div>
     );
 };

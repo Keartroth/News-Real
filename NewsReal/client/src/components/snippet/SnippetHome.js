@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SnippetHome = () => {
+export const SnippetHome = (props) => {
     const classes = useStyles();
     const { snippets, getSnippets } = useContext(SnippetContext);
     const [snippetsReady, setSnippetsReady] = useState(false);
@@ -75,7 +75,7 @@ export const SnippetHome = () => {
                     <Container maxWidth="lg" className={classes.container}>
                         {
                             (snippetsReady === true)
-                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><SnippetList searching={searching} snippets={(filteredSnippets !== null) ? filteredSnippets : snippets} /></div>
+                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><SnippetList {...props} searching={searching} snippets={(filteredSnippets !== null) ? filteredSnippets : snippets} /></div>
                                 : <div style={{ margin: 'auto' }}><CircularProgress status="loading" /></div>
                         }
                     </Container>
