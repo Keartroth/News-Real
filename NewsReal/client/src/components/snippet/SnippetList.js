@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 export const SnippetList = (props, { openSnippetEditModal }) => {
     const snippets = props.snippets;
     const searching = props.searching
-    const { deleteSnippet } = useContext(SnippetContext);
+    const { deleteSnippet, getSnippets, setSnippets } = useContext(SnippetContext);
     const classes = useStyles();
     const [snippetDeleteState, setSnippetDeleteState] = useState({
         articleReferences: [],
@@ -52,8 +52,11 @@ export const SnippetList = (props, { openSnippetEditModal }) => {
     };
 
     const nukeSnippet = (id) => {
-        debugger
-        deleteSnippet(snippetDeleteState.id);
+        deleteSnippet(snippetDeleteState.id).then(() => {
+            getSnippets().then((resp) => {
+                setSnippets(resp);
+            });
+        });
     }
 
     return (
@@ -64,17 +67,21 @@ export const SnippetList = (props, { openSnippetEditModal }) => {
                 open={snackOpen}
                 onClose={handleSnackClose}
                 message={(snippetDeleteState !== null)
-                    ? snippetDeleteState.articleReferences.map((ar, idx) => {
-                        if (idx === 0) {
-                            return <><div>Are you certain you wish to delete:</div>
-                                <div>{`${snippetTitle}`}</div>
-                                <div>You will also delete: </div>
-                                <div>{`${ar.referenceArticle.title}`}</div></>
-                        } else {
-                            return <div>{`${ar.referenceArticle.title}`}</div>
-                        }
-                    })
-                    : ""}
+                    ? (snippetDeleteState.articleReferences.length > 0)
+                        ? snippetDeleteState.articleReferences.map((ar, idx) => {
+                            if (idx === 0) {
+                                return <><div>Are you certain you wish to delete:</div>
+                                    <div>{`${snippetTitle}`}</div>
+                                    <div>You will also delete the reference articles: </div>
+                                    <div>{`${ar.referenceArticle.title}`}</div></>
+                            } else {
+                                return <div>{`${ar.referenceArticle.title}`}</div>
+                            }
+                        })
+                        : <><div>Are you certain you wish to delete:</div>
+                            <div>{`${snippetTitle}`}</div></>
+                    : ""
+                }
                 key={vertical + horizontal}
                 action={
                     <React.Fragment>

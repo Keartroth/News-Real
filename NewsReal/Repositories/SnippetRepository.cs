@@ -518,56 +518,54 @@ namespace NewsReal.Repositories
             return article;
         }
 
-        //return _context.Article
-        //                    .Include(a => a.UserProfile)
-        //                    .Include(a => a.ArticleCategory)
-        //                        .ThenInclude(ac => ac.Category)
-        //                    .FirstOrDefault(a => a.Id == id);
-
-        public void Add(EFArticle snippet)
+        public void Add(Article snippet)
         {
             _context.Add(snippet);
             _context.SaveChanges();
         }
 
-        public void Update(EFArticle snippet)
+        public void Update(Article snippet)
         {
             _context.Entry(snippet).State = EntityState.Modified;
             _context.SaveChanges();
         }
 
-        //public void Delete(int id)
-        //{
-        //    var snippet = GetSnippetById(id);
-        //    var articleCategories = GetArticleCategoriesByArticleId(id);
-        //    var articleReferences = GetArticleReferencesByArticleId(id);
+        public void Delete(int id)
+        {
+            Article snippet = GetArticleById(id);
+            List<ArticleCategory> articleCategories = GetArticleCategoriesByArticleId(id);
+            List<ArticleReference> articleReferences = GetArticleReferencesByArticleId(id);
 
-        //    if (articleCategories != null)
-        //    {
-        //        _context.ArticleCategory.RemoveRange(articleCategories);
-        //    }
+            if (articleCategories != null)
+            {
+                _context.ArticleCategory.RemoveRange(articleCategories);
+            }
 
-        //    if (articleReferences != null)
-        //    {
-        //        List<ADOArticle> referenceArticles = new List<ADOArticle>();
+            if (articleReferences != null)
+            {
+                List<Article> referenceArticles = new List<Article>();
+                List<ArticleCategory> refrenceArticlesCategories = new List<ArticleCategory>();
 
-        //        foreach (var reference in articleReferences)
-        //        {
-        //            int referenceArticleId = reference.ReferenceArticleId;
-        //            var referenceArticle = GetArticleById(referenceArticleId);
-        //            referenceArticles.Add(referenceArticle);
-        //        }
+                foreach (var reference in articleReferences)
+                {
+                    int referenceArticleId = reference.ReferenceArticleId;
+                    var referenceArticle = GetArticleById(referenceArticleId);
+                    referenceArticles.Add(referenceArticle);
+                    var referenceArticleCategories = GetArticleCategoriesByArticleId(referenceArticleId);
+                    refrenceArticlesCategories.AddRange(referenceArticleCategories);
+                }
 
-        //        _context.ArticleReference.RemoveRange(articleReferences);
-        //        _context.Article.RemoveRange(referenceArticles);
-        //    }
+                _context.ArticleCategory.RemoveRange(refrenceArticlesCategories);
+                _context.ArticleReference.RemoveRange(articleReferences);
+                _context.Article.RemoveRange(referenceArticles);
+            }
 
-        //    _context.Article.Remove(snippet);
-        //    _context.SaveChanges();
-        //}
+            _context.Article.Remove(snippet);
+            _context.SaveChanges();
+        }
 
         //Beginning of ArticleReference methods.
-        public void AddArticleReference(EFArticleReference articleReferrence)
+        public void AddArticleReference(ArticleReference articleReferrence)
         {
             _context.Add(articleReferrence);
             _context.SaveChanges();
@@ -586,22 +584,22 @@ namespace NewsReal.Repositories
 
         //Private methods for returning data.
 
-        private List<EFArticleCategory> GetArticleCategoriesByArticleId(int id)
+        private List<ArticleCategory> GetArticleCategoriesByArticleId(int id)
         {
             return _context.ArticleCategory.Where(ac => ac.ArticleId == id).ToList();
         }
 
-        private List<EFArticleReference> GetArticleReferencesByArticleId(int id)
+        private List<ArticleReference> GetArticleReferencesByArticleId(int id)
         {
             return _context.ArticleReference.Where(ac => ac.ArticleId == id).ToList();
         }
 
-        private EFArticle GetArticleById(int id)
+        private Article GetArticleById(int id)
         {
             return _context.Article.FirstOrDefault(a => a.Id == id);
         }
 
-        private EFArticleReference GetArticleReferenceByArticleIdAndReferenceArticleId(int articleId, int referenceArticleId)
+        private ArticleReference GetArticleReferenceByArticleIdAndReferenceArticleId(int articleId, int referenceArticleId)
         {
             return _context.ArticleReference.FirstOrDefault(ar => ar.ArticleId == articleId && ar.ReferenceArticleId == referenceArticleId);
         }

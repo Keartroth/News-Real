@@ -14,17 +14,17 @@ namespace NewsReal.Repositories
             _context = context;
         }
 
-        public List<EFCategory> GetCategories()
+        public List<Category> GetCategories()
         {
             return _context.Category.OrderBy(c => c.Name).ToList();
         }
 
-        public EFCategory GetCategoryByName(string categoryName)
+        public Category GetCategoryByName(string categoryName)
         {
             return _context.Category.FirstOrDefault(c => c.Name == categoryName);
         }
 
-        public void AddArticleCategory(EFArticleCategory articleCategory)
+        public void AddArticleCategory(ArticleCategory articleCategory)
         {
             _context.Add(articleCategory);
             _context.SaveChanges();

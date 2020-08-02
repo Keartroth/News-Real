@@ -84,7 +84,6 @@ export const Snippet = ({ snippet, handleSnackClick, setSnippetDeleteState }) =>
 
     const setNukeSnippet = (e) => {
         e.preventDefault();
-        debugger
         setSnippetDeleteState(snippet);
         handleSnackClick(snippet.userTitle);
     };

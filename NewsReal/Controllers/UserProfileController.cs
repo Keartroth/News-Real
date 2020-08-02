@@ -43,7 +43,7 @@ namespace NewsReal.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult Register(EFUserProfile userProfile)
+        public IActionResult Register(UserProfile userProfile)
         {
             userProfile.CreateDateTime = DateTime.Now;
             _userProfileRepository.Add(userProfile);
@@ -51,7 +51,7 @@ namespace NewsReal.Controllers
                 nameof(GetByFirebaseUserId), new { firebaseUserId = userProfile.FirebaseUserId }, userProfile);
         }
 
-        private EFUserProfile GetCurrentUserProfile()
+        private UserProfile GetCurrentUserProfile()
         {
             var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             return _userProfileRepository.GetByFirebaseUserId(firebaseUserId);

@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import debounce from 'lodash.debounce'
 import { SnippetContext } from '../../providers/SnippetProvider';
+import { CategoryContext } from '../../providers/CategoryProvider';
 import { SnippetList } from './SnippetList';
 import { Footer } from '../Footer';
 import { Header } from '../Header';
@@ -30,11 +31,14 @@ const useStyles = makeStyles((theme) => ({
 export const SnippetHome = (props) => {
     const classes = useStyles();
     const { snippets, getSnippets } = useContext(SnippetContext);
+    const { categories, getCategories } = useContext(CategoryContext);
     const [snippetsReady, setSnippetsReady] = useState(false);
     const [searching, setSearching] = useState(false);
 
     useEffect(() => {
+        setSnippetsReady(false);
         getSnippets();
+        getCategories();
     }, []);
 
     useEffect(() => {
@@ -67,7 +71,7 @@ export const SnippetHome = (props) => {
 
     return (
         <>
-            <Header handleSearchInput={handleSearchInput} setSnippetsReady={setSnippetsReady} />
+            <Header categories={categories} handleSearchInput={handleSearchInput} setSnippetsReady={setSnippetsReady} />
             <div className={classes.root}>
                 <CssBaseline />
                 <div className={classes.content}>

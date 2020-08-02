@@ -56,7 +56,7 @@ namespace NewsReal.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(EFArticle snippet)
+        public IActionResult Post(Article snippet)
         {
             snippet.CreateDateTime = DateTime.Now;
 
@@ -66,7 +66,7 @@ namespace NewsReal.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, EFArticle snippet)
+        public IActionResult Put(int id, Article snippet)
         {
             var currentUserProfile = GetCurrentUserProfile();
 
@@ -84,31 +84,31 @@ namespace NewsReal.Controllers
             return NoContent();
         }
 
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(int id)
-        //{
-        //    var currentUserProfile = GetCurrentUserProfile();
-        //    var snippet = _snippetRepository.GetSnippetById(id);
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var currentUserProfile = GetCurrentUserProfile();
+            var snippet = _snippetRepository.GetSnippetById(id);
 
-        //    if (currentUserProfile.Id != snippet.UserProfileId)
-        //    {
-        //        return Unauthorized();
-        //    }
+            if (currentUserProfile.Id != snippet.UserProfileId)
+            {
+                return Unauthorized();
+            }
 
-        //    _snippetRepository.Delete(id);
-        //    return NoContent();
-        //}
+            _snippetRepository.Delete(id);
+            return NoContent();
+        }
 
         // Start of SnippetReferrence methods
         [HttpPost("addsnippetreferrence")]
-        public IActionResult Post(EFArticleReference snippetReferrence)
+        public IActionResult Post(ArticleReference snippetReferrence)
         {
             _snippetRepository.AddArticleReference(snippetReferrence);
 
             return CreatedAtAction("Get", new { id = snippetReferrence.Id }, snippetReferrence);
         }
 
-        private EFUserProfile GetCurrentUserProfile()
+        private UserProfile GetCurrentUserProfile()
         {
             var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             return _userProfileRepository.GetByFirebaseUserId(firebaseUserId);

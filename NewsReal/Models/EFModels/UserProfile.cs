@@ -4,8 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NewsReal.Models.EFModels
 {
-    [Table("UserProfile")]
-    public class EFUserProfile
+    public class UserProfile
     {
         public int Id { get; set; }
 

@@ -5,15 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NewsReal.Models.EFModels
 {
-    [Table("Article")]
-
-    public class EFArticle
+    public class Article
     {
-        [Column("Id")]
         public int Id { get; set; }
 
-        [Column("UserProfileId")]
-        [ForeignKey("UserProfileId")]
         [Required]
         public int UserProfileId { get; set; }
 
@@ -62,11 +57,11 @@ namespace NewsReal.Models.EFModels
 
         public double? Sentimentality { get; set; }
 
-        public EFUserProfile UserProfile { get; set; }
+        public UserProfile UserProfile { get; set; }
 
-        public List<EFArticleCategory> ArticleCategory { get; set; }
+        public List<ArticleCategory> ArticleCategory { get; set; }
 
         [NotMapped]
-        public List<EFArticleReference> ArticleReferences { get; set; }
+        public List<ArticleReference> ArticleReferences { get; set; }
     }
 }

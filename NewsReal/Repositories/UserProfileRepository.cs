@@ -13,17 +13,17 @@ namespace NewsReal.Repositories
             _context = context;
         }
 
-        public EFUserProfile GetByFirebaseUserId(string firebaseUserId)
+        public UserProfile GetByFirebaseUserId(string firebaseUserId)
         {
             return _context.UserProfile.FirstOrDefault(up => up.FirebaseUserId == firebaseUserId);
         }
 
-        public EFUserProfile GetByEmail(string email, string displayName)
+        public UserProfile GetByEmail(string email, string displayName)
         {
             return _context.UserProfile.FirstOrDefault(up => up.Email == email || up.DisplayName == displayName);
         }
 
-        public void Add(EFUserProfile userProfile)
+        public void Add(UserProfile userProfile)
         {
             _context.Add(userProfile);
             _context.SaveChanges();

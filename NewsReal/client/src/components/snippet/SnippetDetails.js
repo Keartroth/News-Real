@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
+import { Header } from '../Header';
+import { SnippetEditDialog } from './SnippetEditDialog';
 import { SnippetContext } from "../../providers/SnippetProvider";
 import { parseISO } from 'date-fns'
 import {
@@ -10,13 +12,10 @@ import {
     CardMedia,
     CircularProgress,
     Container,
-    Link,
     Typography,
     Paper
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Header } from '../Header';
-import { SnippetEditDialog } from './SnippetEditDialog';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -121,19 +120,16 @@ export const SnippetDetails = ({ setSnippetDeleteState, setSnippetEditState, han
 
     const editArticleModal = (article) => {
         setSnippetEditState(article);
-        console.log(article)
         handleSnippetEditModalChange();
     };
 
     const deleteArticleModal = (e) => {
         e.preventDefault();
-        debugger
         setSnippetDeleteState(snippet);
         handleSnackClick(snippet.userTitle);
     };
 
     const CategoryRender = () => {
-        debugger
         return (
             <>
                 {
@@ -282,8 +278,11 @@ export const SnippetDetails = ({ setSnippetDeleteState, setSnippetEditState, han
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        {/* <Button onClick={editReference}>Edit Reference</Button>
-                    <Button onClick={setNukeReference}>Delete Reference</Button> */}
+                        <Button onClick={(e) => {
+                            e.preventDefault();
+                            editArticleModal(snippet);
+                        }}>Edit Snippet</Button>
+                        <Button onClick={deleteArticleModal}>Delete Snippet</Button>
                     </CardActions>
                 </Card>
             </Paper>

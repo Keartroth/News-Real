@@ -16,8 +16,20 @@ export const SnippetProvider = (props) => {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            }).then((resp) => resp.json())
-                .then(setSnippets));
+            }).then((resp) => {
+                if (resp.ok) {
+                    if (resp.statusText === "No Content") {
+                        return [];
+                    } else {
+                        return resp.json();
+                    }
+                } else {
+                    throw new Error("Unauthorized");
+                }
+            })
+                .then((resp) => {
+                    setSnippets(resp);
+                }));
     };
 
     const getSnippetById = (id) => {
@@ -120,7 +132,11 @@ export const SnippetProvider = (props) => {
     };
 
     return (
-        <SnippetContext.Provider value={{ snippets, getSnippets, addSnippet, getSnippetById, deleteSnippet, updateSnippet, addSnippetReference, deleteSnippetReference }}>
+        <SnippetContext.Provider value={{
+            snippets, getSnippets, addSnippet,
+            getSnippetById, deleteSnippet, updateSnippet, addSnippetReference,
+            deleteSnippetReference, setSnippets
+        }}>
             {props.children}
         </SnippetContext.Provider>
     );
