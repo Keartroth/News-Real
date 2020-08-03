@@ -116,9 +116,6 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    toolbar: {
-        paddingRight: 24, // keep right padding when drawer closed
-    },
     toolbarIcon: {
         display: 'flex',
         alignItems: 'center',

@@ -10,7 +10,10 @@ import {
     Button,
     CssBaseline,
     Divider,
+    FormControl,
     Grid,
+    Input,
+    InputAdornment,
     InputLabel,
     List,
     ListItem,
@@ -19,7 +22,6 @@ import {
     ListSubheader,
     MenuItem,
     Select,
-    TextField
 } from '@material-ui/core';
 import {
     KeyboardDatePicker,
@@ -34,6 +36,21 @@ import DomainDisabledIcon from '@material-ui/icons/DomainDisabled';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 const useStyles = makeStyles((theme) => ({
+    button: {
+        // color: 'primary',
+        margin: 'auto',
+    },
+    inputSelect: {
+        marginLeft: '16px',
+        marginRight: '16px',
+        width: '-webkit-fill-available',
+    },
+    inputField: {
+        display: 'block',
+        height: '35px',
+        margin: '16px 16px',
+        width: '-webkit-fill-available',
+    },
     searchTitle: {
         writingMode: 'vertical-rl',
         textOrientation: 'upright',
@@ -88,22 +105,26 @@ export const Search = ({ categories, open, handleDrawerChange, setNewsReady }) =
     const submitSearchCriteria = (e) => {
         e.preventDefault();
 
-        if (startDate !== null && startDate !== "") {
-            searchState.start_date = format(startDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
-        }
-        if (endDate !== null && endDate !== "") {
-            searchState.end_date = format(endDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
-        }
-        let searchCriteriaString = ""
-
-        Object.keys(searchState).forEach((key) => {
-            if (searchState[key] !== null && searchState[key] !== "") {
-                searchCriteriaString = searchCriteriaString + `&${key}=${searchState[key]}`
+        if (searchState.domain.includes('www.') || searchState.domain_not.includes('www.')) {
+            alert('Please remove domain prefix from search criteria: e.g. www.cnn.com becomes cnn.com')
+        } else {
+            if (startDate !== null && startDate !== "") {
+                searchState.start_date = format(startDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
             }
-        });
+            if (endDate !== null && endDate !== "") {
+                searchState.end_date = format(endDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+            }
+            let searchCriteriaString = ""
 
-        setNewsReady(false);
-        getNewsByDefinedParameters(searchCriteriaString).then(handleDrawerChange);
+            Object.keys(searchState).forEach((key) => {
+                if (searchState[key] !== null && searchState[key] !== "") {
+                    searchCriteriaString = searchCriteriaString + `&${key}=${searchState[key]}`
+                }
+            });
+
+            setNewsReady(false);
+            getNewsByDefinedParameters(searchCriteriaString).then(handleDrawerChange);
+        }
     };
 
     return (
@@ -114,10 +135,7 @@ export const Search = ({ categories, open, handleDrawerChange, setNewsReady }) =
                     (open)
                         ? <div>
                             <ListSubheader inset>News Filter Criteria</ListSubheader>
-                            <ListItem button>
-                                <ListItemIcon>
-                                    <ClassIcon />
-                                </ListItemIcon>
+                            <FormControl className={classes.inputSelect}>
                                 <InputLabel id="searchFilter--categoryLabel">Category</InputLabel>
                                 <Select
                                     labelId="searchFilter--categoryLabel"
@@ -126,6 +144,11 @@ export const Search = ({ categories, open, handleDrawerChange, setNewsReady }) =
                                     onChange={handleChange}
                                     label="Category"
                                     name="category"
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <ClassIcon />
+                                        </InputAdornment>
+                                    }
                                 >
                                     <MenuItem value="">
                                         <em>None</em>
@@ -134,7 +157,7 @@ export const Search = ({ categories, open, handleDrawerChange, setNewsReady }) =
                                         categories.map(c => <MenuItem key={c.id} value={c.name}>{c.name}</MenuItem>)
                                     }
                                 </Select>
-                            </ListItem>
+                            </FormControl>
                             <ListItem>
                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                     <Grid container justify="space-around">
@@ -176,53 +199,61 @@ export const Search = ({ categories, open, handleDrawerChange, setNewsReady }) =
                                             minDate={earliestDate}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
+                                                position: 'start',
                                             }}
                                         />
                                     </Grid>
                                 </MuiPickersUtilsProvider>
                             </ListItem>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <DomainIcon />
-                                </ListItemIcon>
-                                <TextField
+                            <FormControl className={classes.inputField}>
+                                <InputLabel id="searchFilter--domain">Domain: Exclusive</InputLabel>
+                                <Input
                                     variant="outlined"
                                     margin="none"
                                     fullWidth
                                     name="domain"
-                                    label="Domain Exclusive"
                                     type="text"
                                     id="searchFilter--domain"
+                                    title="exclude prefix (e.g. www)"
                                     onChange={handleChange}
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <DomainIcon />
+                                        </InputAdornment>
+                                    }
                                 />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <DomainDisabledIcon />
-                                </ListItemIcon>
-                                <TextField
+                            </FormControl>
+                            <FormControl className={classes.inputField}>
+                                <InputLabel id="searchFilter--domain">Domain: Exclusion</InputLabel>
+                                <Input
                                     variant="outlined"
                                     margin="none"
                                     fullWidth
                                     name="domain_not"
-                                    label="Domain: Exclusion"
                                     type="text"
                                     id="searchFilter--domainNot"
+                                    title="exclude prefix (e.g. www)"
                                     onChange={handleChange}
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <DomainDisabledIcon />
+                                        </InputAdornment>
+                                    }
                                 />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <PlaylistAddIcon />
-                                </ListItemIcon>
+                            </FormControl>
+                            <FormControl className={classes.inputSelect}>
                                 <InputLabel id="searchFilter--pageNumberLabel">Pages Returned</InputLabel>
                                 <Select
                                     labelId="searchFilter--pageNumberLabel"
                                     id="searchFilter--pageNumber"
                                     value={searchState.page_number}
                                     onChange={handleChange}
-                                    // label="Pages Returned"
                                     name="page_number"
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <PlaylistAddIcon />
+                                        </InputAdornment>
+                                    }
                                 >
                                     <MenuItem value={1}>Max 30</MenuItem>
                                     <MenuItem value={2}>Max 60</MenuItem>
@@ -230,9 +261,9 @@ export const Search = ({ categories, open, handleDrawerChange, setNewsReady }) =
                                     <MenuItem value={4}>Max 120</MenuItem>
                                     <MenuItem value={5}>Max 150</MenuItem>
                                 </Select>
-                            </ListItem>
+                            </FormControl>
                             <ListItem>
-                                <Button color="primary" onClick={submitSearchCriteria} >Search By Criteria</Button>
+                                <Button variant="contained" color="primary" className={classes.button} onClick={submitSearchCriteria}>Search By Criteria</Button>
                             </ListItem>
                         </div>
                         : <Button onClick={handleDrawerChange}><span className={classes.searchTitle}>News Filter Criteria</span></Button>
