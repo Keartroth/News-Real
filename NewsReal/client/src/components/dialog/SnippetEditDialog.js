@@ -49,7 +49,6 @@ export const SnippetEditDialog = ({ openSnippetEditModal, snippetEditState, hand
     const snippet = snippetEditState;
     const [newEditState, setNewEditState] = useState(snippet);
 
-
     const handleUserInput = (e) => {
         const updatedEditState = { ...newEditState }
         updatedEditState[e.target.id] = e.target.value;
@@ -58,7 +57,7 @@ export const SnippetEditDialog = ({ openSnippetEditModal, snippetEditState, hand
 
     const editSnippet = () => {
         updateSnippet(snippet.id, newEditState).then(getSnippets).then(() => {
-            handleSnippetEditModalChange()
+            window.location.reload(true);
         });
     };
 
@@ -95,7 +94,7 @@ export const SnippetEditDialog = ({ openSnippetEditModal, snippetEditState, hand
             </DialogContent>
             <DialogActions>
                 <Button onClick={editSnippet} color="primary">
-                    Edit Snippet
+                    Save Changes
                 </Button>
             </DialogActions>
         </Dialog>

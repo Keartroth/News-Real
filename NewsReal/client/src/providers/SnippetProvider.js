@@ -1,11 +1,28 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { UserProfileContext } from "./UserProfileProvider";
 
 export const SnippetContext = React.createContext();
 
 export const SnippetProvider = (props) => {
     const { getToken } = useContext(UserProfileContext);
+    //useState for getSnippets
     const [snippets, setSnippets] = useState(null);
+    const [snippetsReady, setSnippetsReady] = useState(snippets !== null);
+    //useState for getSnippetById
+    const [snippet, setSnippet] = useState(null);
+    const [snippetReady, setSnippetReady] = useState(snippet !== null);
+
+    useEffect(() => {
+        if (snippets !== null) {
+            setSnippetsReady(true);
+        }
+    }, [snippets]);
+
+    useEffect(() => {
+        if (snippet !== null) {
+            setSnippetReady(true);
+        }
+    }, [snippet]);
 
     const apiUrl = '/api/snippet'
 
@@ -16,20 +33,8 @@ export const SnippetProvider = (props) => {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            }).then((resp) => {
-                if (resp.ok) {
-                    if (resp.statusText === "No Content") {
-                        return [];
-                    } else {
-                        return resp.json();
-                    }
-                } else {
-                    throw new Error("Unauthorized");
-                }
-            })
-                .then((resp) => {
-                    setSnippets(resp);
-                }));
+            }).then((resp) => resp.json())
+                .then(setSnippets));
     };
 
     const getSnippetById = (id) => {
@@ -41,7 +46,7 @@ export const SnippetProvider = (props) => {
                 },
             }).then(resp => {
                 if (resp.ok) {
-                    return resp.json();
+                    return resp.json().then(setSnippet);
                 }
                 else { throw new Error("Unauthorized"); }
             }));
@@ -133,9 +138,9 @@ export const SnippetProvider = (props) => {
 
     return (
         <SnippetContext.Provider value={{
-            snippets, getSnippets, addSnippet,
-            getSnippetById, deleteSnippet, updateSnippet, addSnippetReference,
-            deleteSnippetReference, setSnippets
+            snippet, snippets, snippetsReady, snippetReady,
+            getSnippets, addSnippet, getSnippetById, deleteSnippet,
+            updateSnippet, addSnippetReference, deleteSnippetReference, setSnippets
         }}>
             {props.children}
         </SnippetContext.Provider>

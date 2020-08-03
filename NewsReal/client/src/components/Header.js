@@ -146,16 +146,20 @@ export const Header = ({ categories, handleSearchInput, setNewsReady }) => {
                 })}
             >
                 <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerChange}
-                        edge="start"
-                        className={clsx(classes.menuButton, {
-                            [classes.menuButtonHidden]: open,
-                        })}
-                    ><MenuIcon />
-                    </IconButton>
+                    {
+                        (pathname === "/" || pathname === "/snippets")
+                            ? <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={handleDrawerChange}
+                                edge="start"
+                                className={clsx(classes.menuButton, {
+                                    [classes.menuButtonHidden]: open,
+                                })}
+                            ><MenuIcon />
+                            </IconButton>
+                            : ""
+                    }
                     <Typography component="h1" variant="h6" className={classes.title}>
                         NewsReal
                     </Typography>

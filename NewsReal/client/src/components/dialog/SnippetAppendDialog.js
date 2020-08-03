@@ -101,8 +101,7 @@ const DialogTitle = withStyles(useStyles)(({ children, classes, onClose, ...othe
 
 export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, handleSnippetAppendModalChange, openSnippetAppendModal }) => {
     const classes = useStyles();
-    const { addSnippetReference, snippets, getSnippets, addSnippet } = useContext(SnippetContext);
-    const [snippetsReady, setSnippetsReady] = useState(false);
+    const { addSnippetReference, snippets, getSnippets, addSnippet, snippetsReady } = useContext(SnippetContext);
     const [filterReady, setFilterReady] = useState(false);
     const [snippet, setSnippet] = useState("");
     const [searchTerms, setSearchTerms] = useState(null);
@@ -114,12 +113,6 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
     useEffect(() => {
         getSnippets();
     }, []);
-
-    useEffect(() => {
-        if (snippets !== null) {
-            setSnippetsReady(true);
-        }
-    }, [snippets]);
 
     useEffect(() => {
         if (searchTerms === null || searchTerms === "") {

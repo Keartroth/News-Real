@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { Header } from '../Header';
-import { SnippetEditDialog } from './SnippetEditDialog';
+import { SnippetEditDialog } from '../dialog/SnippetEditDialog';
+import { DeleteSnackbar } from '../dialog/DeleteSnackbar';
 import { SnippetContext } from "../../providers/SnippetProvider";
 import { parseISO } from 'date-fns'
 import {
@@ -90,43 +91,37 @@ const capitalizeCategory = (s) => {
     }
 }
 
-export const SnippetDetails = ({ setSnippetDeleteState, setSnippetEditState, handleSnippetEditModalChange, handleSnackClick, openSnippetEditModal }) => {
+export const SnippetDetails = (props) => {
     const { id } = useParams();
     const classes = useStyles();
-    const [snippet, setSnippet] = useState(null);
-    const [snippetReady, setSnippetReady] = useState(false);
-    const { getSnippetById } = useContext(SnippetContext);
+    const setSnippetDeleteState = props.setSnippetDeleteState;
+    const setSnippetEditState = props.setSnippetEditState;
+    const handleSnippetEditModalChange = props.handleSnippetEditModalChange;
+    const handleSnackClick = props.handleSnackClick;
+    const openSnippetEditModal = props.openSnippetEditModal;
+    const snackOpen = props.snackState.snackOpen;
+
+    const { getSnippetById, snippet, snippetReady } = useContext(SnippetContext);
     let formatedDate;
     let formatedUserDate;
 
-    if (snippet) {
+    if (snippetReady && snippet !== null) {
         formatedDate = parseISO(snippet.published).toDateString();
         formatedUserDate = parseISO(snippet.createDateTime).toDateString();
     }
 
     useEffect(() => {
-        getSnippetById(id).then((resp) => {
-            setSnippet(resp);
-        })
+        getSnippetById(id)
     }, []);
-
-    useEffect(() => {
-        if (snippet !== null) {
-            setSnippetReady(true);
-        } else {
-            setSnippetReady(false);
-        }
-    }, [snippet]);
 
     const editArticleModal = (article) => {
         setSnippetEditState(article);
         handleSnippetEditModalChange();
     };
 
-    const deleteArticleModal = (e) => {
-        e.preventDefault();
-        setSnippetDeleteState(snippet);
-        handleSnackClick(snippet.userTitle);
+    const deleteArticleModal = (article) => {
+        setSnippetDeleteState(article);
+        handleSnackClick(article.userTitle);
     };
 
     const CategoryRender = () => {
@@ -151,7 +146,7 @@ export const SnippetDetails = ({ setSnippetDeleteState, setSnippetEditState, han
         )
     }
 
-    const referenceCards = (ar, idx) => {
+    const referenceCardsRender = (ar, idx) => {
         const ra = ar.referenceArticle
         return (
             <Card key={idx}>
@@ -207,7 +202,10 @@ export const SnippetDetails = ({ setSnippetDeleteState, setSnippetEditState, han
                         e.preventDefault();
                         editArticleModal(ra);
                     }}>Edit Reference</Button>
-                    <Button onClick={deleteArticleModal}>Delete Reference</Button>
+                    <Button onClick={(e) => {
+                        e.preventDefault();
+                        deleteArticleModal(ra);
+                    }}>Delete Reference</Button>
                 </CardActions>
             </Card>
         )
@@ -241,9 +239,7 @@ export const SnippetDetails = ({ setSnippetDeleteState, setSnippetEditState, han
                             {
                                 <span className={classes.marginLeft}><strong>Category:</strong>
                                     {
-                                        (snippetReady)
-                                            ? <CategoryRender />
-                                            : ""
+                                        <CategoryRender />
                                     }</span>
                             }
                         </Typography>
@@ -264,25 +260,16 @@ export const SnippetDetails = ({ setSnippetDeleteState, setSnippetEditState, han
                             <strong>Created:</strong> {snippet.formatedUserDate}
                             <strong>Description:</strong> {snippet.description}
                         </Typography>
-                        <Typography >
-                            {snippet.description}
-                        </Typography>
-                        <Typography >
-                            {snippet.description}
-                        </Typography>
-                        <Typography >
-                            {snippet.description}
-                        </Typography>
-                        <Typography >
-                            {snippet.description}
-                        </Typography>
                     </CardContent>
                     <CardActions>
                         <Button onClick={(e) => {
                             e.preventDefault();
                             editArticleModal(snippet);
                         }}>Edit Snippet</Button>
-                        <Button onClick={deleteArticleModal}>Delete Snippet</Button>
+                        <Button onClick={(e) => {
+                            e.preventDefault();
+                            deleteArticleModal(snippet);
+                        }}>Delete Snippet</Button>
                     </CardActions>
                 </Card>
             </Paper>
@@ -294,7 +281,12 @@ export const SnippetDetails = ({ setSnippetDeleteState, setSnippetEditState, han
             <Header />
             {
                 (openSnippetEditModal)
-                    ? <SnippetEditDialog />
+                    ? <SnippetEditDialog {...props} />
+                    : ""
+            }
+            {
+                (snackOpen)
+                    ? <DeleteSnackbar {...props} />
                     : ""
             }
             <Container className={classes.root}>
@@ -309,7 +301,7 @@ export const SnippetDetails = ({ setSnippetDeleteState, setSnippetEditState, han
                     {
                         (snippetReady)
                             ? (snippet.articleReferences.length > 0)
-                                ? snippet.articleReferences.map((ar, idx) => referenceCards(ar, idx))
+                                ? snippet.articleReferences.map((ar, idx) => referenceCardsRender(ar, idx))
                                 : ""
                             : ""
                     }

@@ -41,18 +41,7 @@ export const NewsHome = () => {
         getCategories();
     }, []);
 
-    // useEffect(() => {
-    //     getRecentNews();
-    // }, []);
-
-    // useEffect(() => {
-    //     if (news !== null && news.length > 0) {
-    //         setNewsReady(true);
-    //     } else if (news === null || news.length === 0) {
-    //         setNewsReady(false);
-    //     }
-    // }, [news]);
-
+    const [searching, setSearching] = useState(false);
     const [searchTerms, setSearchTerms] = useState(null);
     const [filteredArticles, setFilteredArticles] = useState(null);
     const debounceSearchNews = debounce(setSearchTerms, 500);
@@ -64,11 +53,12 @@ export const NewsHome = () => {
 
     useEffect(() => {
         if (searchTerms === null || searchTerms === "") {
-            setFilteredArticles(dummyData);
+            setSearching(false);
         } else {
             const toLowerCriteria = searchTerms.toLowerCase();
-            const articleSubset = dummyData.filter((a) => a.title.toLowerCase().includes(toLowerCriteria) || a.description.toLowerCase().includes(toLowerCriteria));
+            const articleSubset = dummyData.filter((a) => (a.title) ? a.title.toLowerCase().includes(toLowerCriteria) : null || (a.description) ? a.description.toLowerCase().includes(toLowerCriteria) : null);
             setFilteredArticles(articleSubset);
+            setSearching(true);
         }
     }, [searchTerms]);
 
@@ -82,7 +72,7 @@ export const NewsHome = () => {
                     <Container maxWidth="lg" className={classes.container}>
                         {
                             (newsReady === true)
-                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><NewsList categories={categories} news={(filteredArticles !== null) ? filteredArticles : dummyData} /></div>
+                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><NewsList categories={categories} news={(filteredArticles !== null && searching) ? filteredArticles : dummyData} /></div>
                                 : <div style={{ display: 'flex', justifyContent: 'center' }}><CircularProgress status="loading" /></div>
                         }
                     </Container>

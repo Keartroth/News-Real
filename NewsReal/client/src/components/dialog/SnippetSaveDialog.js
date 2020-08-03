@@ -12,8 +12,8 @@ import {
     Typography,
 } from '@material-ui/core';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,7 +40,7 @@ const DialogTitle = withStyles(useStyles)(({ children, classes, onClose, ...othe
     );
 });
 
-export const NewsDialog = ({ openModal, handleModalChange, dialogNewsState, categories }) => {
+export const SnippetSaveDialog = ({ openModal, handleModalChange, dialogNewsState, categories }) => {
     const classes = useStyles();
     const { addSnippet } = useContext(SnippetContext);
     const article = dialogNewsState;
