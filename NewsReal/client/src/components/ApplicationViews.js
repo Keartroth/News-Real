@@ -52,7 +52,7 @@ export const ApplicationViews = props => {
     }
 
     return (
-        <main>
+        <main style={{ height: '100%' }}>
             <Switch>
                 <Route path="/login">
                     <Login />

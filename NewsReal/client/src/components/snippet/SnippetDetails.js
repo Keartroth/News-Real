@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { Header } from '../Header';
+import { Footer } from '../Footer';
 import { SnippetEditDialog } from '../dialog/SnippetEditDialog';
 import { DeleteSnackbar } from '../dialog/DeleteSnackbar';
 import { SnippetContext } from "../../providers/SnippetProvider";
@@ -307,6 +308,7 @@ export const SnippetDetails = (props) => {
                     }
                 </section>
             </Container>
+            <Footer />
         </>
     )
 }

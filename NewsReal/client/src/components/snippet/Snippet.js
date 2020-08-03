@@ -11,33 +11,19 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        minWidth: 275,
-    },
     author: {
         fontSize: 14,
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
     },
     buttonGroup: {
         width: '263px',
     },
     card: {
-        height: '575px',
+        boxShadow: '5px 10px 10px #888888',
         display: 'flex',
         flexDirection: 'column',
+        height: '600px',
         margin: theme.spacing(2),
         width: '45%',
-    },
-    cardFull: {
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        margin: 'auto',
-        width: '75%',
     },
     cardMedia: {
         paddingTop: '56.25%', // 16:9
@@ -47,27 +33,19 @@ const useStyles = makeStyles((theme) => ({
         margin: 'inherit',
     },
     cardTitle: {
-        alignSelf: 'center',
-    },
-    content: {
-        overflow: 'scroll',
-        overflowX: 'hidden',
+        maxWidth: 'fit-content',
     },
     expandedDetails: {
         width: '75%',
     },
-    pos: {
-        marginBottom: 12,
-        listStyleType: 'none',
+    info: {
+        display: 'inline-block',
+    },
+    infoContainer: {
         display: 'flex',
         flexWrap: 'nowrap',
+        justifyContent: 'space-between',
     },
-    marginRight: {
-        margin: '0 0.5em 0 0'
-    },
-    marginLeft: {
-        margin: '0 0 0 0.5em'
-    }
 }));
 
 const capitalizeCategory = (s) => {
@@ -97,7 +75,7 @@ export const Snippet = ({ snippet, handleSnackClick, setSnippetDeleteState }) =>
             <CardMedia
                 className={classes.cardMedia}
                 image={(snippet.image !== "None") ? snippet.image : "https://source.unsplash.com/random/?newspaper"}
-                title="Image title"
+                alt="Image title"
             />
             <CardContent>
                 <CardActions>

@@ -22,6 +22,7 @@ const Copyright = () => {
 
 const useStyles = makeStyles((theme) => ({
     footer: {
+        flexShrink: '0',
         padding: theme.spacing(1.5, 2),
         backgroundColor:
             theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],

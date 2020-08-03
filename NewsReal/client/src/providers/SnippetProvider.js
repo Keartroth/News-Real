@@ -33,7 +33,14 @@ export const SnippetProvider = (props) => {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            }).then((resp) => resp.json())
+            }).then((resp) => {
+                if (resp.ok && resp.statusText === "No Content") {
+                    return [];
+                } else if (resp.ok) {
+                    return resp.json();
+                }
+                else { throw new Error("Unauthorized") }
+            })
                 .then(setSnippets));
     };
 

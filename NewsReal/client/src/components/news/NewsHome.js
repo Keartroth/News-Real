@@ -77,9 +77,9 @@ export const NewsHome = () => {
                                 : <div style={{ display: 'flex', justifyContent: 'center' }}><CircularProgress status="loading" /></div>
                         }
                     </Container>
-                    <Footer />
                 </div>
             </div>
+            <Footer />
         </>
     );
 }

@@ -6,8 +6,11 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     resultsInfo: {
+        backgroundColor: 'rgba(169, 169, 169, 0.3)',
+        borderRadius: '25px',
         fontSize: '3rem',
         margin: 'auto',
+        padding: '2rem',
     }
 }));
 

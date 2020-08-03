@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     container: {
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
-        padding: theme.spacing(1),
+        padding: theme.spacing(3),
     },
 }));
 
@@ -73,9 +73,9 @@ export const SnippetHome = (props) => {
                                 : <div style={{ margin: 'auto' }}><CircularProgress status="loading" /></div>
                         }
                     </Container>
-                    <Footer />
                 </div>
             </div>
+            <Footer />
         </>
     );
 }
