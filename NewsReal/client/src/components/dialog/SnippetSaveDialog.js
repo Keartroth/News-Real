@@ -12,6 +12,7 @@ import {
     Typography,
 } from '@material-ui/core';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiTextField from '@material-ui/core/TextField';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -105,11 +106,11 @@ export const SnippetSaveDialog = ({ openModal, handleModalChange, dialogNewsStat
     }
 
     return (
-        <Dialog onClose={handleModalChange} aria-labelledby="customized-dialog-title" open={openModal}>
+        <Dialog maxWidth="md" onClose={handleModalChange} aria-labelledby="saveSnippetDialog" open={openModal}>
             <form onSubmit={saveSnippet}>
-                <DialogTitle classes={classes} id="customized-dialog-title" onClose={handleModalChange}>
+                <DialogTitle classes={classes} id="saveSnippetDialog--title" onClose={handleModalChange}>
                     Save Snippet
-            </DialogTitle>
+                </DialogTitle>
                 <DialogContent dividers>
                     <DialogContentText>
                         Article Title: {(dialogNewsState !== null) ? article.title : ""}.
@@ -125,19 +126,21 @@ export const SnippetSaveDialog = ({ openModal, handleModalChange, dialogNewsStat
                         onChange={handleUserInput}
                         inputProps={{ min: "5", max: "10" }}
                     />
-                    <TextField
+                    <MuiTextField
                         autoFocus
                         margin="dense"
                         id="content"
                         label="Personal Reflections"
                         type="textarea"
+                        multiline={true}
+                        rows={5}
                         fullWidth
                         required
                         onChange={handleUserInput}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button type="submit" color="primary">
+                    <Button type="submit" variant="contained" color="primary">
                         Create Snippet
                 </Button>
                 </DialogActions>

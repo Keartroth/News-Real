@@ -10,7 +10,6 @@ import {
     Container,
     CssBaseline,
     CircularProgress,
-
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -28,6 +27,11 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
         padding: theme.spacing(3),
+    },
+    loadingDiv: {
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: '50%',
     },
 }));
 
@@ -74,7 +78,7 @@ export const NewsHome = () => {
                         {
                             (newsReady === true)
                                 ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><NewsList categories={categories} news={(filteredArticles !== null && searching) ? filteredArticles : dummyData} /></div>
-                                : <div style={{ display: 'flex', justifyContent: 'center' }}><CircularProgress status="loading" /></div>
+                                : <div className={classes.loadingDiv}><CircularProgress status="loading" /></div>
                         }
                     </Container>
                 </div>
