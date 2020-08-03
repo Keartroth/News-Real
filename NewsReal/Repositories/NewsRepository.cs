@@ -1,5 +1,5 @@
 ﻿using NewsReal.Data;
-using NewsReal.Models;
+using NewsReal.Models.CurrentsModels;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

@@ -1,39 +1,32 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Snippet } from './Snippet';
-import { SnippetEditDialog } from './SnippetEditDialog';
+import { SnippetEditDialog } from '../dialog/SnippetEditDialog';
+import { DeleteSnackbar } from '../dialog/DeleteSnackbar';
 
-export const SnippetList = props => {
+export const SnippetList = (props, { openSnippetEditModal }) => {
     const snippets = props.snippets;
-    const searching = props.searching
-
-    const [openSnippetEditModal, setOpenSnippetEditModal] = useState(false);
-    const [snippetEditState, setSnippetEditState] = useState(null);
-
-    const handleSnippetEditModalChange = () => {
-        setOpenSnippetEditModal(!openSnippetEditModal);
-    }
-
+    const searching = props.searching;
+    const snackOpen = props.snackState.snackOpen;
 
     return (
         <>
             {
+                (snackOpen)
+                    ? <DeleteSnackbar {...props} />
+                    : ""
+            }
+            {
                 (openSnippetEditModal)
-                    ? <SnippetEditDialog
-                        openSnippetEditModal={openSnippetEditModal}
-                        snippetEditState={snippetEditState}
-                        handleSnippetEditModalChange={handleSnippetEditModalChange}
-                    />
+                    ? <SnippetEditDialog {...props} />
                     : ""
             }
             {
                 (snippets.length > 0)
                     ? snippets.map((s, idx) => {
                         return <Snippet
-                            key={s.id}
+                            key={idx}
                             snippet={s}
-                            idx={idx}
-                            setSnippetEditState={setSnippetEditState}
-                            handleSnippetEditModalChange={handleSnippetEditModalChange}
+                            {...props}
                         />
                     })
                     : (searching) ? <div>No Results Match Your Search</div> : <div>You have no saved snippets</div>

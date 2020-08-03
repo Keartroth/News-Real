@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewsReal.Models
+namespace NewsReal.Models.CurrentsModels
 {
     public class CurrentsSearchParameters
     {

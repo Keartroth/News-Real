@@ -129,13 +129,13 @@ namespace NewsReal.Tests
                 CategoryId = 18
             };
 
-            var articleReference1 = new ArticleReferrence()
+            var articleReference1 = new ArticleReference()
             {
                 ArticleId = 1,
                 ReferenceArticleId = 3
             };
 
-            var articleReference2 = new ArticleReferrence()
+            var articleReference2 = new ArticleReference()
             {
                 ArticleId = 2,
                 ReferenceArticleId = 4

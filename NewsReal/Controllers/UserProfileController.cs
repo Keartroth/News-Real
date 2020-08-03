@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NewsReal.Data;
-using NewsReal.Models;
+using NewsReal.Models.EFModels;
 using NewsReal.Repositories;
 using System;
 using System.Security.Claims;
@@ -29,7 +29,7 @@ namespace NewsReal.Controllers
             return Ok(userProfile);
         }
 
-        [Authorize]
+
         [HttpGet("{firebaseUserId}")]
         public IActionResult GetByFirebaseUserId(string firebaseUserId)
         {

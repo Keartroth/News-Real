@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NewsReal.Data;
-using NewsReal.Models;
+using NewsReal.Models.CurrentsModels;
 using NewsReal.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;

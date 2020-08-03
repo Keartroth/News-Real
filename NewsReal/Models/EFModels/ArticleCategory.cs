@@ -5,18 +5,16 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NewsReal.Models
+namespace NewsReal.Models.EFModels
 {
-    public class ArticleReferrence
+    public class ArticleCategory
     {
         public int Id { get; set; }
 
         public int ArticleId { get; set; }
 
-        public int ReferenceArticleId { get; set; }
+        public int CategoryId { get; set; }
 
-        public Article Article { get; set; }
-
-        public Article ReferenceArticle { get; set; }
+        public Category Category { get; set; }
     }
 }

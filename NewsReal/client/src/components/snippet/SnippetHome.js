@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import debounce from 'lodash.debounce'
 import { SnippetContext } from '../../providers/SnippetProvider';
+import { CategoryContext } from '../../providers/CategoryProvider';
 import { SnippetList } from './SnippetList';
 import { Footer } from '../Footer';
 import { Header } from '../Header';
@@ -27,25 +28,17 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const SnippetHome = () => {
+export const SnippetHome = (props) => {
     const classes = useStyles();
-    const { snippets, getSnippets } = useContext(SnippetContext);
-    const [snippetsReady, setSnippetsReady] = useState(false);
-    const [searching, setSearching] = useState(false);
+    const { snippets, getSnippets, snippetsReady } = useContext(SnippetContext);
+    const { categories, getCategories } = useContext(CategoryContext);
 
     useEffect(() => {
         getSnippets();
+        getCategories();
     }, []);
 
-    useEffect(() => {
-        if (snippets !== null && snippets.length > 0) {
-            setSnippetsReady(true);
-            setSearching(false);
-        } else if (snippets === null || snippets.length === 0) {
-            setSnippetsReady(false);
-        }
-    }, [snippets]);
-
+    const [searching, setSearching] = useState(false);
     const [searchTerms, setSearchTerms] = useState(null);
     const [filteredSnippets, setFilteredSnippets] = useState(null);
     const debounceSearchsnippets = debounce(setSearchTerms, 500);
@@ -57,25 +50,26 @@ export const SnippetHome = () => {
 
     useEffect(() => {
         if (searchTerms === null || searchTerms === "") {
-            setFilteredSnippets(snippets);
+            setSearching(false);
         } else {
             const toLowerCriteria = searchTerms.toLowerCase();
-            const articleSubset = snippets.filter((a) => a.title.toLowerCase().includes(toLowerCriteria) || a.description.toLowerCase().includes(toLowerCriteria));
+            const articleSubset = snippets.filter((a) => (a.userTitle) ? a.userTitle.toLowerCase().includes(toLowerCriteria) : null || (a.description) ? a.description.toLowerCase().includes(toLowerCriteria) : null || (a.title) ? a.title.toLowerCase().includes(toLowerCriteria) : null);
             setFilteredSnippets(articleSubset);
+            setSearching(true);
         }
     }, [searchTerms]);
 
     return (
         <>
-            <Header handleSearchInput={handleSearchInput} setSnippetsReady={setSnippetsReady} />
+            <Header categories={categories} handleSearchInput={handleSearchInput} />
             <div className={classes.root}>
                 <CssBaseline />
                 <div className={classes.content}>
                     <div className={classes.appBarSpacer} />
                     <Container maxWidth="lg" className={classes.container}>
                         {
-                            (snippetsReady === true)
-                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><SnippetList searching={searching} snippets={(filteredSnippets !== null) ? filteredSnippets : snippets} /></div>
+                            (snippetsReady)
+                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><SnippetList {...props} searching={searching} snippets={(filteredSnippets !== null && searching) ? filteredSnippets : snippets} /></div>
                                 : <div style={{ margin: 'auto' }}><CircularProgress status="loading" /></div>
                         }
                     </Container>

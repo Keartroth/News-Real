@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NewsReal.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using NewsReal.Models.EFModels;
 
 namespace NewsReal.Data
 {
@@ -17,7 +13,7 @@ namespace NewsReal.Data
 
         public DbSet<Category> Category { get; set; }
 
-        public DbSet<ArticleReferrence> ArticleReferrence { get; set; }
+        public DbSet<ArticleReference> ArticleReference { get; set; }
 
         public DbSet<ArticleCategory> ArticleCategory { get; set; }
     }

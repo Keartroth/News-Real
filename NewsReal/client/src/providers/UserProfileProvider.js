@@ -9,7 +9,7 @@ export const UserProfileProvider = (props) => {
     const apiUrl = "/api/userprofile";
 
     const userProfile = sessionStorage.getItem("userProfile");
-    const [isLoggedIn, setIsLoggedIn] = useState(userProfile != null);
+    const [isLoggedIn, setIsLoggedIn] = useState(userProfile !== null);
 
     const [isFirebaseReady, setIsFirebaseReady] = useState(false);
     useEffect(() => {

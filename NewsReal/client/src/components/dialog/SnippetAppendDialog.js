@@ -101,8 +101,7 @@ const DialogTitle = withStyles(useStyles)(({ children, classes, onClose, ...othe
 
 export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, handleSnippetAppendModalChange, openSnippetAppendModal }) => {
     const classes = useStyles();
-    const { addSnippetReference, snippets, getSnippets, addSnippet } = useContext(SnippetContext);
-    const [snippetsReady, setSnippetsReady] = useState(false);
+    const { addSnippetReference, snippets, getSnippets, addSnippet, snippetsReady } = useContext(SnippetContext);
     const [filterReady, setFilterReady] = useState(false);
     const [snippet, setSnippet] = useState("");
     const [searchTerms, setSearchTerms] = useState(null);
@@ -114,12 +113,6 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
     useEffect(() => {
         getSnippets();
     }, []);
-
-    useEffect(() => {
-        if (snippets !== null) {
-            setSnippetsReady(true);
-        }
-    }, [snippets]);
 
     useEffect(() => {
         if (searchTerms === null || searchTerms === "") {
@@ -158,15 +151,15 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
 
         const newArticle = {
             userProfileId: currentUserProfileId,
-            author: article.author,
-            publisher: publisher,
+            author: (article.author !== "") ? article.author : "No author information provided",
+            publisher: (publisher !== "") ? publisher : "No publisher information provided",
             currentsId: article.id,
-            title: article.title,
-            description: article.description,
+            title: (article.title !== "") ? article.title : "No title information provided",
+            description: (article.description !== "") ? article.description : "No description information provided",
             url: article.url,
             image: article.image,
-            language: article.language,
-            published: article.published,
+            language: (article.language !== "") ? article.language : "No language information provided",
+            published: (article.published !== "") ? article.published : "No publication date information provided",
             objectivity: null,
             sentimentality: null,
             articleCategory: []
@@ -179,6 +172,7 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
 
             newArticle.articleCategory.push(articleCategory);
         });
+
         addSnippet(newArticle).then((resp) => {
             const articleReference = {
                 articleId: snippet.id,
@@ -186,7 +180,7 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
             }
             addSnippetReference(articleReference).then(() => {
                 handleSnippetAppendModalChange();
-                history.push(`/snippets`)
+                history.push(`/snippet/${articleReference.articleId}`)
             })
         });
     }

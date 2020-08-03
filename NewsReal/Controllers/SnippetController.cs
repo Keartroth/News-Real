@@ -2,8 +2,9 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using NewsReal.Data;
-using NewsReal.Models;
+using NewsReal.Models.EFModels;
 using NewsReal.Repositories;
 
 namespace NewsReal.Controllers
@@ -17,9 +18,9 @@ namespace NewsReal.Controllers
         private readonly UserProfileRepository _userProfileRepository;
         private readonly CategoryRepository _categoryRepository;
 
-        public SnippetController(ApplicationDbContext context)
+        public SnippetController(ApplicationDbContext context, IConfiguration configuration)
         {
-            _snippetRepository = new SnippetRepository(context);
+            _snippetRepository = new SnippetRepository(context, configuration);
             _userProfileRepository = new UserProfileRepository(context);
             _categoryRepository = new CategoryRepository(context);
         }
@@ -39,7 +40,7 @@ namespace NewsReal.Controllers
         {
             var currentUserProfile = GetCurrentUserProfile();
             var snippet = _snippetRepository.GetSnippetById(id);
-            
+
             if (snippet == null)
             {
                 return NotFound();
@@ -98,9 +99,9 @@ namespace NewsReal.Controllers
             return NoContent();
         }
 
-        // Start of SnippetRefernce methods
+        // Start of SnippetReferrence methods
         [HttpPost("addsnippetreferrence")]
-        public IActionResult Post(ArticleReferrence snippetReferrence)
+        public IActionResult Post(ArticleReference snippetReferrence)
         {
             _snippetRepository.AddArticleReference(snippetReferrence);
 

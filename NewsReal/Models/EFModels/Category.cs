@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NewsReal.Models
+namespace NewsReal.Models.EFModels
 {
     public class Category
     {

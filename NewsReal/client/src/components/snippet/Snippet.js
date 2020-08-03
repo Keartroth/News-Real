@@ -70,25 +70,29 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const capitalizeCategory = (s) => {
+    if (typeof s !== 'string') {
+        return s;
+    } else {
+        return s.charAt(0).toUpperCase() + s.slice(1)
+    }
+}
 
-export const Snippet = ({ snippet, idx, setSnippetEditState, handleSnippetEditModalChange }) => {
+export const Snippet = ({ snippet, handleSnackClick, setSnippetDeleteState }) => {
     const classes = useStyles();
-    const formatedDate = parseISO(snippet.published).toDateString();;
+    const formatedDate = parseISO(snippet.published).toDateString();
 
-    const editSnippet = (e) => {
+    const setNukeSnippet = (e) => {
         e.preventDefault();
-        setSnippetEditState(snippet);
-        handleSnippetEditModalChange();
-    };
-
-    const nukeSnippet = () => {
-        console.log("All your base, are belong to us.");
+        setSnippetDeleteState(snippet);
+        handleSnackClick(snippet.userTitle);
     };
 
     return (
         <Card className={classes.card}>
             <Typography className={classes.cardTitle} gutterBottom variant="h5" component="h2">
-                {snippet.userTitle}
+                Title: {snippet.userTitle}
+                Published: {formatedDate}
             </Typography>
             <CardMedia
                 className={classes.cardMedia}
@@ -97,8 +101,11 @@ export const Snippet = ({ snippet, idx, setSnippetEditState, handleSnippetEditMo
             />
             <CardContent>
                 <CardActions>
-                    <Button onClick={editSnippet}>Edit Snippet</Button>
-                    <Button onClick={nukeSnippet}>Delete Snippet</Button>
+                    <Button onClick={(e) => {
+                        e.preventDefault();
+                        window.location.href = `/snippet/${snippet.id}`;
+                    }}>View Snippet Details</Button>
+                    <Button onClick={setNukeSnippet}>Delete Snippet</Button>
                 </CardActions>
             </CardContent>
             <CardContent className={classes.content}>

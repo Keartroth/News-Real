@@ -1,5 +1,5 @@
 ﻿using NewsReal.Data;
-using NewsReal.Models;
+using NewsReal.Models.EFModels;
 using System.Linq;
 
 namespace NewsReal.Repositories

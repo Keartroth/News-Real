@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { News } from './News';
-import { NewsDialog } from './NewsDialog';
-import { SnippetAppendDialog } from '../snippet/SnippetAppendDialog';
+import { SnippetSaveDialog } from '../dialog/SnippetSaveDialog';
+import { SnippetAppendDialog } from '../dialog/SnippetAppendDialog';
 
 export const NewsList = props => {
     const news = props.news;
@@ -27,7 +27,7 @@ export const NewsList = props => {
                 handleSnippetAppendModalChange={handleSnippetAppendModalChange}
                 openSnippetAppendModal={openSnippetAppendModal}
             />
-            <NewsDialog
+            <SnippetSaveDialog
                 categories={categories}
                 dialogNewsState={dialogNewsState}
                 handleModalChange={handleModalChange}
