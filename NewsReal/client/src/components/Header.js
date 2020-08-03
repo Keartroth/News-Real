@@ -193,7 +193,7 @@ export const Header = ({ categories, handleSearchInput, setNewsReady }) => {
                 </Toolbar>
             </AppBar>
             {
-                (pathname === "/" || pathname === "/snippets")
+                (pathname === "/")
                     ? <Drawer
                         variant="permanent"
                         className={clsx(classes.drawer, {
