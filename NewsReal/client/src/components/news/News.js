@@ -19,32 +19,26 @@ import { makeStyles } from '@material-ui/core/styles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        minWidth: 275,
-    },
     author: {
         fontSize: 14,
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
     },
     buttonGroup: {
         width: '263px',
     },
     card: {
-        height: '100%',
+        boxShadow: '5px 10px 10px #888888',
         display: 'flex',
         flexDirection: 'column',
+        height: '600px',
         margin: theme.spacing(2),
     },
     cardFull: {
-        height: '100%',
+        boxShadow: '5px 10px #888888',
         display: 'flex',
         flexDirection: 'column',
+        height: '100%',
         margin: 'auto',
-        maxWidth: '75%',
+        width: '75%',
     },
     cardMedia: {
         paddingTop: '56.25%', // 16:9
@@ -59,17 +53,13 @@ const useStyles = makeStyles((theme) => ({
     expandedDetails: {
         width: '75%',
     },
-    pos: {
-        marginBottom: 12,
-        listStyleType: 'none',
+    info: {
+        display: 'inline-block',
+    },
+    infoContainer: {
         display: 'flex',
         flexWrap: 'nowrap',
-    },
-    marginRight: {
-        margin: '0 0.5em 0 0'
-    },
-    marginLeft: {
-        margin: '0 0 0 0.5em'
+        justifyContent: 'space-between',
     },
 }));
 
@@ -169,7 +159,7 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
             <CardMedia
                 className={classes.cardMedia}
                 image={(article.image !== "None") ? article.image : "https://source.unsplash.com/random/?newspaper"}
-                title="Image title"
+                alt="Image title"
             />
             <CardContent className={classes.cardContent}>
                 {
@@ -178,13 +168,13 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
                         : <><Typography className={classes.cardTitle} gutterBottom variant="h5" component="h2">
                             {article.title}
                         </Typography>
-                            <Typography>
-                                <span className={classes.marginRight}><strong>Author:</strong> {article.author}</span>
-                                <span className={classes.marginLeft}><strong>Published:</strong> {formatedDate}</span>
+                            <Typography component="div" className={classes.infoContainer}>
+                                <div className={classes.info}><strong>Author:</strong> {article.author}</div>
+                                <div className={classes.info}><strong>Published:</strong> {formatedDate}</div>
                             </Typography>
-                            <Typography>
-                                <span className={classes.marginRight}><strong>Publisher:</strong> {getHostname(article.url)}</span>
-                                <span className={classes.marginLeft}><strong>Category:</strong> {
+                            <Typography component="div" className={classes.infoContainer}>
+                                <div className={classes.info}><strong>Publisher:</strong> {getHostname(article.url)}</div>
+                                <div className={classes.info}><strong>Category:</strong> {
                                     article.category.map((c, idx) => {
                                         const length = article.category.length;
                                         const cc = capitalizeCategory(c);
@@ -198,7 +188,7 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
                                             }
                                         }
                                     })
-                                }</span>
+                                }</div>
                             </Typography></>
                 }
             </CardContent>
