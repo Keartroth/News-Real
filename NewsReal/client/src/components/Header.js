@@ -170,23 +170,27 @@ export const Header = ({ categories, handleSearchInput, setNewsReady }) => {
                             Saved Snippets
                         </Link>
                     </Typography>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
-                        </div>
-                        <InputBase
-                            placeholder="Search Present List…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            onChange={handleSearchInput}
-                        />
-                    </div>
-                    <IconButton edge="end" color="inherit" aria-label="menu">
+                    {
+                        (pathname === "/" || pathname === "/snippets")
+                            ? <div className={classes.search}>
+                                <div className={classes.searchIcon}>
+                                    <SearchIcon />
+                                </div>
+                                <InputBase
+                                    placeholder="Search Present List…"
+                                    classes={{
+                                        root: classes.inputRoot,
+                                        input: classes.inputInput,
+                                    }}
+                                    inputProps={{ 'aria-label': 'search' }}
+                                    onChange={handleSearchInput}
+                                />
+                            </div>
+                            : ""
+                    }
+                    {/* <IconButton edge="end" color="inherit" aria-label="menu">
                         <AccountCircleIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton edge="end" color="inherit" aria-label="menu" onClick={logout}>
                         <ExitToAppRoundedIcon />
                     </IconButton>
