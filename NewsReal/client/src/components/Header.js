@@ -188,9 +188,6 @@ export const Header = ({ categories, handleSearchInput }) => {
                             </div>
                             : ""
                     }
-                    {/* <IconButton edge="end" color="inherit" aria-label="menu">
-                        <AccountCircleIcon />
-                    </IconButton> */}
                     <IconButton edge="end" color="inherit" aria-label="menu" onClick={logout}>
                         <ExitToAppRoundedIcon />
                     </IconButton>

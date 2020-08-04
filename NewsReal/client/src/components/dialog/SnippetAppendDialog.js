@@ -191,11 +191,13 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
         }
         article.category.map(c => {
             const foundCategory = categories.find(cat => cat.name === c);
-            let articleCategory = {
-                categoryId: foundCategory.id
-            };
+            if (foundCategory) {
+                let articleCategory = {
+                    categoryId: foundCategory.id
+                };
 
-            newArticle.articleCategory.push(articleCategory);
+                newArticle.articleCategory.push(articleCategory);
+            }
         });
 
         if (snippet !== snippetEditState) {

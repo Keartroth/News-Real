@@ -92,11 +92,13 @@ export const SnippetSaveDialog = ({ openModal, handleModalChange, dialogNewsStat
 
         article.category.map(c => {
             const foundCategory = categories.find(cat => cat.name === c);
-            let articleCategory = {
-                categoryId: foundCategory.id
-            };
+            if (foundCategory) {
+                let articleCategory = {
+                    categoryId: foundCategory.id
+                };
 
-            newSnippet.articleCategory.push(articleCategory);
+                newSnippet.articleCategory.push(articleCategory);
+            }
         });
 
         addSnippet(newSnippet).then(() => {

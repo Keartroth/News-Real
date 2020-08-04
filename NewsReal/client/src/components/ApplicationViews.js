@@ -10,7 +10,7 @@ import { UserProfileContext } from "../providers/UserProfileProvider";
 
 export const ApplicationViews = props => {
     const { isLoggedIn } = useContext(UserProfileContext);
-    const { deleteSnippet, getSnippets } = useContext(SnippetContext);
+    const { deleteSnippet, getSnippets, deleteSnippetReference, getSnippetById } = useContext(SnippetContext);
     const history = useHistory();
     let pathname = useLocation().pathname;
 
@@ -24,23 +24,31 @@ export const ApplicationViews = props => {
         vertical: 'top',
         horizontal: 'center',
         snippetTitle: '',
+        snippetBool: null,
+        snippetId: null,
     });
 
-    // const { vertical, horizontal, snackOpen, snippetTitle } = snackState;
-
-    const handleSnackClick = (title) => {
-        setSnackState({ ...snackState, snackOpen: true, snippetTitle: title });
+    const handleSnackClick = (title, bool, id) => {
+        setSnackState({ ...snackState, snackOpen: true, snippetTitle: title, snippetBool: bool, snippetId: id });
     };
 
     const handleSnackClose = () => {
-        setSnackState({ ...snackState, snackOpen: false });
+        setSnackState({ ...snackState, snackOpen: false, snippetBool: null, id: null, });
     };
 
-    const nukeSnippet = (id) => {
+    const nukeSnippet = (articleId) => {
+        const referenceBool = snackState.snippetBool;
+        const id = snackState.snippetId;
         if (pathname === "/snippets") {
-            deleteSnippet(snippetDeleteState.id).then(getSnippets).then(handleSnackClose);
-        } else {
-            deleteSnippet(snippetDeleteState.id).then(() => history.push("/"));
+            deleteSnippet(articleId).then(getSnippets).then(handleSnackClose);
+        } else if (referenceBool) {
+            deleteSnippet(articleId).then(() => {
+                history.push("/snippets");
+                handleSnackClose();
+            });
+        } else if (!referenceBool) {
+            deleteSnippetReference(articleId).then(() => getSnippetById(id));
+            handleSnackClose();
         }
     }
 

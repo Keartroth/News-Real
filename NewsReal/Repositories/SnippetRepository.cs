@@ -518,6 +518,11 @@ namespace NewsReal.Repositories
             return article;
         }
 
+        public Article GetArticleById(int id)
+        {
+            return _context.Article.FirstOrDefault(a => a.Id == id);
+        }
+
         public void Add(Article snippet)
         {
             _context.Add(snippet);
@@ -564,6 +569,22 @@ namespace NewsReal.Repositories
             _context.SaveChanges();
         }
 
+        public void DeleteReferenceArticle(int id)
+        {
+            Article referenceArticle = GetArticleById(id);
+            List<ArticleCategory> articleCategories = GetArticleCategoriesByArticleId(id);
+            ArticleReference articleReference = GetArticleReferenceByReferenceArticleId(id);
+
+            if (articleCategories != null)
+            {
+                _context.ArticleCategory.RemoveRange(articleCategories);
+            }
+
+            _context.ArticleReference.Remove(articleReference);
+            _context.Article.Remove(referenceArticle);
+            _context.SaveChanges();
+        }
+
         //Beginning of ArticleReference methods.
         public void AddArticleReference(ArticleReference articleReferrence)
         {
@@ -594,14 +615,14 @@ namespace NewsReal.Repositories
             return _context.ArticleReference.Where(ac => ac.ArticleId == id).ToList();
         }
 
-        private Article GetArticleById(int id)
-        {
-            return _context.Article.FirstOrDefault(a => a.Id == id);
-        }
-
         private ArticleReference GetArticleReferenceByArticleIdAndReferenceArticleId(int articleId, int referenceArticleId)
         {
             return _context.ArticleReference.FirstOrDefault(ar => ar.ArticleId == articleId && ar.ReferenceArticleId == referenceArticleId);
+        }
+
+        private ArticleReference GetArticleReferenceByReferenceArticleId(int referenceArticleId)
+        {
+            return _context.ArticleReference.FirstOrDefault(ar => ar.ReferenceArticleId == referenceArticleId);
         }
     }
 }

@@ -99,6 +99,21 @@ namespace NewsReal.Controllers
             return NoContent();
         }
 
+        [HttpDelete("deletereferencearticle/{id}")]
+        public IActionResult DeleteReferenceArticle(int id)
+        {
+            var currentUserProfile = GetCurrentUserProfile();
+            var referenceArticle = _snippetRepository.GetArticleById(id);
+
+            if (currentUserProfile.Id != referenceArticle.UserProfileId)
+            {
+                return Unauthorized();
+            }
+
+            _snippetRepository.DeleteReferenceArticle(id);
+            return NoContent();
+        }
+
         // Start of SnippetReferrence methods
         [HttpPost("addsnippetreferrence")]
         public IActionResult Post(ArticleReference snippetReferrence)

@@ -136,7 +136,7 @@ export const Register = () => {
                                 onChange={handleUserInput}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12}>
                             <TextField
                                 variant="outlined"
                                 required
@@ -146,18 +146,6 @@ export const Register = () => {
                                 type="displayName"
                                 id="displayName"
                                 autoComplete="dname"
-                                onChange={handleUserInput}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                variant="outlined"
-                                fullWidth
-                                name="imageLocation"
-                                label="Upload Photo"
-                                type="imageLocation"
-                                id="imageLocation"
-                                autoComplete="uphoto"
                                 onChange={handleUserInput}
                             />
                         </Grid>

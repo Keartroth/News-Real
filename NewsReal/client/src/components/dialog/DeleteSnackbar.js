@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const DeleteSnackbar = ({ snackState, handleSnackClose, snippetDeleteState, nukeSnippet }) => {
     const classes = useStyles();
-    const { vertical, horizontal, snackOpen, snippetTitle } = snackState;
+    const { vertical, horizontal, snackOpen, snippetTitle, id } = snackState;
 
     return (
         <Snackbar
@@ -50,7 +50,7 @@ export const DeleteSnackbar = ({ snackState, handleSnackClose, snippetDeleteStat
             key={vertical + horizontal}
             action={
                 <React.Fragment>
-                    <Button className={classes.snackButton} size="small" onClick={nukeSnippet}>
+                    <Button className={classes.snackButton} size="small" onClick={() => nukeSnippet(snippetDeleteState.id)}>
                         Yes I am Certain
                     </Button>
                     <IconButton
