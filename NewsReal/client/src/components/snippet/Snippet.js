@@ -11,33 +11,22 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        minWidth: 275,
-    },
     author: {
         fontSize: 14,
     },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
-    },
     buttonGroup: {
-        width: '263px',
+        display: 'flex',
+        flexWrap: 'nowrap',
+        margin: 'auto',
+        width: 'fit-content',
     },
     card: {
-        height: '575px',
+        boxShadow: '5px 10px 10px #888888',
         display: 'flex',
         flexDirection: 'column',
+        height: '650px',
         margin: theme.spacing(2),
-        width: '45%',
-    },
-    cardFull: {
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        margin: 'auto',
-        width: '75%',
+        width: '47%',
     },
     cardMedia: {
         paddingTop: '56.25%', // 16:9
@@ -48,26 +37,30 @@ const useStyles = makeStyles((theme) => ({
     },
     cardTitle: {
         alignSelf: 'center',
+        maxWidth: 'fit-content',
+        padding: '0.5rem 0em',
     },
     content: {
-        overflow: 'scroll',
-        overflowX: 'hidden',
+        margin: 'auto 0.25rem',
+        overflow: 'inherit',
+    },
+    contentContainer: {
+        height: '100%',
+        position: 'relative',
+        overflowY: 'auto',
     },
     expandedDetails: {
         width: '75%',
     },
-    pos: {
-        marginBottom: 12,
-        listStyleType: 'none',
+    info: {
+        display: 'inline-block',
+    },
+    infoContainer: {
         display: 'flex',
         flexWrap: 'nowrap',
+        justifyContent: 'space-between',
+        marginBottom: '1rem',
     },
-    marginRight: {
-        margin: '0 0.5em 0 0'
-    },
-    marginLeft: {
-        margin: '0 0 0 0.5em'
-    }
 }));
 
 const capitalizeCategory = (s) => {
@@ -80,36 +73,60 @@ const capitalizeCategory = (s) => {
 
 export const Snippet = ({ snippet, handleSnackClick, setSnippetDeleteState }) => {
     const classes = useStyles();
-    const formatedDate = parseISO(snippet.published).toDateString();
+    const formatedDate = parseISO(snippet.createDateTime).toDateString();
 
     const setNukeSnippet = (e) => {
         e.preventDefault();
         setSnippetDeleteState(snippet);
         handleSnackClick(snippet.userTitle);
     };
-
     return (
         <Card className={classes.card}>
             <Typography className={classes.cardTitle} gutterBottom variant="h5" component="h2">
-                Title: {snippet.userTitle}
-                Published: {formatedDate}
+                {snippet.userTitle}
             </Typography>
             <CardMedia
                 className={classes.cardMedia}
                 image={(snippet.image !== "None") ? snippet.image : "https://source.unsplash.com/random/?newspaper"}
-                title="Image title"
+                alt="Image title"
             />
-            <CardContent>
+            <CardContent className={classes.buttonGroup}>
                 <CardActions>
-                    <Button onClick={(e) => {
-                        e.preventDefault();
-                        window.location.href = `/snippet/${snippet.id}`;
-                    }}>View Snippet Details</Button>
-                    <Button onClick={setNukeSnippet}>Delete Snippet</Button>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            window.location.href = `/snippet/${snippet.id}`;
+                        }}>View Snippet Details</Button>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={setNukeSnippet}>Delete Snippet</Button>
                 </CardActions>
             </CardContent>
             <CardContent className={classes.content}>
-                <Typography >{snippet.content}</Typography>
+                <Typography component="div" className={classes.infoContainer}>
+                    <div className={classes.info}><strong>Created: </strong> {formatedDate}</div>
+                    <div className={classes.info}><strong>Category: </strong>
+                        {
+                            snippet.categories.map((c, idx) => {
+                                const length = snippet.categories.length;
+                                const cc = capitalizeCategory(c.name);
+                                if (length === 1) {
+                                    return <span key={idx}>{cc}</span>
+                                } else {
+                                    if (idx < length - 1) {
+                                        return <span key={idx}>{cc}, </span>
+                                    } else {
+                                        return <span key={idx}>{cc}</span>
+                                    }
+                                }
+                            })
+                        }
+                    </div>
+                </Typography>
+                <Typography className={classes.contentContainer} component="div"><strong>Summary:</strong> {snippet.content}</Typography>
             </CardContent>
             <CardActions>
             </CardActions>

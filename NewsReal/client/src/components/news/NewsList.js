@@ -2,8 +2,20 @@ import React, { useState } from 'react';
 import { News } from './News';
 import { SnippetSaveDialog } from '../dialog/SnippetSaveDialog';
 import { SnippetAppendDialog } from '../dialog/SnippetAppendDialog';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+    resultsInfo: {
+        backgroundColor: 'rgba(169, 169, 169, 0.3)',
+        borderRadius: '25px',
+        fontSize: '3rem',
+        margin: 'auto',
+        padding: '2rem',
+    }
+}));
 
 export const NewsList = props => {
+    const classes = useStyles();
     const news = props.news;
     const categories = props.categories;
     const [openModal, setOpenModal] = useState(false);
@@ -46,7 +58,7 @@ export const NewsList = props => {
                             setDialogSnippetAppendState={setDialogSnippetAppendState}
                         />
                     })
-                    : <div>No Results Match Your Search</div>
+                    : <div className={classes.resultsInfo}>No Results Match Your Search</div>
             }
         </>
     )

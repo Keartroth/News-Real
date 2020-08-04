@@ -1,6 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, {
+    useContext,
+    useEffect
+} from 'react';
 import { useParams } from "react-router-dom";
 import { Header } from '../Header';
+import { Footer } from '../Footer';
 import { SnippetEditDialog } from '../dialog/SnippetEditDialog';
 import { DeleteSnackbar } from '../dialog/DeleteSnackbar';
 import { SnippetContext } from "../../providers/SnippetProvider";
@@ -13,6 +17,7 @@ import {
     CardMedia,
     CircularProgress,
     Container,
+    Grid,
     Typography,
     Paper
 } from '@material-ui/core';
@@ -34,7 +39,10 @@ const useStyles = makeStyles((theme) => ({
         transform: 'scale(0.8)',
     },
     buttonGroup: {
-        width: '263px',
+        display: 'flex',
+        flexWrap: 'nowrap',
+        margin: 'auto',
+        width: 'fit-content',
     },
     card: {
         height: '575px',
@@ -42,13 +50,6 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         margin: theme.spacing(2),
         width: '45%',
-    },
-    cardFull: {
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        margin: 'auto',
-        width: '75%',
     },
     cardMedia: {
         height: 'auto',
@@ -61,13 +62,26 @@ const useStyles = makeStyles((theme) => ({
     },
     cardTitle: {
         alignSelf: 'center',
+        maxWidth: 'fit-content',
+        padding: '0.5rem 0em',
     },
     content: {
-        overflow: 'scroll',
+        maxHeight: '20rem',
+        overflow: 'auto',
         overflowX: 'hidden',
+        textAlign: 'left',
     },
     expandedDetails: {
         width: '75%',
+    },
+    info: {
+        display: 'inline-block',
+    },
+    infoContainer: {
+        display: 'flex',
+        flexWrap: 'nowrap',
+        justifyContent: 'space-between',
+        margin: '0.5rem 1.5rem',
     },
     pos: {
         marginBottom: 12,
@@ -75,11 +89,35 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexWrap: 'nowrap',
     },
-    marginRight: {
-        margin: '0 0.5em 0 0'
+    raContent: {
+        display: 'flex',
+        flexWrap: 'nowrap',
     },
-    marginLeft: {
-        margin: '0 0 0 0.5em'
+    raInfo: {
+        display: 'inline-block',
+    },
+    raInfoContainer: {
+        display: 'flex',
+        flexWrap: 'nowrap',
+        justifyContent: 'space-between',
+        margin: '0.5rem 0',
+    },
+    referenceArticle: {
+        boxShadow: '5px 10px 10px #888888',
+        margin: '2rem 0',
+        width: '100%',
+    },
+    snippet: {
+        boxShadow: '5px 10px 10px #888888',
+        marginBottom: '2rem',
+        width: '100%',
+    },
+    textContainer: {
+        margin: '0.5rem 0',
+        textIndent: '1.5rem',
+    },
+    userTitle: {
+        textAlign: 'center',
     },
 }));
 
@@ -149,64 +187,81 @@ export const SnippetDetails = (props) => {
     const referenceCardsRender = (ar, idx) => {
         const ra = ar.referenceArticle
         return (
-            <Card key={idx}>
-                <Typography className={classes.cardTitle} gutterBottom variant="h5" component="h2">
+            <Card key={idx} className={classes.referenceArticle}>
+                <Typography className={classes.cardTitle} gutterBottom component="div">
                     {
                         (ra.userTitle)
-                            ? <span><strong>Title:</strong> {ra.userTitle}</span>
-                            : ""
+                            ? <div><div><strong>Title: </strong> {ra.userTitle}</div><div><strong>Link: </strong><a target="_blank" rel="noopener noreferrer" href={`${ra.url}`}>{ra.title}</a></div></div>
+                            : <div><strong>Link: </strong><a target="_blank" rel="noopener noreferrer" href={`${ra.url}`}>{ra.title}</a></div>
                     }
-                    <a target="blank" href={`${ra.url}`}>
-                        <strong>Article Title:</strong> {ra.title}
-                    </a>
                 </Typography>
-                <CardMedia
-                    className={classes.cardMedia}
-                    image={(ra.image !== "None") ? ra.image : "https://source.unsplash.com/random/?newspaper"}
-                    title="Image title"
-                />
-                <CardContent className={classes.content}>
-                    <Typography >
-                        <span><strong>Author:</strong> {ra.author}</span>
-                        <span><strong>Publisher:</strong> {ra.publisher}</span>
-                        <span><strong>Published:</strong> {formatedDate}</span>
-                        {
-                            <span className={classes.marginLeft}><strong>Category:</strong>
+                <Grid className={classes.raContent}>
+                    <Grid item xs={4}>
+                        <CardContent>
+                            <CardMedia
+                                className={classes.cardMedia}
+                                image={(ra.image !== "None") ? ra.image : "https://source.unsplash.com/random/?newspaper"}
+                                alt="Image title"
+                            />
+                        </CardContent>
+                    </Grid>
+                    <Grid item xs={8}>
+                        <CardContent className={classes.content}>
+                            <Typography className={classes.raInfoContainer} component="div">
+                                <div className={classes.raInfo}><strong>Author:</strong> {ra.author}</div>
+                                <div className={classes.raInfo}><strong>Publisher:</strong> {ra.publisher}</div>
+                                <div className={classes.raInfo}><strong>Published:</strong> {formatedDate}</div>
+                            </Typography>
+                            <Typography className={classes.raInfoContainer} component="div">
+                                <div className={classes.raInfo}><strong>Created:</strong> {formatedUserDate}</div>
                                 {
-                                    (snippetReady)
-                                        ? <CategoryRender />
+                                    <div className={classes.raInfo}><strong>Category: </strong>
+                                        {
+                                            (snippetReady)
+                                                ? <CategoryRender />
+                                                : ""
+                                        }</div>
+                                }
+                                {
+                                    (ra.objectivity)
+                                        ? <div><strong>Objectivity:</strong> {ra.objectivity}</div>
                                         : ""
-                                }</span>
-                        }
-                    </Typography>
-                    <Typography >
-                        <strong>Created:</strong> {ra.createDateTime}
-                        {
-                            (ra.objectivity)
-                                ? <span><strong>Objectivity:</strong> {ra.objectivity}</span>
-                                : ""
-                        }
-                        {
-                            (ra.sentimentality)
-                                ? <span><strong>Objectivity:</strong> {ra.sentimentality}</span>
-                                : ""
-                        }
-                    </Typography>
-                    <Typography >
-                        <strong>Created:</strong> {ra.createDateTime}
-                        <strong>Description:</strong> {ra.description}
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button onClick={(e) => {
-                        e.preventDefault();
-                        editArticleModal(ra);
-                    }}>Edit Reference</Button>
-                    <Button onClick={(e) => {
-                        e.preventDefault();
-                        deleteArticleModal(ra);
-                    }}>Delete Reference</Button>
-                </CardActions>
+                                }
+                                {
+                                    (ra.sentimentality)
+                                        ? <div><strong>Objectivity:</strong> {ra.sentimentality}</div>
+                                        : ""
+                                }
+                            </Typography>
+                            <Typography component="div">
+                                <strong>Description:</strong> {ra.description}
+                            </Typography>
+                            <Typography component="div">
+                                {
+                                    (ra.content)
+                                        ? <div><strong>Content:</strong> {ra.content}</div>
+                                        : ""
+                                }
+                            </Typography>
+                        </CardContent>
+                        <CardActions className={classes.buttonGroup}>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    editArticleModal(ra);
+                                }}>Edit Reference</Button>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    deleteArticleModal(ra);
+                                }}>Delete Reference</Button>
+                        </CardActions>
+                    </Grid>
+                </Grid>
             </Card>
         )
     };
@@ -215,16 +270,23 @@ export const SnippetDetails = (props) => {
         return (
             <Paper className={classes.snippet}>
                 <Card>
-                    <Typography className={classes.cardTitle} gutterBottom variant="h5" component="h2">
+                    <Typography className={classes.cardTitle} gutterBottom component="div">
                         {
                             (snippet.userTitle)
-                                ? <span><strong>Title:</strong> {snippet.userTitle}</span>
+                                ? <div><strong>Title:</strong> {snippet.userTitle}</div>
+                                : <div> <strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href={`${snippet.url}`}> {snippet.title}</a></div>
+                        }
+                        <div><strong>Created:</strong> {formatedUserDate}</div>
+                        {
+                            (snippet.objectivity)
+                                ? <span><strong>Objectivity:</strong> {snippet.objectivity}</span>
                                 : ""
                         }
-
-                        <a target="blank" href={`${snippet.url}`}>
-                            <strong>Article Title:</strong> {snippet.title}
-                        </a>
+                        {
+                            (snippet.sentimentality)
+                                ? <span><strong>Objectivity:</strong> {snippet.sentimentality}</span>
+                                : ""
+                        }
                     </Typography>
                     <CardMedia
                         className={classes.cardMedia}
@@ -232,44 +294,46 @@ export const SnippetDetails = (props) => {
                         title="Image title"
                     />
                     <CardContent className={classes.content}>
-                        <Typography >
-                            <span><strong>Author:</strong> {snippet.author}</span>
-                            <span><strong>Publisher:</strong> {snippet.publisher}</span>
-                            <span><strong>Published:</strong> {formatedDate}</span>
+                        <Typography className={classes.userTitle} component="div">
                             {
-                                <span className={classes.marginLeft}><strong>Category:</strong>
+                                (snippet.userTitle)
+                                    ? <div> <strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href={`${snippet.url}`}> {snippet.title}</a></div>
+                                    : ""
+                            }
+                        </Typography>
+                        <Typography className={classes.infoContainer} component="div">
+                            <div className={classes.info}><strong>Author:</strong> {snippet.author}</div>
+                            <div className={classes.info}><strong>Publisher:</strong> {snippet.publisher}</div>
+                            <div><strong>Published:</strong> {formatedDate}</div>
+                            {
+                                <div className={classes.marginLeft}><strong>Category: </strong>
                                     {
                                         <CategoryRender />
-                                    }</span>
+                                    }</div>
                             }
                         </Typography>
-                        <Typography >
-                            <strong>Created:</strong> {snippet.createDateTime}
-                            {
-                                (snippet.objectivity)
-                                    ? <span><strong>Objectivity:</strong> {snippet.objectivity}</span>
-                                    : ""
-                            }
-                            {
-                                (snippet.sentimentality)
-                                    ? <span><strong>Objectivity:</strong> {snippet.sentimentality}</span>
-                                    : ""
-                            }
-                        </Typography>
-                        <Typography >
-                            <strong>Created:</strong> {snippet.formatedUserDate}
+                        <Typography className={classes.textContainer}>
                             <strong>Description:</strong> {snippet.description}
                         </Typography>
+                        <Typography className={classes.textContainer}>
+                            <strong>Content:</strong> {snippet.content}
+                        </Typography>
                     </CardContent>
-                    <CardActions>
-                        <Button onClick={(e) => {
-                            e.preventDefault();
-                            editArticleModal(snippet);
-                        }}>Edit Snippet</Button>
-                        <Button onClick={(e) => {
-                            e.preventDefault();
-                            deleteArticleModal(snippet);
-                        }}>Delete Snippet</Button>
+                    <CardActions className={classes.buttonGroup}>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                editArticleModal(snippet);
+                            }}>Edit Snippet</Button>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                deleteArticleModal(snippet);
+                            }}>Delete Snippet</Button>
                     </CardActions>
                 </Card>
             </Paper>
@@ -307,6 +371,7 @@ export const SnippetDetails = (props) => {
                     }
                 </section>
             </Container>
+            <Footer />
         </>
     )
 }

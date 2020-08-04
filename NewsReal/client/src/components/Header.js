@@ -116,9 +116,6 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    toolbar: {
-        paddingRight: 24, // keep right padding when drawer closed
-    },
     toolbarIcon: {
         display: 'flex',
         alignItems: 'center',
@@ -128,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Header = ({ categories, handleSearchInput, setNewsReady }) => {
+export const Header = ({ categories, handleSearchInput }) => {
     const { logout } = useContext(UserProfileContext);
     let pathname = useLocation().pathname;
     const classes = useStyles();
@@ -173,30 +170,34 @@ export const Header = ({ categories, handleSearchInput, setNewsReady }) => {
                             Saved Snippets
                         </Link>
                     </Typography>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
-                        </div>
-                        <InputBase
-                            placeholder="Search Present List…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            onChange={handleSearchInput}
-                        />
-                    </div>
-                    <IconButton edge="end" color="inherit" aria-label="menu">
+                    {
+                        (pathname === "/" || pathname === "/snippets")
+                            ? <div className={classes.search}>
+                                <div className={classes.searchIcon}>
+                                    <SearchIcon />
+                                </div>
+                                <InputBase
+                                    placeholder="Search Present List…"
+                                    classes={{
+                                        root: classes.inputRoot,
+                                        input: classes.inputInput,
+                                    }}
+                                    inputProps={{ 'aria-label': 'search' }}
+                                    onChange={handleSearchInput}
+                                />
+                            </div>
+                            : ""
+                    }
+                    {/* <IconButton edge="end" color="inherit" aria-label="menu">
                         <AccountCircleIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton edge="end" color="inherit" aria-label="menu" onClick={logout}>
                         <ExitToAppRoundedIcon />
                     </IconButton>
                 </Toolbar>
             </AppBar>
             {
-                (pathname === "/" || pathname === "/snippets")
+                (pathname === "/")
                     ? <Drawer
                         variant="permanent"
                         className={clsx(classes.drawer, {
@@ -216,7 +217,7 @@ export const Header = ({ categories, handleSearchInput, setNewsReady }) => {
                             </IconButton>
                         </div>
                         <Divider />
-                        <Search open={open} categories={categories} classes={classes} handleDrawerChange={handleDrawerChange} setNewsReady={setNewsReady} />
+                        <Search open={open} categories={categories} classes={classes} handleDrawerChange={handleDrawerChange} />
                     </Drawer>
                     : ""
             }

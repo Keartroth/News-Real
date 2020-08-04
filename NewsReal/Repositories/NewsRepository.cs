@@ -1,4 +1,5 @@
-﻿using NewsReal.Data;
+﻿using Microsoft.Extensions.Configuration;
+using NewsReal.Data;
 using NewsReal.Models.CurrentsModels;
 using Newtonsoft.Json;
 using System;
@@ -12,25 +13,27 @@ namespace NewsReal.Repositories
     public class NewsRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _config;
 
-        public NewsRepository(ApplicationDbContext context)
+        public NewsRepository(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _config = configuration;
         }
 
         private static string currentsBaseUrl = "https://api.currentsapi.services/v1/";
 
-        private static string apiKey = "KEEP_IT_SECRET_KEEP_IT_SAFE";
-
         public async Task<List<CurrentsArticle>> GetNewsAsync()
         {
+            string CurrentsApiKey = _config["CurrentsApiKey"];
+
             List<CurrentsArticle> articles;
             using (var httpClient = new HttpClient())
             {
                 httpClient.BaseAddress = new Uri(currentsBaseUrl);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage response = await httpClient.GetAsync("latest-news?apiKey=" + apiKey);
+                HttpResponseMessage response = await httpClient.GetAsync("latest-news?apiKey=" + CurrentsApiKey);
                 
                 if (response.IsSuccessStatusCode)
                 {
@@ -53,13 +56,15 @@ namespace NewsReal.Repositories
 
         public async Task<List<CurrentsArticle>> SearchNewsByCriteriaAsync(string criteria)
         {
+            string CurrentsApiKey = _config["CurrentsApiKey"];
+
             List<CurrentsArticle> articles;
             using (var httpClient = new HttpClient())
             {
                 httpClient.BaseAddress = new Uri(currentsBaseUrl);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage response = await httpClient.GetAsync("search?apiKey=" + apiKey + criteria);
+                HttpResponseMessage response = await httpClient.GetAsync("search?apiKey=" + CurrentsApiKey + criteria);
 
                 if (response.IsSuccessStatusCode)
                 {

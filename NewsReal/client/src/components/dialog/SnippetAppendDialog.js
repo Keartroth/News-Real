@@ -6,7 +6,6 @@ import {
     Button,
     Card,
     CardContent,
-    CardMedia,
     Dialog,
     DialogActions,
     DialogContent,
@@ -18,9 +17,11 @@ import {
     InputLabel,
     MenuItem,
     Select,
+    TextField,
     Typography,
 } from '@material-ui/core';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiTextField from '@material-ui/core/TextField';
 import { makeStyles, withStyles, fade } from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
@@ -38,9 +39,15 @@ const useStyles = makeStyles((theme) => ({
         top: theme.spacing(1),
         color: theme.palette.grey[500],
     },
+    cardMedia: {
+        paddingTop: '56.25%', // 16:9
+    },
+    dialogTitle: {
+        textAlign: 'center',
+    },
     formControl: {
         margin: theme.spacing(1),
-        minWidth: 120,
+        minWidth: '75%',
     },
     inputRoot: {
         color: 'gray',
@@ -52,9 +59,9 @@ const useStyles = makeStyles((theme) => ({
         transition: theme.transitions.create('width'),
         width: '100%',
         [theme.breakpoints.up('sm')]: {
-            width: '18ch',
+            width: '75%',
             '&:focus': {
-                width: '25ch',
+                width: '100%',
             },
         },
     },
@@ -101,9 +108,11 @@ const DialogTitle = withStyles(useStyles)(({ children, classes, onClose, ...othe
 
 export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, handleSnippetAppendModalChange, openSnippetAppendModal }) => {
     const classes = useStyles();
-    const { addSnippetReference, snippets, getSnippets, addSnippet, snippetsReady } = useContext(SnippetContext);
-    const [filterReady, setFilterReady] = useState(false);
+    const { addSnippetReference, snippets, getSnippets, addSnippet, snippetsReady, updateSnippet } = useContext(SnippetContext);
+    const [searching, setSearching] = useState(false);
+    const [searchBool, setSearchBool] = useState(true);
     const [snippet, setSnippet] = useState("");
+    const [snippetEditState, setSnippetEditState] = useState("");
     const [searchTerms, setSearchTerms] = useState(null);
     const [filteredSnippets, setFilteredSnippets] = useState(null);
     const debounceSearchSnippets = debounce(setSearchTerms, 500);
@@ -115,22 +124,38 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
     }, []);
 
     useEffect(() => {
+        setSnippetEditState(snippet);
+    }, [snippet]);
+
+    useEffect(() => {
         if (searchTerms === null || searchTerms === "") {
-            setFilterReady(false);
+            setSearching(false);
         } else {
             const toLowerCriteria = searchTerms.toLowerCase();
-            const snippetSubset = snippets.filter(s => s.userTitle.toLowerCase().includes(toLowerCriteria) || s.content.toLowerCase().includes(toLowerCriteria));
+            const snippetSubset = snippets.filter(s => (s.userTitle) ? s.userTitle.toLowerCase().includes(toLowerCriteria) : null || (s.title) ? s.title.toLowerCase().includes(toLowerCriteria) : null || (s.content) ? s.content.toLowerCase().includes(toLowerCriteria) : null);
             setFilteredSnippets(snippetSubset);
-            setFilterReady(true);
+            setSearching(true);
         }
     }, [searchTerms]);
 
     const handleSnippetChange = (e) => {
-        setSnippet(e.target.value);
+        if (e.target.value === "0") {
+            setSearchBool(true);
+            setSnippet("");
+        } else {
+            setSearchBool(false);
+            setSnippet(e.target.value);
+        }
     };
 
     const handleUserInput = (e) => {
         debounceSearchSnippets(e.target.value);
+    };
+
+    const handleSnippetUpdate = (e) => {
+        const updatedState = { ...snippetEditState }
+        updatedState[e.target.id] = e.target.value
+        setSnippetEditState(updatedState);
     };
 
     const getHostname = (url) => {
@@ -173,6 +198,9 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
             newArticle.articleCategory.push(articleCategory);
         });
 
+        if (snippet !== snippetEditState) {
+            updateSnippet(snippet.id, snippetEditState);
+        }
         addSnippet(newArticle).then((resp) => {
             const articleReference = {
                 articleId: snippet.id,
@@ -190,7 +218,14 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
     }
 
     return (
-        <Dialog onClose={handleSnippetAppendModalChange} aria-labelledby="customized-dialog-title" open={openSnippetAppendModal}>
+        <Dialog
+            fullWidth={true}
+            maxWidth="sm"
+            className={classes.appendDialog}
+            open={openSnippetAppendModal}
+            onClose={handleSnippetAppendModalChange}
+            aria-labelledby="customized-dialog-title"
+        >
             <DialogTitle classes={classes} id="customized-dialog-title" onClose={handleSnippetAppendModalChange}>
                 Append A Snippet
             </DialogTitle>
@@ -204,6 +239,8 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
                             <SearchIcon />
                         </div>
                         <InputBase
+                            fullWidth
+                            disabled={(searchBool) ? false : true}
                             placeholder="Search by Snippet Title or Content…"
                             classes={{
                                 root: classes.inputRoot,
@@ -223,10 +260,14 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
                     id="demo-simple-select-helper"
                     value={snippet}
                     fullWidth
+                    required
                     onChange={handleSnippetChange}
                 >
+                    <MenuItem value="0">
+                        Select A Snippet
+                    </MenuItem>
                     {
-                        (filterReady)
+                        (searching)
                             ? (filteredSnippets.length > 0)
                                 ? filteredSnippets.map((fs, idx) => {
                                     return (
@@ -236,9 +277,9 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
                                     )
                                 })
                                 : <MenuItem value="">
-                                    No Snippets
+                                    No Matching Snippets
                                   </MenuItem>
-                            : (snippetsReady)
+                            : (snippetsReady && snippets.length > 0)
                                 ? snippets.map((s, idx) => {
                                     return (
                                         <MenuItem key={idx} value={s}>
@@ -246,8 +287,8 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
                                         </MenuItem>
                                     )
                                 })
-                                : <MenuItem value="">
-                                    No Snippets
+                                : <MenuItem value="0">
+                                    You Have No Saved Snippets
                                   </MenuItem>
                     }
                 </Select>
@@ -256,22 +297,46 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
             {
                 (snippet !== "")
                     ? <Card className={classes.card}>
-                        <CardMedia
-                            className={classes.cardMedia}
-                            image={(snippet.image !== "None") ? snippet.image : ""}
-                            title="Image title"
-                        />
                         <CardContent className={classes.cardContent}>
-                            <Typography className={classes.cardTitle} gutterBottom variant="h5" component="h2">
-                                {snippet.userTitle}
-                            </Typography>
-                            {snippet.content}
+                            <TextField
+                                className={classes.cardTitle}
+                                autoFocus
+                                margin="dense"
+                                id="userTitle"
+                                label="Snippet Title"
+                                type="text"
+                                fullWidth
+                                required
+                                onChange={handleSnippetUpdate}
+                                value={snippetEditState.userTitle || ""}
+                                inputProps={{ min: "5", max: "10" }}
+                            />
+                            <MuiTextField
+                                autoFocus
+                                margin="dense"
+                                id="content"
+                                label="Personal Reflections"
+                                type="textarea"
+                                multiline={true}
+                                rows={5}
+                                fullWidth
+                                required
+                                onChange={handleSnippetUpdate}
+                                value={snippetEditState.content || ""}
+                            />
                         </CardContent>
                     </Card>
                     : ""
             }
             <DialogActions>
-                <Button onClick={appendSnippet} color="primary">
+                <Button onClick={(e) => {
+                    e.preventDefault();
+                    if (snippetEditState && snippet) {
+                        appendSnippet();
+                    } else {
+                        alert('You must select a Snippet to append.');
+                    }
+                }} variant="contained" color="primary">
                     Append Snippet
                 </Button>
             </DialogActions>

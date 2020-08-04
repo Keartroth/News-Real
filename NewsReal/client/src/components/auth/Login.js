@@ -25,7 +25,7 @@ const Copyright = () => {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://keartroth.github.io/" target="_blank">
+            <Link color="inherit" href="https://keartroth.github.io/" target="_blank" rel="noopener noreferrer">
                 Michael Carroll
             </Link>{' '}
             {new Date().getFullYear()}
