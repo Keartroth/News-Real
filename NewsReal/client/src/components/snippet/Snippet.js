@@ -71,14 +71,14 @@ const capitalizeCategory = (s) => {
     }
 }
 
-export const Snippet = ({ snippet, handleSnackClick, setSnippetDeleteState }) => {
+export const Snippet = ({ snippet, toggleSnack, setSnippetDeleteState }) => {
     const classes = useStyles();
     const formatedDate = parseISO(snippet.createDateTime).toDateString();
 
     const setNukeSnippet = (e) => {
         e.preventDefault();
         setSnippetDeleteState(snippet);
-        handleSnackClick(snippet.userTitle);
+        toggleSnack(snippet.userTitle);
     };
     return (
         <Card className={classes.card}>

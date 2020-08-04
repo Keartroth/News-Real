@@ -23,11 +23,11 @@ export const NewsList = props => {
     const [openSnippetAppendModal, setOpenSnippetAppendModal] = useState(false);
     const [dialogSnippetAppendState, setDialogSnippetAppendState] = useState(null);
 
-    const handleSnippetAppendModalChange = () => {
+    const toggleSnippetAppendModalChange = () => {
         setOpenSnippetAppendModal(!openSnippetAppendModal);
     }
 
-    const handleModalChange = () => {
+    const toggleModalChange = () => {
         setOpenModal(!openModal);
     }
 
@@ -36,13 +36,13 @@ export const NewsList = props => {
             <SnippetAppendDialog
                 categories={categories}
                 dialogSnippetAppendState={dialogSnippetAppendState}
-                handleSnippetAppendModalChange={handleSnippetAppendModalChange}
+                toggleSnippetAppendModalChange={toggleSnippetAppendModalChange}
                 openSnippetAppendModal={openSnippetAppendModal}
             />
             <SnippetSaveDialog
                 categories={categories}
                 dialogNewsState={dialogNewsState}
-                handleModalChange={handleModalChange}
+                toggleModalChange={toggleModalChange}
                 openModal={openModal}
             />
             {
@@ -52,8 +52,8 @@ export const NewsList = props => {
                             key={idx}
                             article={a}
                             categories={categories}
-                            handleModalChange={handleModalChange}
-                            handleSnippetAppendModalChange={handleSnippetAppendModalChange}
+                            toggleModalChange={toggleModalChange}
+                            toggleSnippetAppendModalChange={toggleSnippetAppendModalChange}
                             setDialogNewsState={setDialogNewsState}
                             setDialogSnippetAppendState={setDialogSnippetAppendState}
                         />

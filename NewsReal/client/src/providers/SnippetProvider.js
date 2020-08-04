@@ -127,9 +127,9 @@ export const SnippetProvider = (props) => {
             }))
     };
 
-    const deleteSnippetReference = (articleId, referenceArticleId) => {
+    const deleteSnippetReference = (referenceArticleId) => {
         return getToken().then((token) =>
-            fetch(apiUrl + `/id=${articleId}&referenceArticleId=${referenceArticleId}`, {
+            fetch(apiUrl + `/deletereferencearticle/${referenceArticleId}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -138,7 +138,7 @@ export const SnippetProvider = (props) => {
                 if (resp.ok) {
                     return;
                 }
-                throw new Error("Failed to delete snippet.")
+                throw new Error("Failed to delete reference article.")
             })
         );
     };

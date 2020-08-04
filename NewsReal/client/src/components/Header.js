@@ -130,7 +130,7 @@ export const Header = ({ categories, handleSearchInput }) => {
     let pathname = useLocation().pathname;
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    const handleDrawerChange = () => {
+    const toggleDrawerChange = () => {
         setOpen(!open);
     };
 
@@ -144,11 +144,11 @@ export const Header = ({ categories, handleSearchInput }) => {
             >
                 <Toolbar>
                     {
-                        (pathname === "/" || pathname === "/snippets")
+                        (pathname === "/")
                             ? <IconButton
                                 color="inherit"
                                 aria-label="open drawer"
-                                onClick={handleDrawerChange}
+                                onClick={toggleDrawerChange}
                                 edge="start"
                                 className={clsx(classes.menuButton, {
                                     [classes.menuButtonHidden]: open,
@@ -188,9 +188,6 @@ export const Header = ({ categories, handleSearchInput }) => {
                             </div>
                             : ""
                     }
-                    {/* <IconButton edge="end" color="inherit" aria-label="menu">
-                        <AccountCircleIcon />
-                    </IconButton> */}
                     <IconButton edge="end" color="inherit" aria-label="menu" onClick={logout}>
                         <ExitToAppRoundedIcon />
                     </IconButton>
@@ -212,12 +209,12 @@ export const Header = ({ categories, handleSearchInput }) => {
                         }}
                     >
                         <div className={classes.toolbarIcon}>
-                            <IconButton onClick={handleDrawerChange}>
+                            <IconButton onClick={toggleDrawerChange}>
                                 <ChevronLeftIcon />
                             </IconButton>
                         </div>
                         <Divider />
-                        <Search open={open} categories={categories} classes={classes} handleDrawerChange={handleDrawerChange} />
+                        <Search open={open} categories={categories} classes={classes} toggleDrawerChange={toggleDrawerChange} />
                     </Drawer>
                     : ""
             }

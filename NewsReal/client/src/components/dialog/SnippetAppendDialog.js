@@ -106,7 +106,7 @@ const DialogTitle = withStyles(useStyles)(({ children, classes, onClose, ...othe
     );
 });
 
-export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, handleSnippetAppendModalChange, openSnippetAppendModal }) => {
+export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, toggleSnippetAppendModalChange, openSnippetAppendModal }) => {
     const classes = useStyles();
     const { addSnippetReference, snippets, getSnippets, addSnippet, snippetsReady, updateSnippet } = useContext(SnippetContext);
     const [searching, setSearching] = useState(false);
@@ -138,7 +138,7 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
         }
     }, [searchTerms]);
 
-    const handleSnippetChange = (e) => {
+    const SnippetChange = (e) => {
         if (e.target.value === "0") {
             setSearchBool(true);
             setSnippet("");
@@ -191,11 +191,13 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
         }
         article.category.map(c => {
             const foundCategory = categories.find(cat => cat.name === c);
-            let articleCategory = {
-                categoryId: foundCategory.id
-            };
+            if (foundCategory) {
+                let articleCategory = {
+                    categoryId: foundCategory.id
+                };
 
-            newArticle.articleCategory.push(articleCategory);
+                newArticle.articleCategory.push(articleCategory);
+            }
         });
 
         if (snippet !== snippetEditState) {
@@ -207,7 +209,7 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
                 referenceArticleId: resp.id,
             }
             addSnippetReference(articleReference).then(() => {
-                handleSnippetAppendModalChange();
+                toggleSnippetAppendModalChange();
                 history.push(`/snippet/${articleReference.articleId}`)
             })
         });
@@ -223,10 +225,10 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
             maxWidth="sm"
             className={classes.appendDialog}
             open={openSnippetAppendModal}
-            onClose={handleSnippetAppendModalChange}
+            onClose={toggleSnippetAppendModalChange}
             aria-labelledby="customized-dialog-title"
         >
-            <DialogTitle classes={classes} id="customized-dialog-title" onClose={handleSnippetAppendModalChange}>
+            <DialogTitle classes={classes} id="customized-dialog-title" onClose={toggleSnippetAppendModalChange}>
                 Append A Snippet
             </DialogTitle>
             <DialogContent dividers>
@@ -261,7 +263,7 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
                     value={snippet}
                     fullWidth
                     required
-                    onChange={handleSnippetChange}
+                    onChange={SnippetChange}
                 >
                     <MenuItem value="0">
                         Select A Snippet
@@ -271,7 +273,7 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
                             ? (filteredSnippets.length > 0)
                                 ? filteredSnippets.map((fs, idx) => {
                                     return (
-                                        <MenuItem key={idx} value={fs.id}>
+                                        <MenuItem key={idx} value={fs}>
                                             {fs.userTitle}
                                         </MenuItem>
                                     )

@@ -69,8 +69,9 @@ namespace NewsReal.Controllers
         public IActionResult Put(int id, Article snippet)
         {
             var currentUserProfile = GetCurrentUserProfile();
+            var snippetDBState = _snippetRepository.GetTracklessArticleById(id);
 
-            if (currentUserProfile.Id != snippet.UserProfileId)
+            if ((currentUserProfile.Id != snippet.UserProfileId) || (snippetDBState.UserProfileId != snippet.UserProfileId))
             {
                 return Unauthorized();
             }
@@ -96,6 +97,21 @@ namespace NewsReal.Controllers
             }
 
             _snippetRepository.Delete(id);
+            return NoContent();
+        }
+
+        [HttpDelete("deletereferencearticle/{id}")]
+        public IActionResult DeleteReferenceArticle(int id)
+        {
+            var currentUserProfile = GetCurrentUserProfile();
+            var referenceArticle = _snippetRepository.GetArticleById(id);
+
+            if (currentUserProfile.Id != referenceArticle.UserProfileId)
+            {
+                return Unauthorized();
+            }
+
+            _snippetRepository.DeleteReferenceArticle(id);
             return NoContent();
         }
 

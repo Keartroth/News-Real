@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 const snippetOptions = ['Create New Snippet', 'Append Existing Snippet'];
 const articleOptions = ['View Description', 'Visit Article Home'];
 
-export const News = ({ article, handleModalChange, setDialogNewsState, setDialogSnippetAppendState, handleSnippetAppendModalChange }) => {
+export const News = ({ article, toggleModalChange, setDialogNewsState, setDialogSnippetAppendState, toggleSnippetAppendModalChange }) => {
     const classes = useStyles();
     const [articleOpen, setArticleOpen] = useState(false);
     const [snippetOpen, setSnippetOpen] = useState(false);
@@ -100,10 +100,10 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
         e.preventDefault();
         if (snippetOptions[selectedSnippetIndex] === 'Create New Snippet') {
             setDialogNewsState(article)
-            handleModalChange();
+            toggleModalChange();
         } else {
             setDialogSnippetAppendState(article);
-            handleSnippetAppendModalChange();
+            toggleSnippetAppendModalChange();
         }
     };
 
@@ -134,7 +134,7 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
         setArticleOpen(false);
     };
 
-    const handleArticleToggle = () => {
+    const toggleArticleButtonGroup = () => {
         setArticleOpen((prevOpen) => !prevOpen);
     };
 
@@ -150,7 +150,7 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
         setSnippetOpen(false);
     };
 
-    const handleSnippetToggle = () => {
+    const toggleSnippetButtonGroup = () => {
         setSnippetOpen((prevOpen) => !prevOpen);
     };
 
@@ -210,7 +210,7 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
                         aria-expanded={articleOpen ? 'true' : undefined}
                         aria-label="select merge strategy"
                         aria-haspopup="menu"
-                        onClick={handleArticleToggle}
+                        onClick={toggleArticleButtonGroup}
                     >
                         <ArrowDropDownIcon />
                     </Button>
@@ -250,7 +250,7 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
                         aria-expanded={snippetOpen ? 'true' : undefined}
                         aria-label="select merge strategy"
                         aria-haspopup="menu"
-                        onClick={handleSnippetToggle}
+                        onClick={toggleSnippetButtonGroup}
                     >
                         <ArrowDropDownIcon />
                     </Button>

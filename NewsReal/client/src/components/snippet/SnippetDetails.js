@@ -134,8 +134,8 @@ export const SnippetDetails = (props) => {
     const classes = useStyles();
     const setSnippetDeleteState = props.setSnippetDeleteState;
     const setSnippetEditState = props.setSnippetEditState;
-    const handleSnippetEditModalChange = props.handleSnippetEditModalChange;
-    const handleSnackClick = props.handleSnackClick;
+    const toggleSnippetEditModalChange = props.toggleSnippetEditModalChange;
+    const toggleSnack = props.toggleSnack;
     const openSnippetEditModal = props.openSnippetEditModal;
     const snackOpen = props.snackState.snackOpen;
 
@@ -154,12 +154,12 @@ export const SnippetDetails = (props) => {
 
     const editArticleModal = (article) => {
         setSnippetEditState(article);
-        handleSnippetEditModalChange();
+        toggleSnippetEditModalChange();
     };
 
-    const deleteArticleModal = (article) => {
+    const deleteArticleModal = (article, bool, snippetId) => {
         setSnippetDeleteState(article);
-        handleSnackClick(article.userTitle);
+        toggleSnack(article.userTitle, bool, snippetId);
     };
 
     const CategoryRender = () => {
@@ -257,7 +257,7 @@ export const SnippetDetails = (props) => {
                                 variant="contained"
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    deleteArticleModal(ra);
+                                    deleteArticleModal(ra, false, snippet.id);
                                 }}>Delete Reference</Button>
                         </CardActions>
                     </Grid>
@@ -291,7 +291,7 @@ export const SnippetDetails = (props) => {
                     <CardMedia
                         className={classes.cardMedia}
                         image={(snippet.image !== "None") ? snippet.image : "https://source.unsplash.com/random/?newspaper"}
-                        title="Image title"
+                        alt="Image title"
                     />
                     <CardContent className={classes.content}>
                         <Typography className={classes.userTitle} component="div">
@@ -332,7 +332,7 @@ export const SnippetDetails = (props) => {
                             variant="contained"
                             onClick={(e) => {
                                 e.preventDefault();
-                                deleteArticleModal(snippet);
+                                deleteArticleModal(snippet, true);
                             }}>Delete Snippet</Button>
                     </CardActions>
                 </Card>

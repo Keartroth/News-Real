@@ -21,16 +21,16 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export const DeleteSnackbar = ({ snackState, handleSnackClose, snippetDeleteState, nukeSnippet }) => {
+export const DeleteSnackbar = ({ snackState, toggleSnack, snippetDeleteState, nukeSnippet }) => {
     const classes = useStyles();
-    const { vertical, horizontal, snackOpen, snippetTitle } = snackState;
+    const { vertical, horizontal, snackOpen, snippetTitle, id } = snackState;
 
     return (
         <Snackbar
             className={classes.root}
             anchorOrigin={{ vertical, horizontal }}
             open={snackOpen}
-            onClose={handleSnackClose}
+            onClose={toggleSnack}
             message={(snippetDeleteState !== null)
                 ? (snippetDeleteState.articleReferences !== null && snippetDeleteState.articleReferences.length > 0)
                     ? snippetDeleteState.articleReferences.map((ar, idx) => {
@@ -50,14 +50,14 @@ export const DeleteSnackbar = ({ snackState, handleSnackClose, snippetDeleteStat
             key={vertical + horizontal}
             action={
                 <React.Fragment>
-                    <Button className={classes.snackButton} size="small" onClick={nukeSnippet}>
+                    <Button className={classes.snackButton} size="small" onClick={() => nukeSnippet(snippetDeleteState.id)}>
                         Yes I am Certain
                     </Button>
                     <IconButton
                         aria-label="close"
                         color="inherit"
                         className={classes.close}
-                        onClick={handleSnackClose}
+                        onClick={toggleSnack}
                     >
                         <CloseIcon />
                     </IconButton>
