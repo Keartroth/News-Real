@@ -107,8 +107,8 @@ export const Snippet = ({ snippet, handleSnackClick, setSnippetDeleteState }) =>
             </CardContent>
             <CardContent className={classes.content}>
                 <Typography component="div" className={classes.infoContainer}>
-                    <div className={classes.info}><strong>Created:</strong> {formatedDate}</div>
-                    <div className={classes.info}><strong>Category:</strong>
+                    <div className={classes.info}><strong>Created: </strong> {formatedDate}</div>
+                    <div className={classes.info}><strong>Category: </strong>
                         {
                             snippet.categories.map((c, idx) => {
                                 const length = snippet.categories.length;

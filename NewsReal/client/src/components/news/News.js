@@ -181,7 +181,7 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
                             </Typography>
                             <Typography component="div" className={classes.infoContainer}>
                                 <div className={classes.info}><strong>Publisher:</strong> {getHostname(article.url)}</div>
-                                <div className={classes.info}><strong>Category:</strong>
+                                <div className={classes.info}><strong>Category: </strong>
                                     {
                                         article.category.map((c, idx) => {
                                             const length = article.category.length;

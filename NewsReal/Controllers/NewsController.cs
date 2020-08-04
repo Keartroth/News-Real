@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using NewsReal.Data;
 using NewsReal.Models.CurrentsModels;
 using NewsReal.Repositories;
@@ -14,9 +15,9 @@ namespace NewsReal.Controllers
     public class NewsController : ControllerBase
     {
         private readonly NewsRepository _newsRepository;
-        public NewsController(ApplicationDbContext context)
+        public NewsController(ApplicationDbContext context, IConfiguration configuration)
         {
-            _newsRepository = new NewsRepository(context);
+            _newsRepository = new NewsRepository(context, configuration);
         }
 
         [HttpGet]
