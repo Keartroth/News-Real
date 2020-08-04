@@ -22,6 +22,12 @@ const useStyles = makeStyles((theme) => ({
     author: {
         fontSize: 14,
     },
+    buttonContainer: {
+        display: 'flex',
+        flexWrap: 'nowrap',
+        margin: 'auto',
+        width: 'fit-content',
+    },
     buttonGroup: {
         width: '263px',
     },
@@ -31,9 +37,10 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         height: '600px',
         margin: theme.spacing(2),
+        maxWidth: '47%',
     },
     cardFull: {
-        boxShadow: '5px 10px #888888',
+        boxShadow: '5px 10px 10px #888888',
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
@@ -118,7 +125,7 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
                 }
             }
         } else {
-            window.open(article.url, '_blank');
+            window.open(article.url, '_blank', 'noopener');
         }
     };
 
@@ -193,7 +200,7 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
                             </Typography></>
                 }
             </CardContent>
-            <CardActions>
+            <CardActions className={classes.buttonContainer}>
                 <ButtonGroup className={classes.buttonGroup} variant="contained" color="primary" ref={articleAnchorRef} aria-label="split button">
                     <Button className={classes.buttonGroup} onClick={handleArticleClick}>{articleOptions[selectedArticleIndex]}</Button>
                     <Button
@@ -275,6 +282,6 @@ export const News = ({ article, handleModalChange, setDialogNewsState, setDialog
                     )}
                 </Popper>
             </CardActions>
-        </Card>
+        </Card >
     )
 }

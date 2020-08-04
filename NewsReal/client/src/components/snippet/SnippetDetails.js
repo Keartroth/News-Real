@@ -66,7 +66,8 @@ const useStyles = makeStyles((theme) => ({
         padding: '0.5rem 0em',
     },
     content: {
-        overflow: 'scroll',
+        maxHeight: '20rem',
+        overflow: 'auto',
         overflowX: 'hidden',
         textAlign: 'left',
     },
@@ -80,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexWrap: 'nowrap',
         justifyContent: 'space-between',
-        margin: '0.5rem 0',
+        margin: '0.5rem 1.5rem',
     },
     pos: {
         marginBottom: 12,
@@ -190,8 +191,8 @@ export const SnippetDetails = (props) => {
                 <Typography className={classes.cardTitle} gutterBottom component="div">
                     {
                         (ra.userTitle)
-                            ? <div><strong>Title:</strong> {ra.userTitle}</div>
-                            : <div><strong>Link:</strong><a target="_blank" href={`${ra.url}`}>{ra.title}</a></div>
+                            ? <div><div><strong>Title: </strong> {ra.userTitle}</div><div><strong>Link: </strong><a target="_blank" rel="noopener noreferrer" href={`${ra.url}`}>{ra.title}</a></div></div>
+                            : <div><strong>Link: </strong><a target="_blank" rel="noopener noreferrer" href={`${ra.url}`}>{ra.title}</a></div>
                     }
                 </Typography>
                 <Grid className={classes.raContent}>
@@ -214,7 +215,7 @@ export const SnippetDetails = (props) => {
                             <Typography className={classes.raInfoContainer} component="div">
                                 <div className={classes.raInfo}><strong>Created:</strong> {formatedUserDate}</div>
                                 {
-                                    <div className={classes.raInfo}><strong>Category:</strong>
+                                    <div className={classes.raInfo}><strong>Category: </strong>
                                         {
                                             (snippetReady)
                                                 ? <CategoryRender />
@@ -223,22 +224,22 @@ export const SnippetDetails = (props) => {
                                 }
                                 {
                                     (ra.objectivity)
-                                        ? <span><strong>Objectivity:</strong> {ra.objectivity}</span>
+                                        ? <div><strong>Objectivity:</strong> {ra.objectivity}</div>
                                         : ""
                                 }
                                 {
                                     (ra.sentimentality)
-                                        ? <span><strong>Objectivity:</strong> {ra.sentimentality}</span>
+                                        ? <div><strong>Objectivity:</strong> {ra.sentimentality}</div>
                                         : ""
                                 }
                             </Typography>
-                            <Typography >
+                            <Typography component="div">
                                 <strong>Description:</strong> {ra.description}
                             </Typography>
-                            <Typography >
+                            <Typography component="div">
                                 {
                                     (ra.content)
-                                        ? <span><strong>Content:</strong> {ra.content}</span>
+                                        ? <div><strong>Content:</strong> {ra.content}</div>
                                         : ""
                                 }
                             </Typography>
@@ -273,7 +274,7 @@ export const SnippetDetails = (props) => {
                         {
                             (snippet.userTitle)
                                 ? <div><strong>Title:</strong> {snippet.userTitle}</div>
-                                : <div> <strong>Link:</strong> <a target="_blank" href={`${snippet.url}`}> {snippet.title}</a></div>
+                                : <div> <strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href={`${snippet.url}`}> {snippet.title}</a></div>
                         }
                         <div><strong>Created:</strong> {formatedUserDate}</div>
                         {
@@ -296,7 +297,7 @@ export const SnippetDetails = (props) => {
                         <Typography className={classes.userTitle} component="div">
                             {
                                 (snippet.userTitle)
-                                    ? <div> <strong>Link:</strong> <a target="_blank" href={`${snippet.url}`}> {snippet.title}</a></div>
+                                    ? <div> <strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href={`${snippet.url}`}> {snippet.title}</a></div>
                                     : ""
                             }
                         </Typography>
@@ -305,7 +306,7 @@ export const SnippetDetails = (props) => {
                             <div className={classes.info}><strong>Publisher:</strong> {snippet.publisher}</div>
                             <div><strong>Published:</strong> {formatedDate}</div>
                             {
-                                <div className={classes.marginLeft}><strong>Category:</strong>
+                                <div className={classes.marginLeft}><strong>Category: </strong>
                                     {
                                         <CategoryRender />
                                     }</div>

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { UserProfileContext } from "./UserProfileProvider";
 
 export const NewsContext = React.createContext();
@@ -6,6 +6,13 @@ export const NewsContext = React.createContext();
 export const NewsProvider = (props) => {
     const { getToken } = useContext(UserProfileContext);
     const [news, setNews] = useState(null);
+    const [newsReady, setNewsReady] = useState(false);
+
+    useEffect(() => {
+        if (news !== null) {
+            setNewsReady(true);
+        }
+    }, [news]);
 
     const apiUrl = '/api/news'
 
@@ -32,7 +39,7 @@ export const NewsProvider = (props) => {
     };
 
     return (
-        <NewsContext.Provider value={{ news, getRecentNews, getNewsByDefinedParameters }}>
+        <NewsContext.Provider value={{ news, newsReady, setNewsReady, getRecentNews, getNewsByDefinedParameters }}>
             {props.children}
         </NewsContext.Provider>
     );

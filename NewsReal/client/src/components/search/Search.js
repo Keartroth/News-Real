@@ -57,9 +57,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Search = ({ categories, open, handleDrawerChange, setNewsReady }) => {
+export const Search = ({ categories, open, handleDrawerChange }) => {
     const classes = useStyles();
-    const { getNewsByDefinedParameters } = useContext(NewsContext);
+    const { setNewsReady, getNewsByDefinedParameters } = useContext(NewsContext);
 
     const initialSearchState = {
         language: "en",
@@ -102,11 +102,34 @@ export const Search = ({ categories, open, handleDrawerChange, setNewsReady }) =
     const date = new Date();
     const earliestDate = ((date.getMonth() - 5 > 0) ? (date.getFullYear()) : (date.getFullYear() - 1)) + '-' + ((date.getMonth() - 5 > 0) ? (date.getMonth() - 5) : (date.getMonth() + 7)) + '-' + date.getDate();
 
+    const isEquivalent = (a, b) => {
+        const aProps = Object.getOwnPropertyNames(a);
+        const bProps = Object.getOwnPropertyNames(b);
+
+        if (aProps.length !== bProps.length) {
+            return false;
+        }
+
+        for (let i = 0; i < aProps.length; i++) {
+            const propName = aProps[i];
+
+            if (a[propName] !== b[propName]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     const submitSearchCriteria = (e) => {
         e.preventDefault();
+        const bool = isEquivalent(searchState, initialSearchState);
 
         if (searchState.domain.includes('www.') || searchState.domain_not.includes('www.')) {
             alert('Please remove domain prefix from search criteria: e.g. www.cnn.com becomes cnn.com')
+        } else if (bool) {
+            handleDrawerChange();
+            alert('No parameters selected.')
         } else {
             if (startDate !== null && startDate !== "") {
                 searchState.start_date = format(startDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");

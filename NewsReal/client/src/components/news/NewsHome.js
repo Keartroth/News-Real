@@ -37,12 +37,11 @@ const useStyles = makeStyles((theme) => ({
 
 export const NewsHome = () => {
     const classes = useStyles();
-    const { news, getRecentNews } = useContext(NewsContext);
+    const { news, newsReady, getRecentNews } = useContext(NewsContext);
     const { categories, getCategories } = useContext(CategoryContext);
 
-    const [newsReady, setNewsReady] = useState(true);
-
     useEffect(() => {
+        getRecentNews();
         getCategories();
     }, []);
 
@@ -61,7 +60,7 @@ export const NewsHome = () => {
             setSearching(false);
         } else {
             const toLowerCriteria = searchTerms.toLowerCase();
-            const articleSubset = dummyData.filter((a) => (a.title) ? a.title.toLowerCase().includes(toLowerCriteria) : null || (a.description) ? a.description.toLowerCase().includes(toLowerCriteria) : null);
+            const articleSubset = news.filter((a) => (a.title) ? a.title.toLowerCase().includes(toLowerCriteria) : null || (a.description) ? a.description.toLowerCase().includes(toLowerCriteria) : null);
             setFilteredArticles(articleSubset);
             setSearching(true);
         }
@@ -69,7 +68,7 @@ export const NewsHome = () => {
 
     return (
         <>
-            <Header categories={categories} handleSearchInput={handleSearchInput} setNewsReady={setNewsReady} />
+            <Header categories={categories} handleSearchInput={handleSearchInput} />
             <div className={classes.root}>
                 <CssBaseline />
                 <div className={classes.content}>
@@ -77,7 +76,7 @@ export const NewsHome = () => {
                     <Container maxWidth="lg" className={classes.container}>
                         {
                             (newsReady === true)
-                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><NewsList categories={categories} news={(filteredArticles !== null && searching) ? filteredArticles : dummyData} /></div>
+                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><NewsList categories={categories} news={(filteredArticles !== null && searching) ? filteredArticles : news} /></div>
                                 : <div className={classes.loadingDiv}><CircularProgress status="loading" /></div>
                         }
                     </Container>

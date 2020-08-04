@@ -6,7 +6,6 @@ import {
     Button,
     Card,
     CardContent,
-    CardMedia,
     Dialog,
     DialogActions,
     DialogContent,
@@ -48,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
     formControl: {
         margin: theme.spacing(1),
-        minWidth: 120,
+        minWidth: '75%',
     },
     inputRoot: {
         color: 'gray',
@@ -60,9 +59,9 @@ const useStyles = makeStyles((theme) => ({
         transition: theme.transitions.create('width'),
         width: '100%',
         [theme.breakpoints.up('sm')]: {
-            width: '18ch',
+            width: '75%',
             '&:focus': {
-                width: '25ch',
+                width: '100%',
             },
         },
     },
@@ -111,6 +110,7 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
     const classes = useStyles();
     const { addSnippetReference, snippets, getSnippets, addSnippet, snippetsReady, updateSnippet } = useContext(SnippetContext);
     const [searching, setSearching] = useState(false);
+    const [searchBool, setSearchBool] = useState(true);
     const [snippet, setSnippet] = useState("");
     const [snippetEditState, setSnippetEditState] = useState("");
     const [searchTerms, setSearchTerms] = useState(null);
@@ -139,7 +139,13 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
     }, [searchTerms]);
 
     const handleSnippetChange = (e) => {
-        setSnippet(e.target.value);
+        if (e.target.value === "0") {
+            setSearchBool(true);
+            setSnippet("");
+        } else {
+            setSearchBool(false);
+            setSnippet(e.target.value);
+        }
     };
 
     const handleUserInput = (e) => {
@@ -157,7 +163,6 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
     }
 
     const appendSnippet = () => {
-        debugger
         const publisherArray = getHostname(article.url).split(".");
         const currentUserProfileId = JSON.parse(sessionStorage.getItem("userProfile")).id;
 
@@ -194,7 +199,6 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
         });
 
         if (snippet !== snippetEditState) {
-            debugger
             updateSnippet(snippet.id, snippetEditState);
         }
         addSnippet(newArticle).then((resp) => {
@@ -214,7 +218,14 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
     }
 
     return (
-        <Dialog onClose={handleSnippetAppendModalChange} aria-labelledby="customized-dialog-title" open={openSnippetAppendModal}>
+        <Dialog
+            fullWidth={true}
+            maxWidth="sm"
+            className={classes.appendDialog}
+            open={openSnippetAppendModal}
+            onClose={handleSnippetAppendModalChange}
+            aria-labelledby="customized-dialog-title"
+        >
             <DialogTitle classes={classes} id="customized-dialog-title" onClose={handleSnippetAppendModalChange}>
                 Append A Snippet
             </DialogTitle>
@@ -228,6 +239,8 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
                             <SearchIcon />
                         </div>
                         <InputBase
+                            fullWidth
+                            disabled={(searchBool) ? false : true}
                             placeholder="Search by Snippet Title or Content…"
                             classes={{
                                 root: classes.inputRoot,
@@ -250,6 +263,9 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
                     required
                     onChange={handleSnippetChange}
                 >
+                    <MenuItem value="0">
+                        Select A Snippet
+                    </MenuItem>
                     {
                         (searching)
                             ? (filteredSnippets.length > 0)
@@ -271,7 +287,7 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
                                         </MenuItem>
                                     )
                                 })
-                                : <MenuItem value="">
+                                : <MenuItem value="0">
                                     You Have No Saved Snippets
                                   </MenuItem>
                     }
@@ -281,15 +297,6 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
             {
                 (snippet !== "")
                     ? <Card className={classes.card}>
-                        {
-                            (snippet.image !== "None")
-                                ? <CardMedia
-                                    className={classes.cardMedia}
-                                    image={snippet.image}
-                                    alt="Image title"
-                                />
-                                : ""
-                        }
                         <CardContent className={classes.cardContent}>
                             <TextField
                                 className={classes.cardTitle}
@@ -301,7 +308,7 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
                                 fullWidth
                                 required
                                 onChange={handleSnippetUpdate}
-                                defaultValue={snippet.userTitle}
+                                value={snippetEditState.userTitle || ""}
                                 inputProps={{ min: "5", max: "10" }}
                             />
                             <MuiTextField
@@ -315,7 +322,7 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
                                 fullWidth
                                 required
                                 onChange={handleSnippetUpdate}
-                                defaultValue={snippet.content}
+                                value={snippetEditState.content || ""}
                             />
                         </CardContent>
                     </Card>
@@ -324,7 +331,7 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, hand
             <DialogActions>
                 <Button onClick={(e) => {
                     e.preventDefault();
-                    if (snippet) {
+                    if (snippetEditState && snippet) {
                         appendSnippet();
                     } else {
                         alert('You must select a Snippet to append.');

@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: '5px 10px 10px #888888',
         display: 'flex',
         flexDirection: 'column',
-        height: '600px',
+        height: '650px',
         margin: theme.spacing(2),
         width: '47%',
     },
@@ -40,6 +40,15 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: 'fit-content',
         padding: '0.5rem 0em',
     },
+    content: {
+        margin: 'auto 0.25rem',
+        overflow: 'inherit',
+    },
+    contentContainer: {
+        height: '100%',
+        position: 'relative',
+        overflowY: 'auto',
+    },
     expandedDetails: {
         width: '75%',
     },
@@ -50,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexWrap: 'nowrap',
         justifyContent: 'space-between',
+        marginBottom: '1rem',
     },
 }));
 
@@ -70,7 +80,6 @@ export const Snippet = ({ snippet, handleSnackClick, setSnippetDeleteState }) =>
         setSnippetDeleteState(snippet);
         handleSnackClick(snippet.userTitle);
     };
-    debugger
     return (
         <Card className={classes.card}>
             <Typography className={classes.cardTitle} gutterBottom variant="h5" component="h2">
@@ -117,7 +126,7 @@ export const Snippet = ({ snippet, handleSnackClick, setSnippetDeleteState }) =>
                         }
                     </div>
                 </Typography>
-                <Typography ><strong>Summary:</strong> {snippet.content}</Typography>
+                <Typography className={classes.contentContainer} component="div"><strong>Summary:</strong> {snippet.content}</Typography>
             </CardContent>
             <CardActions>
             </CardActions>

@@ -125,7 +125,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Header = ({ categories, handleSearchInput, setNewsReady }) => {
+export const Header = ({ categories, handleSearchInput }) => {
     const { logout } = useContext(UserProfileContext);
     let pathname = useLocation().pathname;
     const classes = useStyles();
@@ -217,7 +217,7 @@ export const Header = ({ categories, handleSearchInput, setNewsReady }) => {
                             </IconButton>
                         </div>
                         <Divider />
-                        <Search open={open} categories={categories} classes={classes} handleDrawerChange={handleDrawerChange} setNewsReady={setNewsReady} />
+                        <Search open={open} categories={categories} classes={classes} handleDrawerChange={handleDrawerChange} />
                     </Drawer>
                     : ""
             }
