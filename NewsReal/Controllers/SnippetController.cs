@@ -69,8 +69,9 @@ namespace NewsReal.Controllers
         public IActionResult Put(int id, Article snippet)
         {
             var currentUserProfile = GetCurrentUserProfile();
+            var snippetDBState = _snippetRepository.GetTracklessArticleById(id);
 
-            if (currentUserProfile.Id != snippet.UserProfileId)
+            if ((currentUserProfile.Id != snippet.UserProfileId) || (snippetDBState.UserProfileId != snippet.UserProfileId))
             {
                 return Unauthorized();
             }

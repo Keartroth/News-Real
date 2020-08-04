@@ -48,7 +48,7 @@ const DialogTitle = withStyles(useStyles)(({ children, classes, onClose, ...othe
     );
 });
 
-export const SnippetEditDialog = ({ openSnippetEditModal, snippetEditState, handleSnippetEditModalChange }) => {
+export const SnippetEditDialog = ({ openSnippetEditModal, snippetEditState, toggleSnippetEditModalChange }) => {
     const { id } = useParams();
     const classes = useStyles();
     const { updateSnippet, getSnippetById } = useContext(SnippetContext);
@@ -64,7 +64,7 @@ export const SnippetEditDialog = ({ openSnippetEditModal, snippetEditState, hand
     const editSnippet = () => {
         updateSnippet(snippet.id, newEditState).then(() => {
             getSnippetById(id);
-            handleSnippetEditModalChange();
+            toggleSnippetEditModalChange();
         });
     };
 
@@ -73,10 +73,10 @@ export const SnippetEditDialog = ({ openSnippetEditModal, snippetEditState, hand
             fullWidth={true}
             maxWidth="md"
             open={openSnippetEditModal}
-            onClose={handleSnippetEditModalChange}
+            onClose={toggleSnippetEditModalChange}
             aria-labelledby="customized-dialog-title"
         >
-            <DialogTitle classes={classes} id="customized-dialog-title" onClose={handleSnippetEditModalChange}>
+            <DialogTitle classes={classes} id="customized-dialog-title" onClose={toggleSnippetEditModalChange}>
                 Edit: {snippet.userTitle}
             </DialogTitle>
             <DialogContent dividers>

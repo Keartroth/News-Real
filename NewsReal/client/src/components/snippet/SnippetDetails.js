@@ -134,8 +134,8 @@ export const SnippetDetails = (props) => {
     const classes = useStyles();
     const setSnippetDeleteState = props.setSnippetDeleteState;
     const setSnippetEditState = props.setSnippetEditState;
-    const handleSnippetEditModalChange = props.handleSnippetEditModalChange;
-    const handleSnackClick = props.handleSnackClick;
+    const toggleSnippetEditModalChange = props.toggleSnippetEditModalChange;
+    const toggleSnack = props.toggleSnack;
     const openSnippetEditModal = props.openSnippetEditModal;
     const snackOpen = props.snackState.snackOpen;
 
@@ -154,12 +154,12 @@ export const SnippetDetails = (props) => {
 
     const editArticleModal = (article) => {
         setSnippetEditState(article);
-        handleSnippetEditModalChange();
+        toggleSnippetEditModalChange();
     };
 
     const deleteArticleModal = (article, bool, snippetId) => {
         setSnippetDeleteState(article);
-        handleSnackClick(article.userTitle, bool, snippetId);
+        toggleSnack(article.userTitle, bool, snippetId);
     };
 
     const CategoryRender = () => {
@@ -339,8 +339,6 @@ export const SnippetDetails = (props) => {
             </Paper>
         )
     }
-
-    console.log(snippet);
 
     return (
         <>

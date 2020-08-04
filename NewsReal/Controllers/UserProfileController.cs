@@ -29,7 +29,7 @@ namespace NewsReal.Controllers
             return Ok(userProfile);
         }
 
-
+        [Authorize]
         [HttpGet("{firebaseUserId}")]
         public IActionResult GetByFirebaseUserId(string firebaseUserId)
         {

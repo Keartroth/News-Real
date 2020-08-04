@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export const DeleteSnackbar = ({ snackState, handleSnackClose, snippetDeleteState, nukeSnippet }) => {
+export const DeleteSnackbar = ({ snackState, toggleSnack, snippetDeleteState, nukeSnippet }) => {
     const classes = useStyles();
     const { vertical, horizontal, snackOpen, snippetTitle, id } = snackState;
 
@@ -30,7 +30,7 @@ export const DeleteSnackbar = ({ snackState, handleSnackClose, snippetDeleteStat
             className={classes.root}
             anchorOrigin={{ vertical, horizontal }}
             open={snackOpen}
-            onClose={handleSnackClose}
+            onClose={toggleSnack}
             message={(snippetDeleteState !== null)
                 ? (snippetDeleteState.articleReferences !== null && snippetDeleteState.articleReferences.length > 0)
                     ? snippetDeleteState.articleReferences.map((ar, idx) => {
@@ -57,7 +57,7 @@ export const DeleteSnackbar = ({ snackState, handleSnackClose, snippetDeleteStat
                         aria-label="close"
                         color="inherit"
                         className={classes.close}
-                        onClick={handleSnackClose}
+                        onClick={toggleSnack}
                     >
                         <CloseIcon />
                     </IconButton>

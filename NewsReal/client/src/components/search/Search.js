@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Search = ({ categories, open, handleDrawerChange }) => {
+export const Search = ({ categories, open, toggleDrawerChange }) => {
     const classes = useStyles();
     const { setNewsReady, getNewsByDefinedParameters } = useContext(NewsContext);
 
@@ -128,7 +128,7 @@ export const Search = ({ categories, open, handleDrawerChange }) => {
         if (searchState.domain.includes('www.') || searchState.domain_not.includes('www.')) {
             alert('Please remove domain prefix from search criteria: e.g. www.cnn.com becomes cnn.com')
         } else if (bool) {
-            handleDrawerChange();
+            toggleDrawerChange();
             alert('No parameters selected.')
         } else {
             if (startDate !== null && startDate !== "") {
@@ -146,7 +146,7 @@ export const Search = ({ categories, open, handleDrawerChange }) => {
             });
 
             setNewsReady(false);
-            getNewsByDefinedParameters(searchCriteriaString).then(handleDrawerChange);
+            getNewsByDefinedParameters(searchCriteriaString).then(toggleDrawerChange);
         }
     };
 
@@ -289,7 +289,7 @@ export const Search = ({ categories, open, handleDrawerChange }) => {
                                 <Button variant="contained" color="primary" className={classes.button} onClick={submitSearchCriteria}>Search By Criteria</Button>
                             </ListItem>
                         </div>
-                        : <Button onClick={handleDrawerChange}><span className={classes.searchTitle}>News Filter Criteria</span></Button>
+                        : <Button onClick={toggleDrawerChange}><span className={classes.searchTitle}>News Filter Criteria</span></Button>
                 }
             </List>
             <Divider />

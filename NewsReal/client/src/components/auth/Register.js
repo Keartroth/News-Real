@@ -65,7 +65,7 @@ export const Register = () => {
         setRegisterState(updatedState)
     }
 
-    const handleClickShowPassword = () => {
+    const toggleShowPassword = () => {
         setRegisterState({ ...registerState, showPassword: !registerState.showPassword });
     };
 
@@ -176,7 +176,7 @@ export const Register = () => {
                                         <InputAdornment position="end">
                                             <IconButton
                                                 aria-label="toggle password visibility"
-                                                onClick={handleClickShowPassword}
+                                                onClick={toggleShowPassword}
                                                 onMouseDown={handleMouseDownPassword}
                                                 edge="end"
                                             >
@@ -203,7 +203,7 @@ export const Register = () => {
                                         <InputAdornment position="end">
                                             <IconButton
                                                 aria-label="toggle password visibility"
-                                                onClick={handleClickShowPassword}
+                                                onClick={toggleShowPassword}
                                                 onMouseDown={handleMouseDownPassword}
                                                 edge="end"
                                             >

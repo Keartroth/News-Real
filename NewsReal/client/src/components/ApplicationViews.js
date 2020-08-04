@@ -19,43 +19,47 @@ export const ApplicationViews = props => {
         articleReferences: [],
     });
 
-    const [snackState, setSnackState] = useState({
+    const initialSnackState = {
         snackOpen: false,
         vertical: 'top',
         horizontal: 'center',
         snippetTitle: '',
         snippetBool: null,
         snippetId: null,
-    });
+    }
 
-    const handleSnackClick = (title, bool, id) => {
-        setSnackState({ ...snackState, snackOpen: true, snippetTitle: title, snippetBool: bool, snippetId: id });
-    };
+    const [snackState, setSnackState] = useState(initialSnackState);
 
-    const handleSnackClose = () => {
-        setSnackState({ ...snackState, snackOpen: false, snippetBool: null, id: null, });
+    const { snackOpen } = snackState;
+
+    const toggleSnack = (title, bool, id) => {
+        if (snackOpen) {
+            setSnackState(initialSnackState);
+        } else {
+            setSnackState({ ...snackState, snackOpen: true, snippetTitle: title, snippetBool: bool, snippetId: id });
+        }
     };
 
     const nukeSnippet = (articleId) => {
         const referenceBool = snackState.snippetBool;
         const id = snackState.snippetId;
         if (pathname === "/snippets") {
-            deleteSnippet(articleId).then(getSnippets).then(handleSnackClose);
+            deleteSnippet(articleId).then(getSnippets).then(toggleSnack);
         } else if (referenceBool) {
             deleteSnippet(articleId).then(() => {
                 history.push("/snippets");
-                handleSnackClose();
+                toggleSnack();
             });
         } else if (!referenceBool) {
             deleteSnippetReference(articleId).then(() => getSnippetById(id));
-            handleSnackClose();
+            toggleSnack();
         }
     }
 
     //setState for editing snippets and reference articles
     const [openSnippetEditModal, setOpenSnippetEditModal] = useState(false);
     const [snippetEditState, setSnippetEditState] = useState(null);
-    const handleSnippetEditModalChange = () => {
+    const toggleSnippetEditModalChange = () => {
         setOpenSnippetEditModal(!openSnippetEditModal);
     }
 
@@ -76,13 +80,12 @@ export const ApplicationViews = props => {
                         snackState={snackState}
                         nukeSnippet={nukeSnippet}
                         setSnackState={setSnackState}
-                        handleSnackClick={handleSnackClick}
-                        handleSnackClose={handleSnackClose}
+                        toggleSnack={toggleSnack}
                         snippetDeleteState={snippetDeleteState}
                         setSnippetDeleteState={setSnippetDeleteState}
                         snippetEditState={snippetEditState}
                         openSnippetEditModal={openSnippetEditModal}
-                        handleSnippetEditModalChange={handleSnippetEditModalChange}
+                        toggleSnippetEditModalChange={toggleSnippetEditModalChange}
                     /> : <Redirect to="/login" />}
                 </Route>
 
@@ -95,14 +98,13 @@ export const ApplicationViews = props => {
                         snackState={snackState}
                         nukeSnippet={nukeSnippet}
                         setSnackState={setSnackState}
-                        handleSnackClick={handleSnackClick}
-                        handleSnackClose={handleSnackClose}
+                        toggleSnack={toggleSnack}
                         snippetDeleteState={snippetDeleteState}
                         setSnippetDeleteState={setSnippetDeleteState}
                         snippetEditState={snippetEditState}
                         setSnippetEditState={setSnippetEditState}
                         openSnippetEditModal={openSnippetEditModal}
-                        handleSnippetEditModalChange={handleSnippetEditModalChange}
+                        toggleSnippetEditModalChange={toggleSnippetEditModalChange}
                     /> : <Redirect to="/login" />}
                 </Route>
             </Switch>

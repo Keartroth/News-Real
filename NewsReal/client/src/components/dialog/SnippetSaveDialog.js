@@ -41,7 +41,7 @@ const DialogTitle = withStyles(useStyles)(({ children, classes, onClose, ...othe
     );
 });
 
-export const SnippetSaveDialog = ({ openModal, handleModalChange, dialogNewsState, categories }) => {
+export const SnippetSaveDialog = ({ openModal, toggleModalChange, dialogNewsState, categories }) => {
     const classes = useStyles();
     const { addSnippet } = useContext(SnippetContext);
     const article = dialogNewsState;
@@ -102,15 +102,15 @@ export const SnippetSaveDialog = ({ openModal, handleModalChange, dialogNewsStat
         });
 
         addSnippet(newSnippet).then(() => {
-            handleModalChange();
+            toggleModalChange();
             history.push(`/snippets`)
         });
     }
 
     return (
-        <Dialog maxWidth="md" onClose={handleModalChange} aria-labelledby="saveSnippetDialog" open={openModal}>
+        <Dialog maxWidth="md" onClose={toggleModalChange} aria-labelledby="saveSnippetDialog" open={openModal}>
             <form onSubmit={saveSnippet}>
-                <DialogTitle classes={classes} id="saveSnippetDialog--title" onClose={handleModalChange}>
+                <DialogTitle classes={classes} id="saveSnippetDialog--title" onClose={toggleModalChange}>
                     Save Snippet
                 </DialogTitle>
                 <DialogContent dividers>

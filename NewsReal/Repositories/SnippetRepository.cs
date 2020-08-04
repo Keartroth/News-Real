@@ -523,6 +523,11 @@ namespace NewsReal.Repositories
             return _context.Article.FirstOrDefault(a => a.Id == id);
         }
 
+        public Article GetTracklessArticleById(int id)
+        {
+            return _context.Article.AsNoTracking().FirstOrDefault(a => a.Id == id);
+        }
+
         public void Add(Article snippet)
         {
             _context.Add(snippet);
