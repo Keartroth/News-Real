@@ -57,8 +57,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Search = ({ categories, open, toggleDrawerChange }) => {
+export const Search = (props) => {
     const classes = useStyles();
+    const { open, toggleDrawerChange, categories } = props;
     const { setNewsReady, getNewsByDefinedParameters } = useContext(NewsContext);
 
     const initialSearchState = {

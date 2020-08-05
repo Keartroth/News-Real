@@ -147,7 +147,8 @@ export const SnippetProvider = (props) => {
         <SnippetContext.Provider value={{
             snippet, snippets, snippetsReady, snippetReady,
             getSnippets, addSnippet, getSnippetById, deleteSnippet,
-            updateSnippet, addSnippetReference, deleteSnippetReference, setSnippets
+            updateSnippet, addSnippetReference, deleteSnippetReference,
+            setSnippets, setSnippet, setSnippetReady
         }}>
             {props.children}
         </SnippetContext.Provider>

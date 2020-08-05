@@ -131,13 +131,7 @@ const capitalizeCategory = (s) => {
 export const SnippetDetails = (props) => {
     const { id } = useParams();
     const classes = useStyles();
-    const setSnippetDeleteState = props.setSnippetDeleteState;
-    const setSnippetEditState = props.setSnippetEditState;
-    const toggleSnippetEditModalChange = props.toggleSnippetEditModalChange;
-    const toggleSnack = props.toggleSnack;
-    const openSnippetEditModal = props.openSnippetEditModal;
-    const snackOpen = props.snackState.snackOpen;
-
+    const { setSnippetDeleteState, setSnippetEditState, toggleSnippetEditModalChange, toggleSnack, openSnippetEditModal, snackOpen } = props;
     const { getSnippetById, snippet, snippetReady } = useContext(SnippetContext);
     let formatedDate;
     let formatedUserDate;
@@ -148,7 +142,7 @@ export const SnippetDetails = (props) => {
     }
 
     useEffect(() => {
-        getSnippetById(id)
+        getSnippetById(id);
     }, []);
 
     const editArticleModal = (article) => {
@@ -216,20 +210,14 @@ export const SnippetDetails = (props) => {
                                 {
                                     <div className={classes.raInfo}><strong>Category: </strong>
                                         {
-                                            (snippetReady)
-                                                ? <CategoryRender />
-                                                : ""
+                                            (snippetReady) && <CategoryRender />
                                         }</div>
                                 }
                                 {
-                                    (ra.objectivity)
-                                        ? <div><strong>Objectivity:</strong> {ra.objectivity}</div>
-                                        : ""
+                                    (ra.objectivity) && <div><strong>Objectivity:</strong> {ra.objectivity}</div>
                                 }
                                 {
-                                    (ra.sentimentality)
-                                        ? <div><strong>Objectivity:</strong> {ra.sentimentality}</div>
-                                        : ""
+                                    (ra.sentimentality) && <div><strong>Objectivity:</strong> {ra.sentimentality}</div>
                                 }
                             </Typography>
                             <Typography component="div">
@@ -237,9 +225,7 @@ export const SnippetDetails = (props) => {
                             </Typography>
                             <Typography component="div">
                                 {
-                                    (ra.content)
-                                        ? <div><strong>Content:</strong> {ra.content}</div>
-                                        : ""
+                                    (ra.content) && <div><strong>Content:</strong> {ra.content}</div>
                                 }
                             </Typography>
                         </CardContent>
@@ -277,14 +263,10 @@ export const SnippetDetails = (props) => {
                         }
                         <div><strong>Created:</strong> {formatedUserDate}</div>
                         {
-                            (snippet.objectivity)
-                                ? <span><strong>Objectivity:</strong> {snippet.objectivity}</span>
-                                : ""
+                            (snippet.objectivity) && <span><strong>Objectivity:</strong> {snippet.objectivity}</span>
                         }
                         {
-                            (snippet.sentimentality)
-                                ? <span><strong>Objectivity:</strong> {snippet.sentimentality}</span>
-                                : ""
+                            (snippet.sentimentality) && <span><strong>Objectivity:</strong> {snippet.sentimentality}</span>
                         }
                     </Typography>
                     <CardMedia
@@ -295,9 +277,7 @@ export const SnippetDetails = (props) => {
                     <CardContent className={classes.content}>
                         <Typography className={classes.userTitle} component="div">
                             {
-                                (snippet.userTitle)
-                                    ? <div> <strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href={`${snippet.url}`}> {snippet.title}</a></div>
-                                    : ""
+                                (snippet.userTitle) && <div> <strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href={`${snippet.url}`}> {snippet.title}</a></div>
                             }
                         </Typography>
                         <Typography className={classes.infoContainer} component="div">
@@ -342,14 +322,10 @@ export const SnippetDetails = (props) => {
     return (
         <>
             {
-                (openSnippetEditModal)
-                    ? <SnippetEditDialog {...props} />
-                    : ""
+                (openSnippetEditModal) && <SnippetEditDialog {...props} />
             }
             {
-                (snackOpen)
-                    ? <DeleteSnackbar {...props} />
-                    : ""
+                (snackOpen) && <DeleteSnackbar {...props} />
             }
             <Container className={classes.root}>
                 <section>
@@ -361,11 +337,7 @@ export const SnippetDetails = (props) => {
                 </section>
                 <section>
                     {
-                        (snippetReady)
-                            ? (snippet.articleReferences.length > 0)
-                                ? snippet.articleReferences.map((ar, idx) => referenceCardsRender(ar, idx))
-                                : ""
-                            : ""
+                        (snippetReady) && (snippet.articleReferences.length > 0) && snippet.articleReferences.map((ar, idx) => referenceCardsRender(ar, idx))
                     }
                 </section>
             </Container>

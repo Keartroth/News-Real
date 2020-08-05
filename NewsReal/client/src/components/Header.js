@@ -1,7 +1,6 @@
-import React, { useEffect, useContext } from 'react';
-import { useLocation } from "react-router-dom";
+import React, { useContext } from 'react';
+import { useLocation, NavLink } from "react-router-dom";
 import { UserProfileContext } from "../providers/UserProfileProvider";
-import { CategoryContext } from "../providers/CategoryProvider";
 import { NewsContext } from '../providers/NewsProvider';
 import { SnippetContext } from '../providers/SnippetProvider';
 import { Search } from './search/Search';
@@ -128,17 +127,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Header = ({ handleSearchInput }) => {
+export const Header = (props) => {
     const classes = useStyles();
+    const handleSearchInput = props.handleSearchInput;
     const { logout } = useContext(UserProfileContext);
-    const { categories, getCategories } = useContext(CategoryContext);
     const { newsReady } = useContext(NewsContext);
     const { snippetsReady } = useContext(SnippetContext);
     let pathname = useLocation().pathname;
-
-    useEffect(() => {
-        getCategories();
-    }, []);
 
     const [open, setOpen] = React.useState(false);
     const toggleDrawerChange = () => {
@@ -155,50 +150,46 @@ export const Header = ({ handleSearchInput }) => {
             >
                 <Toolbar>
                     {
-                        (pathname === "/")
-                            ? <IconButton
-                                color="inherit"
-                                aria-label="open drawer"
-                                onClick={toggleDrawerChange}
-                                edge="start"
-                                className={clsx(classes.menuButton, {
-                                    [classes.menuButtonHidden]: open,
-                                })}
-                            ><MenuIcon />
-                            </IconButton>
-                            : ""
+                        (pathname === "/") && <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={toggleDrawerChange}
+                            edge="start"
+                            className={clsx(classes.menuButton, {
+                                [classes.menuButtonHidden]: open,
+                            })}
+                        ><MenuIcon />
+                        </IconButton>
                     }
                     <Typography component="h1" variant="h6" className={classes.title}>
                         NewsReal
                     </Typography>
                     <Typography component="h1" variant="h6" className={classes.title}>
-                        <Link href="/" color="inherit" variant="body2">
+                        <Link component={NavLink} to="/" color="inherit" variant="body2">
                             News
                         </Link>
                     </Typography>
                     <Typography component="h1" variant="h6" className={classes.title}>
-                        <Link href="/snippets" color="inherit" variant="body2">
+                        <Link component={NavLink} to="/snippets" color="inherit" variant="body2">
                             Saved Snippets
                         </Link>
                     </Typography>
                     {
-                        (pathname === "/" || pathname === "/snippets")
-                            ? <div className={classes.search}>
-                                <div className={classes.searchIcon}>
-                                    <SearchIcon />
-                                </div>
-                                <InputBase
-                                    placeholder="Search Present List…"
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput,
-                                    }}
-                                    inputProps={{ 'aria-label': 'search' }}
-                                    onChange={handleSearchInput}
-                                    disabled={((pathname === "/" && newsReady) || (pathname === "/snippets" && snippetsReady)) ? false : true}
-                                />
+                        (pathname === "/" || pathname === "/snippets") && <div className={classes.search}>
+                            <div className={classes.searchIcon}>
+                                <SearchIcon />
                             </div>
-                            : ""
+                            <InputBase
+                                placeholder="Search Present List…"
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{ 'aria-label': 'search' }}
+                                onChange={handleSearchInput}
+                                disabled={((pathname === "/" && newsReady) || (pathname === "/snippets" && snippetsReady)) ? false : true}
+                            />
+                        </div>
                     }
                     <IconButton edge="end" color="inherit" aria-label="menu" onClick={logout}>
                         <ExitToAppRoundedIcon />
@@ -206,29 +197,27 @@ export const Header = ({ handleSearchInput }) => {
                 </Toolbar>
             </AppBar>
             {
-                (pathname === "/")
-                    ? <Drawer
-                        variant="permanent"
-                        className={clsx(classes.drawer, {
+                (pathname === "/") && <Drawer
+                    variant="permanent"
+                    className={clsx(classes.drawer, {
+                        [classes.drawerOpen]: open,
+                        [classes.drawerClose]: !open,
+                    })}
+                    classes={{
+                        paper: clsx({
                             [classes.drawerOpen]: open,
                             [classes.drawerClose]: !open,
-                        })}
-                        classes={{
-                            paper: clsx({
-                                [classes.drawerOpen]: open,
-                                [classes.drawerClose]: !open,
-                            }),
-                        }}
-                    >
-                        <div className={classes.toolbarIcon}>
-                            <IconButton onClick={toggleDrawerChange}>
-                                <ChevronLeftIcon />
-                            </IconButton>
-                        </div>
-                        <Divider />
-                        <Search open={open} categories={categories} classes={classes} toggleDrawerChange={toggleDrawerChange} />
-                    </Drawer>
-                    : ""
+                        }),
+                    }}
+                >
+                    <div className={classes.toolbarIcon}>
+                        <IconButton onClick={toggleDrawerChange}>
+                            <ChevronLeftIcon />
+                        </IconButton>
+                    </div>
+                    <Divider />
+                    <Search {...props} open={open} classes={classes} toggleDrawerChange={toggleDrawerChange} />
+                </Drawer>
             }
         </div>
     );

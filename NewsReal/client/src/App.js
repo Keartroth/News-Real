@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { BrowserRouter as Router } from "react-router-dom";
 import debounce from 'lodash.debounce'
 import { Header } from './components/Header';
 import { ApplicationViews } from "./components/ApplicationViews";
-import { CategoryProvider } from "./providers/CategoryProvider";
+import { CategoryContext } from "./providers/CategoryProvider";
 import { NewsProvider } from './providers/NewsProvider';
 import { SnippetProvider } from './providers/SnippetProvider';
-import { UserProfileProvider } from "./providers/UserProfileProvider";
+import { UserProfileContext } from "./providers/UserProfileProvider";
 // import logo from './logo.svg';
 import './App.css';
 
 export const App = () => {
+  const { isLoggedIn } = useContext(UserProfileContext);
+  const { categories, getCategories } = useContext(CategoryContext);
   const [searchTerms, setSearchTerms] = useState(null);
   const debounceSearch = debounce(setSearchTerms, 500);
 
@@ -19,22 +21,23 @@ export const App = () => {
     debounceSearch(e.target.value);
   };
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      getCategories();
+    }
+  }, []);
+
   return (
     <Router>
-      <UserProfileProvider>
-        <NewsProvider>
-          <SnippetProvider>
-            <CategoryProvider>
-              <Header
-                handleSearchInput={handleSearchInput}
-              />
-              <ApplicationViews
-                searchTerms={searchTerms}
-              />
-            </CategoryProvider>
-          </SnippetProvider>
-        </NewsProvider>
-      </UserProfileProvider>
+      <NewsProvider>
+        <SnippetProvider>
+          {
+            //Short circut evaluation is awesome
+            isLoggedIn && <Header categories={categories} handleSearchInput={handleSearchInput} />
+          }
+          <ApplicationViews categories={categories} searchTerms={searchTerms} />
+        </SnippetProvider>
+      </NewsProvider>
     </Router>
   );
 };

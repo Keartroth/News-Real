@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { NavLink } from "react-router-dom";
 import { parseISO } from 'date-fns'
 import {
     Button,
@@ -8,6 +9,7 @@ import {
     CardMedia,
     Typography
 } from '@material-ui/core';
+import { SnippetContext } from "../../providers/SnippetProvider";
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -71,9 +73,15 @@ const capitalizeCategory = (s) => {
     }
 }
 
-export const Snippet = ({ snippet, toggleSnack, setSnippetDeleteState }) => {
+export const Snippet = (props) => {
     const classes = useStyles();
+    const { snippet, toggleSnack, setSnippetDeleteState } = props;
+    const { setSnippetReady } = useContext(SnippetContext);
     const formatedDate = parseISO(snippet.createDateTime).toDateString();
+
+    const setReadyToFalse = () => {
+        setSnippetReady(false);
+    }
 
     const setNukeSnippet = (e) => {
         e.preventDefault();
@@ -92,13 +100,12 @@ export const Snippet = ({ snippet, toggleSnack, setSnippetDeleteState }) => {
             />
             <CardContent className={classes.buttonGroup}>
                 <CardActions>
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            window.location.href = `/snippet/${snippet.id}`;
-                        }}>View Snippet Details</Button>
+                    <NavLink to={`/snippet/${snippet.id}`} onClick={setReadyToFalse}>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                        >View Snippet Details</Button>
+                    </NavLink>
                     <Button
                         color="primary"
                         variant="contained"
@@ -128,8 +135,6 @@ export const Snippet = ({ snippet, toggleSnack, setSnippetDeleteState }) => {
                 </Typography>
                 <Typography className={classes.contentContainer} component="div"><strong>Summary:</strong> {snippet.content}</Typography>
             </CardContent>
-            <CardActions>
-            </CardActions>
         </Card>
     )
 }
