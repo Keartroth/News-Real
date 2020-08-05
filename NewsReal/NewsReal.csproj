@@ -6,11 +6,12 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AngleSharp" Version="0.14.0" />
 		<PackageReference Include="Cloudmersive.APIClient.NETCore.NLP" Version="2.1.3" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.5" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
 	</ItemGroup>
 
 	<ItemGroup>
