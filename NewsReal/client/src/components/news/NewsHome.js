@@ -1,10 +1,6 @@
-import React, { useContext, useState, useEffect } from 'react';
-import debounce from 'lodash.debounce'
-import { CategoryContext } from '../../providers/CategoryProvider';
-import { dummyData } from '../../providers/DummyData'
+import React, { useContext, useEffect } from 'react';
 import { NewsContext } from '../../providers/NewsProvider';
 import { Footer } from '../Footer';
-import { Header } from '../Header';
 import { NewsList } from './NewsList';
 import {
     Container,
@@ -35,40 +31,17 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const NewsHome = () => {
+export const NewsHome = (props) => {
     const classes = useStyles();
+    const { filteredArticles, searching } = props;
     const { news, newsReady, getRecentNews } = useContext(NewsContext);
-    const { categories, getCategories } = useContext(CategoryContext);
 
     useEffect(() => {
         getRecentNews();
-        getCategories();
     }, []);
-
-    const [searching, setSearching] = useState(false);
-    const [searchTerms, setSearchTerms] = useState(null);
-    const [filteredArticles, setFilteredArticles] = useState(null);
-    const debounceSearchNews = debounce(setSearchTerms, 500);
-
-    const handleSearchInput = (e) => {
-        e.preventDefault();
-        debounceSearchNews(e.target.value);
-    };
-
-    useEffect(() => {
-        if (searchTerms === null || searchTerms === "") {
-            setSearching(false);
-        } else {
-            const toLowerCriteria = searchTerms.toLowerCase();
-            const articleSubset = news.filter((a) => (a.title) ? a.title.toLowerCase().includes(toLowerCriteria) : null || (a.description) ? a.description.toLowerCase().includes(toLowerCriteria) : null);
-            setFilteredArticles(articleSubset);
-            setSearching(true);
-        }
-    }, [searchTerms]);
 
     return (
         <>
-            <Header categories={categories} handleSearchInput={handleSearchInput} />
             <div className={classes.root}>
                 <CssBaseline />
                 <div className={classes.content}>
@@ -76,7 +49,7 @@ export const NewsHome = () => {
                     <Container maxWidth="lg" className={classes.container}>
                         {
                             (newsReady === true)
-                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><NewsList categories={categories} news={(filteredArticles !== null && searching) ? filteredArticles : news} /></div>
+                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><NewsList {...props} news={(filteredArticles !== null && searching) ? filteredArticles : news} /></div>
                                 : <div className={classes.loadingDiv}><CircularProgress status="loading" /></div>
                         }
                     </Container>

@@ -1,10 +1,7 @@
-import React, { useContext, useState, useEffect } from 'react';
-import debounce from 'lodash.debounce'
+import React, { useContext, useEffect } from 'react';
 import { SnippetContext } from '../../providers/SnippetProvider';
-import { CategoryContext } from '../../providers/CategoryProvider';
 import { SnippetList } from './SnippetList';
 import { Footer } from '../Footer';
-import { Header } from '../Header';
 import {
     CircularProgress,
     Container,
@@ -30,38 +27,15 @@ const useStyles = makeStyles((theme) => ({
 
 export const SnippetHome = (props) => {
     const classes = useStyles();
-    const { snippets, getSnippets, snippetsReady } = useContext(SnippetContext);
-    const { categories, getCategories } = useContext(CategoryContext);
+    const { filteredSnippets, searching } = props;
+    const { snippets, snippetsReady, getSnippets } = useContext(SnippetContext);
 
     useEffect(() => {
         getSnippets();
-        getCategories();
     }, []);
-
-    const [searching, setSearching] = useState(false);
-    const [searchTerms, setSearchTerms] = useState(null);
-    const [filteredSnippets, setFilteredSnippets] = useState(null);
-    const debounceSearchsnippets = debounce(setSearchTerms, 500);
-
-    const handleSearchInput = (e) => {
-        e.preventDefault();
-        debounceSearchsnippets(e.target.value);
-    };
-
-    useEffect(() => {
-        if (searchTerms === null || searchTerms === "") {
-            setSearching(false);
-        } else {
-            const toLowerCriteria = searchTerms.toLowerCase();
-            const articleSubset = snippets.filter((a) => (a.userTitle) ? a.userTitle.toLowerCase().includes(toLowerCriteria) : null || (a.description) ? a.description.toLowerCase().includes(toLowerCriteria) : null || (a.title) ? a.title.toLowerCase().includes(toLowerCriteria) : null);
-            setFilteredSnippets(articleSubset);
-            setSearching(true);
-        }
-    }, [searchTerms]);
 
     return (
         <>
-            <Header categories={categories} handleSearchInput={handleSearchInput} />
             <div className={classes.root}>
                 <CssBaseline />
                 <div className={classes.content}>
@@ -69,7 +43,7 @@ export const SnippetHome = (props) => {
                     <Container maxWidth="lg" className={classes.container}>
                         {
                             (snippetsReady)
-                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><SnippetList {...props} searching={searching} snippets={(filteredSnippets !== null && searching) ? filteredSnippets : snippets} /></div>
+                                ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><SnippetList {...props} snippets={(filteredSnippets !== null && searching) ? filteredSnippets : snippets} /></div>
                                 : <div style={{ margin: 'auto' }}><CircularProgress status="loading" /></div>
                         }
                     </Container>

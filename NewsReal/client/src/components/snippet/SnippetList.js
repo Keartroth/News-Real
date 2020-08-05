@@ -14,11 +14,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export const SnippetList = (props, { openSnippetEditModal }) => {
+export const SnippetList = (props) => {
     const classes = useStyles();
-    const snippets = props.snippets;
-    const searching = props.searching;
-    const snackOpen = props.snackState.snackOpen;
+    const { snippets, snackState, searching, openSnippetEditModal } = props;
+    const { snackOpen } = snackState;
 
     return (
         <>

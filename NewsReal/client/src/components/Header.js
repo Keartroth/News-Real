@@ -1,6 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useLocation } from "react-router-dom";
 import { UserProfileContext } from "../providers/UserProfileProvider";
+import { CategoryContext } from "../providers/CategoryProvider";
+import { NewsContext } from '../providers/NewsProvider';
+import { SnippetContext } from '../providers/SnippetProvider';
 import { Search } from './search/Search';
 import clsx from 'clsx';
 import {
@@ -125,10 +128,18 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Header = ({ categories, handleSearchInput }) => {
-    const { logout } = useContext(UserProfileContext);
-    let pathname = useLocation().pathname;
+export const Header = ({ handleSearchInput }) => {
     const classes = useStyles();
+    const { logout } = useContext(UserProfileContext);
+    const { categories, getCategories } = useContext(CategoryContext);
+    const { newsReady } = useContext(NewsContext);
+    const { snippetsReady } = useContext(SnippetContext);
+    let pathname = useLocation().pathname;
+
+    useEffect(() => {
+        getCategories();
+    }, []);
+
     const [open, setOpen] = React.useState(false);
     const toggleDrawerChange = () => {
         setOpen(!open);
@@ -184,6 +195,7 @@ export const Header = ({ categories, handleSearchInput }) => {
                                     }}
                                     inputProps={{ 'aria-label': 'search' }}
                                     onChange={handleSearchInput}
+                                    disabled={((pathname === "/" && newsReady) || (pathname === "/snippets" && snippetsReady)) ? false : true}
                                 />
                             </div>
                             : ""

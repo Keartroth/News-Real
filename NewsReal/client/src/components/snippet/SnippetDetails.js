@@ -3,7 +3,6 @@ import React, {
     useEffect
 } from 'react';
 import { useParams } from "react-router-dom";
-import { Header } from '../Header';
 import { Footer } from '../Footer';
 import { SnippetEditDialog } from '../dialog/SnippetEditDialog';
 import { DeleteSnackbar } from '../dialog/DeleteSnackbar';
@@ -342,7 +341,6 @@ export const SnippetDetails = (props) => {
 
     return (
         <>
-            <Header />
             {
                 (openSnippetEditModal)
                     ? <SnippetEditDialog {...props} />
