@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const DeleteSnackbar = ({ snackState, toggleSnack, snippetDeleteState, nukeSnippet }) => {
     const classes = useStyles();
-    const { vertical, horizontal, snackOpen, snippetTitle, id } = snackState;
+    const { vertical, horizontal, snackOpen, snippetTitle } = snackState;
 
     return (
         <Snackbar
