@@ -16,8 +16,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const NewsList = props => {
     const classes = useStyles();
-    const news = props.news;
-    const categories = props.categories;
+    const { news, categories } = props;
     const [openModal, setOpenModal] = useState(false);
     const [dialogNewsState, setDialogNewsState] = useState(null);
     const [openSnippetAppendModal, setOpenSnippetAppendModal] = useState(false);
@@ -33,18 +32,22 @@ export const NewsList = props => {
 
     return (
         <>
-            <SnippetAppendDialog
-                categories={categories}
-                dialogSnippetAppendState={dialogSnippetAppendState}
-                toggleSnippetAppendModalChange={toggleSnippetAppendModalChange}
-                openSnippetAppendModal={openSnippetAppendModal}
-            />
-            <SnippetSaveDialog
-                categories={categories}
-                dialogNewsState={dialogNewsState}
-                toggleModalChange={toggleModalChange}
-                openModal={openModal}
-            />
+            {
+                categories && <SnippetAppendDialog
+                    categories={categories}
+                    dialogSnippetAppendState={dialogSnippetAppendState}
+                    toggleSnippetAppendModalChange={toggleSnippetAppendModalChange}
+                    openSnippetAppendModal={openSnippetAppendModal}
+                />
+            }
+            {
+                categories && <SnippetSaveDialog
+                    categories={categories}
+                    dialogNewsState={dialogNewsState}
+                    toggleModalChange={toggleModalChange}
+                    openModal={openModal}
+                />
+            }
             {
                 (news.length > 0)
                     ? news.map((a, idx) => {

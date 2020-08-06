@@ -115,7 +115,7 @@ export const SnippetSaveDialog = ({ openModal, toggleModalChange, dialogNewsStat
                 </DialogTitle>
                 <DialogContent dividers>
                     <DialogContentText>
-                        Article Title: {(dialogNewsState !== null) ? article.title : ""}.
+                        Article Title: {(dialogNewsState !== null) && article.title}.
                 </DialogContentText>
                     <TextField
                         autoFocus

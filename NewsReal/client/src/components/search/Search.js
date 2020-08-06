@@ -9,16 +9,14 @@ import { NewsContext } from '../../providers/NewsProvider';
 import {
     Button,
     CssBaseline,
-    Divider,
     FormControl,
+    FormHelperText,
     Grid,
     Input,
     InputAdornment,
     InputLabel,
     List,
     ListItem,
-    ListItemIcon,
-    ListItemText,
     ListSubheader,
     MenuItem,
     Select,
@@ -28,21 +26,20 @@ import {
     MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 import ClassIcon from '@material-ui/icons/Class';
 import DomainIcon from '@material-ui/icons/Domain';
 import DomainDisabledIcon from '@material-ui/icons/DomainDisabled';
-// import FileCopyIcon from '@material-ui/icons/FileCopy';
+import FindInPageIcon from '@material-ui/icons/FindInPage';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 const useStyles = makeStyles((theme) => ({
     button: {
-        // color: 'primary',
         margin: 'auto',
     },
     inputSelect: {
         marginLeft: '16px',
         marginRight: '16px',
+        marginTop: '16px',
         width: '-webkit-fill-available',
     },
     inputField: {
@@ -57,13 +54,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const Search = ({ categories, open, toggleDrawerChange }) => {
+export const Search = (props) => {
     const classes = useStyles();
+    const { open, toggleDrawerChange, categories } = props;
     const { setNewsReady, getNewsByDefinedParameters } = useContext(NewsContext);
 
     const initialSearchState = {
         language: "en",
         category: "",
+        keywords: "",
         start_date: null,
         end_date: null,
         country: "us",
@@ -139,9 +138,13 @@ export const Search = ({ categories, open, toggleDrawerChange }) => {
             }
             let searchCriteriaString = ""
 
-            Object.keys(searchState).forEach((key) => {
+            Object.keys(searchState).forEach((key, idx) => {
                 if (searchState[key] !== null && searchState[key] !== "") {
-                    searchCriteriaString = searchCriteriaString + `&${key}=${searchState[key]}`
+                    if (idx === 0) {
+                        searchCriteriaString = `${key}=${searchState[key]}`
+                    } else {
+                        searchCriteriaString = searchCriteriaString + `&${key}=${searchState[key]}`
+                    }
                 }
             });
 
@@ -264,6 +267,25 @@ export const Search = ({ categories, open, toggleDrawerChange }) => {
                                     }
                                 />
                             </FormControl>
+                            <FormControl className={classes.inputField}>
+                                <InputLabel id="searchFilter--domain">Keywords</InputLabel>
+                                <Input
+                                    variant="outlined"
+                                    margin="none"
+                                    fullWidth
+                                    name="keywords"
+                                    type="text"
+                                    id="searchFilter--keywords"
+                                    title="Less is more"
+                                    onChange={handleChange}
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <FindInPageIcon />
+                                        </InputAdornment>
+                                    }
+                                />
+                                <FormHelperText id="searchFilter--keywords--helperText">Less is more</FormHelperText>
+                            </FormControl>
                             <FormControl className={classes.inputSelect}>
                                 <InputLabel id="searchFilter--pageNumberLabel">Pages Returned</InputLabel>
                                 <Select
@@ -291,30 +313,6 @@ export const Search = ({ categories, open, toggleDrawerChange }) => {
                         </div>
                         : <Button onClick={toggleDrawerChange}><span className={classes.searchTitle}>News Filter Criteria</span></Button>
                 }
-            </List>
-            <Divider />
-            <List>
-                <div>
-                    <ListSubheader inset>Saved Search Criteria</ListSubheader>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <AssignmentIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Current month" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <AssignmentIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Last quarter" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <AssignmentIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Year-end sale" />
-                    </ListItem>
-                </div>
             </List>
         </>
     );

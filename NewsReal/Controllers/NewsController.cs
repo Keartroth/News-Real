@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using NewsReal.Data;
+using NewsReal.Models.CloudmersiveModels;
 using NewsReal.Models.CurrentsModels;
 using NewsReal.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace NewsReal.Controllers
 {
@@ -34,6 +35,14 @@ namespace NewsReal.Controllers
             List<CurrentsArticle> currentsNewsSearchResults = await _newsRepository.SearchNewsByCriteriaAsync(searchCriteria);
 
             return Ok(currentsNewsSearchResults);
+        }
+
+        [HttpGet("analyzenews")]
+        public async Task<ActionResult<CloudmersiveNLPResponse>> AnalyzeNewsAsync(string type, string url)
+        {
+            CloudmersiveNLPResponse cloudmersiveNLPResponse = await _newsRepository.CloudmersiveNLPResponseAsync(type, url);
+
+            return Ok(cloudmersiveNLPResponse);
         }
     }
 }

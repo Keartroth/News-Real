@@ -38,8 +38,18 @@ export const NewsProvider = (props) => {
             .then(setNews);
     };
 
+    const getArticleNLPAnalysis = (type, url) => {
+        return getToken().then((token) =>
+            fetch(apiUrl + `/analyzenews?type=${type}&url=${url}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })).then(resp => resp.json());
+    };
+
     return (
-        <NewsContext.Provider value={{ news, newsReady, setNewsReady, getRecentNews, getNewsByDefinedParameters }}>
+        <NewsContext.Provider value={{ news, newsReady, setNewsReady, getRecentNews, getNewsByDefinedParameters, getArticleNLPAnalysis }}>
             {props.children}
         </NewsContext.Provider>
     );

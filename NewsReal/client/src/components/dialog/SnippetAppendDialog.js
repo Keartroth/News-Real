@@ -106,9 +106,10 @@ const DialogTitle = withStyles(useStyles)(({ children, classes, onClose, ...othe
     );
 });
 
-export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, toggleSnippetAppendModalChange, openSnippetAppendModal }) => {
+export const SnippetAppendDialog = (props) => {
     const classes = useStyles();
     const { addSnippetReference, snippets, getSnippets, addSnippet, snippetsReady, updateSnippet } = useContext(SnippetContext);
+    const { categories, dialogSnippetAppendState, openSnippetAppendModal, toggleSnippetAppendModalChange } = props;
     const [searching, setSearching] = useState(false);
     const [searchBool, setSearchBool] = useState(true);
     const [snippet, setSnippet] = useState("");
@@ -233,7 +234,7 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, togg
             </DialogTitle>
             <DialogContent dividers>
                 <DialogContentText>
-                    Addendum Title: {(article !== null) ? article.title : ""}.
+                    Addendum Title: {(article !== null) && article.title}.
                 </DialogContentText>
                 <FormControl className={classes.formControl}>
                     <div className={classes.search}>
@@ -297,38 +298,36 @@ export const SnippetAppendDialog = ({ categories, dialogSnippetAppendState, togg
                 <FormHelperText>Use the Search Field to Narrow Options</FormHelperText>
             </DialogContent>
             {
-                (snippet !== "")
-                    ? <Card className={classes.card}>
-                        <CardContent className={classes.cardContent}>
-                            <TextField
-                                className={classes.cardTitle}
-                                autoFocus
-                                margin="dense"
-                                id="userTitle"
-                                label="Snippet Title"
-                                type="text"
-                                fullWidth
-                                required
-                                onChange={handleSnippetUpdate}
-                                value={snippetEditState.userTitle || ""}
-                                inputProps={{ min: "5", max: "10" }}
-                            />
-                            <MuiTextField
-                                autoFocus
-                                margin="dense"
-                                id="content"
-                                label="Personal Reflections"
-                                type="textarea"
-                                multiline={true}
-                                rows={5}
-                                fullWidth
-                                required
-                                onChange={handleSnippetUpdate}
-                                value={snippetEditState.content || ""}
-                            />
-                        </CardContent>
-                    </Card>
-                    : ""
+                (snippet !== "") && <Card className={classes.card}>
+                    <CardContent className={classes.cardContent}>
+                        <TextField
+                            className={classes.cardTitle}
+                            autoFocus
+                            margin="dense"
+                            id="userTitle"
+                            label="Snippet Title"
+                            type="text"
+                            fullWidth
+                            required
+                            onChange={handleSnippetUpdate}
+                            value={snippetEditState.userTitle || ""}
+                            inputProps={{ min: "5", max: "10" }}
+                        />
+                        <MuiTextField
+                            autoFocus
+                            margin="dense"
+                            id="content"
+                            label="Personal Reflections"
+                            type="textarea"
+                            multiline={true}
+                            rows={5}
+                            fullWidth
+                            required
+                            onChange={handleSnippetUpdate}
+                            value={snippetEditState.content || ""}
+                        />
+                    </CardContent>
+                </Card>
             }
             <DialogActions>
                 <Button onClick={(e) => {

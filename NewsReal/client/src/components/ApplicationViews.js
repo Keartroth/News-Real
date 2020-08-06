@@ -3,9 +3,9 @@ import { Switch, Route, Redirect, useHistory, useLocation } from "react-router-d
 import { Login } from "./auth/Login";
 import { NewsHome } from "./news/NewsHome";
 import { Register } from "./auth/Register";
-import { NewsContext } from '../providers/NewsProvider';
 import { SnippetHome } from "./snippet/SnippetHome";
 import { SnippetDetails } from "./snippet/SnippetDetails";
+import { NewsContext } from '../providers/NewsProvider';
 import { SnippetContext } from '../providers/SnippetProvider';
 import { UserProfileContext } from "../providers/UserProfileProvider";
 
@@ -131,6 +131,8 @@ export const ApplicationViews = (props) => {
 
                 <Route path="/snippet/:id">
                     {isLoggedIn ? <SnippetDetails
+                        {...props}
+                        snackOpen={snackOpen}
                         snackState={snackState}
                         nukeSnippet={nukeSnippet}
                         setSnackState={setSnackState}
