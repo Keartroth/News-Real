@@ -91,7 +91,7 @@ If you would like to create your own account, feel free to use the register opti
 
 ### Technologies
 
-Server Side
+##### Server Side
 
 [.NET Core](https://dotnet.microsoft.com/download) with [C#](https://docs.microsoft.com/en-us/dotnet/csharp/)
 
@@ -99,13 +99,13 @@ Server Side
 
 [ADO.NET Core](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-3.1) utilized for communicating with the SQL Server database
 
-Client Side
+##### Client Side
 
 [React](https://reactjs.org/)
 
 [Material UI](https://material-ui.com/) for styling
 
-Other
+##### Other
 
 [Google Firebase](https://firebase.google.com/) is used for user authentication
 
