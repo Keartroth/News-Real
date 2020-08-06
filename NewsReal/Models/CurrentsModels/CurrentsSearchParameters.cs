@@ -4,6 +4,8 @@ namespace NewsReal.Models.CurrentsModels
 {
     public class CurrentsSearchParameters
     {
+        public string keywords { get; set; }
+
         public string language { get; set; }
 
         public DateTime? start_date { get; set; }

@@ -37,7 +37,7 @@ namespace NewsReal.Controllers
             return Ok(currentsNewsSearchResults);
         }
 
-        [HttpGet("analyzenews/{type}&{url}")]
+        [HttpGet("analyzenews")]
         public async Task<ActionResult<CloudmersiveNLPResponse>> AnalyzeNewsAsync(string type, string url)
         {
             CloudmersiveNLPResponse cloudmersiveNLPResponse = await _newsRepository.CloudmersiveNLPResponseAsync(type, url);

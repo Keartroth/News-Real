@@ -16,6 +16,7 @@ using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 using System.Net;
 using AngleSharp.Dom;
 using System.Linq;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace NewsReal.Repositories
 {
@@ -105,7 +106,7 @@ namespace NewsReal.Repositories
 
             var apiInstance = new AnalyticsApi();
 
-            if (type == "sentiment")
+            if (type == "sentimentality")
             {
                 var input = new SentimentAnalysisRequest(scrapeResult); // SentimentAnalysisRequest | Input sentiment analysis request
 
@@ -165,10 +166,10 @@ namespace NewsReal.Repositories
             var document = await context.OpenAsync(url);
 
             string pConcat = null;
-            var pQuery = document.GetElementsByTagName("p");
-
+            var pQuery = document.Body.GetElementsByTagName("p");
+            
             string divConcat = null;
-            var divQuery = document.GetElementsByTagName("div");
+            var divQuery = document.Body.GetElementsByTagName("div");
 
             foreach (var node in pQuery)
             {
@@ -226,16 +227,30 @@ namespace NewsReal.Repositories
                 }
             }
 
-            int pCount = pConcat.Count(p => p == '>' || p == '<');
-            int divCount = divConcat.Count(d => d == '>' || d == '<');
+            int? pCount = null;
+            int? divCount = null;
 
-            if (pCount > divCount)
+            if (pConcat != null)
+            {
+                pCount = pConcat.Count(p => p == '>' || p == '<');
+            }
+
+            if (divConcat != null)
+            {
+                divCount = divConcat.Count(d => d == '>' || d == '<');
+            }
+
+            if (pCount != null && pCount < divCount)
+            {
+                return pConcat;
+            }
+            else if (divCount != null)
             {
                 return divConcat;
             }
             else
             {
-                return pConcat;
+                return null;
             }
         }
     }

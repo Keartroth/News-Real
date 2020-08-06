@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useLocation, NavLink } from "react-router-dom";
 import { UserProfileContext } from "../providers/UserProfileProvider";
 import { NewsContext } from '../providers/NewsProvider';
@@ -135,7 +135,7 @@ export const Header = (props) => {
     const { snippetsReady } = useContext(SnippetContext);
     let pathname = useLocation().pathname;
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const toggleDrawerChange = () => {
         setOpen(!open);
     };

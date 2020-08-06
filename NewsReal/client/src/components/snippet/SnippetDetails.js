@@ -1,12 +1,9 @@
 import React, {
     useContext,
-    useEffect
+    useEffect,
+    useState
 } from 'react';
 import { useParams } from "react-router-dom";
-import { Footer } from '../Footer';
-import { SnippetEditDialog } from '../dialog/SnippetEditDialog';
-import { DeleteSnackbar } from '../dialog/DeleteSnackbar';
-import { SnippetContext } from "../../providers/SnippetProvider";
 import { parseISO } from 'date-fns'
 import {
     Button,
@@ -20,6 +17,11 @@ import {
     Typography,
     Paper
 } from '@material-ui/core';
+import { Footer } from '../Footer';
+import { SnippetContext } from "../../providers/SnippetProvider";
+import { DeleteSnackbar } from '../dialog/DeleteSnackbar';
+import { SnippetEditDialog } from '../dialog/SnippetEditDialog';
+import { SnippetNLPDialog } from "../dialog/SnippetNLPDialog";
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -133,6 +135,14 @@ export const SnippetDetails = (props) => {
     const classes = useStyles();
     const { setSnippetDeleteState, setSnippetEditState, toggleSnippetEditModalChange, toggleSnack, openSnippetEditModal, snackOpen } = props;
     const { getSnippetById, snippet, snippetReady } = useContext(SnippetContext);
+    const [openNLPModal, setOpenNLPModal] = useState(false);
+    const [analysisArticle, setAnalysisArticle] = useState(null);
+
+    const toggleNLPModal = (article) => {
+        setAnalysisArticle(article);
+        setOpenNLPModal(!openNLPModal);
+    }
+
     let formatedDate;
     let formatedUserDate;
 
@@ -214,10 +224,10 @@ export const SnippetDetails = (props) => {
                                         }</div>
                                 }
                                 {
-                                    (ra.objectivity) && <div><strong>Objectivity:</strong> {ra.objectivity}</div>
+                                    (ra.objectivity) && <div><strong>Objectivity:</strong> {parseFloat((1 - ra.objectivity).toFixed(3)) * 100}%</div>
                                 }
                                 {
-                                    (ra.sentimentality) && <div><strong>Objectivity:</strong> {ra.sentimentality}</div>
+                                    (ra.sentimentality) && <div><strong>Sentimentality:</strong> {(ra.sentimentality > 0) ? `${ra.sentimentality * 100}% Positive` : `${ra.sentimentality * (-100)}% Negative`}</div>
                                 }
                             </Typography>
                             <Typography component="div">
@@ -230,6 +240,13 @@ export const SnippetDetails = (props) => {
                             </Typography>
                         </CardContent>
                         <CardActions className={classes.buttonGroup}>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    toggleNLPModal(ra);
+                                }}>Submit for Language Analysis</Button>
                             <Button
                                 color="primary"
                                 variant="contained"
@@ -257,16 +274,16 @@ export const SnippetDetails = (props) => {
                 <Card>
                     <Typography className={classes.cardTitle} gutterBottom component="div">
                         {
-                            (snippet.userTitle)
+                            snippet.userTitle
                                 ? <div><strong>Title:</strong> {snippet.userTitle}</div>
                                 : <div> <strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href={`${snippet.url}`}> {snippet.title}</a></div>
                         }
                         <div><strong>Created:</strong> {formatedUserDate}</div>
                         {
-                            (snippet.objectivity) && <span><strong>Objectivity:</strong> {snippet.objectivity}</span>
+                            snippet.objectivity && <span><strong>Objectivity:</strong> {parseFloat((1 - snippet.objectivity).toFixed(3)) * 100}%</span>
                         }
                         {
-                            (snippet.sentimentality) && <span><strong>Objectivity:</strong> {snippet.sentimentality}</span>
+                            snippet.sentimentality && <span><strong>Sentimentality:</strong> {(snippet.sentimentality > 0) ? `${snippet.sentimentality * 100}% Positive` : `${snippet.sentimentality * (-100)}% Negative`}</span>
                         }
                     </Typography>
                     <CardMedia
@@ -277,19 +294,18 @@ export const SnippetDetails = (props) => {
                     <CardContent className={classes.content}>
                         <Typography className={classes.userTitle} component="div">
                             {
-                                (snippet.userTitle) && <div> <strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href={`${snippet.url}`}> {snippet.title}</a></div>
+                                snippet.userTitle && <div> <strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href={`${snippet.url}`}> {snippet.title}</a></div>
                             }
                         </Typography>
                         <Typography className={classes.infoContainer} component="div">
                             <div className={classes.info}><strong>Author:</strong> {snippet.author}</div>
                             <div className={classes.info}><strong>Publisher:</strong> {snippet.publisher}</div>
                             <div><strong>Published:</strong> {formatedDate}</div>
-                            {
-                                <div className={classes.marginLeft}><strong>Category: </strong>
-                                    {
-                                        <CategoryRender />
-                                    }</div>
-                            }
+                            <div className={classes.marginLeft}><strong>Category: </strong>
+                                {
+                                    <CategoryRender />
+                                }
+                            </div>
                         </Typography>
                         <Typography className={classes.textContainer}>
                             <strong>Description:</strong> {snippet.description}
@@ -299,6 +315,15 @@ export const SnippetDetails = (props) => {
                         </Typography>
                     </CardContent>
                     <CardActions className={classes.buttonGroup}>
+                        {
+                            (snippet.sentimentality == null || snippet.objectivity == null) && <Button
+                                color="primary"
+                                variant="contained"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    toggleNLPModal(snippet);
+                                }}>Submit for Language Analysis</Button>
+                        }
                         <Button
                             color="primary"
                             variant="contained"
@@ -322,22 +347,25 @@ export const SnippetDetails = (props) => {
     return (
         <>
             {
-                (openSnippetEditModal) && <SnippetEditDialog {...props} />
+                openSnippetEditModal && <SnippetEditDialog {...props} />
             }
             {
-                (snackOpen) && <DeleteSnackbar {...props} />
+                snackOpen && <DeleteSnackbar {...props} />
+            }
+            {
+                openNLPModal && analysisArticle && <SnippetNLPDialog openNLPModal={openNLPModal} article={analysisArticle} toggleNLPModal={toggleNLPModal} />
             }
             <Container className={classes.root}>
                 <section>
                     {
-                        (snippetReady)
+                        snippetReady
                             ? <SnippetRender />
                             : <CircularProgress />
                     }
                 </section>
                 <section>
                     {
-                        (snippetReady) && (snippet.articleReferences.length > 0) && snippet.articleReferences.map((ar, idx) => referenceCardsRender(ar, idx))
+                        snippetReady && (snippet.articleReferences.length > 0) && snippet.articleReferences.map((ar, idx) => referenceCardsRender(ar, idx))
                     }
                 </section>
             </Container>

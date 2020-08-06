@@ -37,7 +37,6 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 const useStyles = makeStyles((theme) => ({
     button: {
-        // color: 'primary',
         margin: 'auto',
     },
     inputSelect: {
