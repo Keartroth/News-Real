@@ -9,16 +9,14 @@ import { NewsContext } from '../../providers/NewsProvider';
 import {
     Button,
     CssBaseline,
-    Divider,
     FormControl,
+    FormHelperText,
     Grid,
     Input,
     InputAdornment,
     InputLabel,
     List,
     ListItem,
-    ListItemIcon,
-    ListItemText,
     ListSubheader,
     MenuItem,
     Select,
@@ -28,11 +26,9 @@ import {
     MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 import ClassIcon from '@material-ui/icons/Class';
 import DomainIcon from '@material-ui/icons/Domain';
 import DomainDisabledIcon from '@material-ui/icons/DomainDisabled';
-// import FileCopyIcon from '@material-ui/icons/FileCopy';
 import FindInPageIcon from '@material-ui/icons/FindInPage';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
@@ -43,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     inputSelect: {
         marginLeft: '16px',
         marginRight: '16px',
+        marginTop: '16px',
         width: '-webkit-fill-available',
     },
     inputField: {
@@ -64,8 +61,8 @@ export const Search = (props) => {
 
     const initialSearchState = {
         language: "en",
-        keywords: "",
         category: "",
+        keywords: "",
         start_date: null,
         end_date: null,
         country: "us",
@@ -141,11 +138,10 @@ export const Search = (props) => {
             }
             let searchCriteriaString = ""
 
-            Object.keys(searchState).forEach((key) => {
+            Object.keys(searchState).forEach((key, idx) => {
                 if (searchState[key] !== null && searchState[key] !== "") {
-                    if (key === "keywords") {
-                        const keywordsString = searchState[key].split(" ").join();
-                        searchCriteriaString = searchCriteriaString + `&${key}=${keywordsString}`
+                    if (idx === 0) {
+                        searchCriteriaString = `${key}=${searchState[key]}`
                     } else {
                         searchCriteriaString = searchCriteriaString + `&${key}=${searchState[key]}`
                     }
@@ -280,6 +276,7 @@ export const Search = (props) => {
                                     name="keywords"
                                     type="text"
                                     id="searchFilter--keywords"
+                                    title="Less is more"
                                     onChange={handleChange}
                                     startAdornment={
                                         <InputAdornment position="start">
@@ -287,6 +284,7 @@ export const Search = (props) => {
                                         </InputAdornment>
                                     }
                                 />
+                                <FormHelperText id="searchFilter--keywords--helperText">Less is more</FormHelperText>
                             </FormControl>
                             <FormControl className={classes.inputSelect}>
                                 <InputLabel id="searchFilter--pageNumberLabel">Pages Returned</InputLabel>
@@ -315,30 +313,6 @@ export const Search = (props) => {
                         </div>
                         : <Button onClick={toggleDrawerChange}><span className={classes.searchTitle}>News Filter Criteria</span></Button>
                 }
-            </List>
-            <Divider />
-            <List>
-                <div>
-                    <ListSubheader inset>Saved Search Criteria</ListSubheader>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <AssignmentIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Current month" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <AssignmentIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Last quarter" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <AssignmentIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Year-end sale" />
-                    </ListItem>
-                </div>
             </List>
         </>
     );

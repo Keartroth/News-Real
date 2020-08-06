@@ -129,7 +129,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Header = (props) => {
     const classes = useStyles();
-    const handleSearchInput = props.handleSearchInput;
+    const { handleSearchInput, categories } = props;
     const { logout } = useContext(UserProfileContext);
     const { newsReady } = useContext(NewsContext);
     const { snippetsReady } = useContext(SnippetContext);
@@ -197,7 +197,7 @@ export const Header = (props) => {
                 </Toolbar>
             </AppBar>
             {
-                (pathname === "/") && <Drawer
+                (pathname === "/") && categories && <Drawer
                     variant="permanent"
                     className={clsx(classes.drawer, {
                         [classes.drawerOpen]: open,

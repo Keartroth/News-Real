@@ -22,6 +22,10 @@ const Copyright = () => {
 
 const useStyles = makeStyles((theme) => ({
     footer: {
+        width: '100%',
+        height: '60px',
+        outline: 'solid 1px darkgray',
+        position: 'absolute',
         flexShrink: '0',
         padding: theme.spacing(1.5, 2),
         backgroundColor:

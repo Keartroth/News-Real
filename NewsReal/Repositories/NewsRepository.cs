@@ -74,7 +74,7 @@ namespace NewsReal.Repositories
                 httpClient.BaseAddress = new Uri(currentsBaseUrl);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage response = await httpClient.GetAsync("search?apiKey=" + CurrentsApiKey + criteria);
+                HttpResponseMessage response = await httpClient.GetAsync("search?" + criteria + "&apiKey=" + CurrentsApiKey);
 
                 if (response.IsSuccessStatusCode)
                 {

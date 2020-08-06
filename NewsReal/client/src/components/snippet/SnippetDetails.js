@@ -84,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'space-between',
         margin: '0.5rem 1.5rem',
     },
+    minHeight: '100vh',
     pos: {
         marginBottom: 12,
         listStyleType: 'none',
@@ -241,7 +242,7 @@ export const SnippetDetails = (props) => {
                         </CardContent>
                         <CardActions className={classes.buttonGroup}>
                             {
-                                (snippet.sentimentality == null || snippet.objectivity == null) && <Button
+                                (ra.sentimentality == null || ra.objectivity == null) && <Button
                                     color="primary"
                                     variant="contained"
                                     onClick={(e) => {
