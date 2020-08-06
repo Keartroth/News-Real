@@ -79,6 +79,7 @@ npm start
 
 
 ### Seed Data
+
 Login with the following dummy user data to view a user that has a few saved articles:
 
 Email Address: mi<span>chael@exam</span>ple.comx
@@ -89,7 +90,9 @@ If you would like to create your own account, feel free to use the register opti
 
 
 ### Technologies
+
 Server Side
+
 [.NET Core](https://dotnet.microsoft.com/download) with [C#](https://docs.microsoft.com/en-us/dotnet/csharp/)
 
 [Entity Framework](https://docs.microsoft.com/en-us/ef/) utilized for communicating with the SQL Server database
@@ -97,11 +100,13 @@ Server Side
 [ADO.NET Core](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-3.1) utilized for communicating with the SQL Server database
 
 Client Side
+
 [React](https://reactjs.org/)
 
 [Material UI](https://material-ui.com/) for styling
 
 Other
+
 [Google Firebase](https://firebase.google.com/) is used for user authentication
 
 [date-fns](https://date-fns.org/) library for date manipulation
