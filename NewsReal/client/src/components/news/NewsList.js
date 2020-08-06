@@ -32,18 +32,22 @@ export const NewsList = props => {
 
     return (
         <>
-            <SnippetAppendDialog
-                categories={categories}
-                dialogSnippetAppendState={dialogSnippetAppendState}
-                toggleSnippetAppendModalChange={toggleSnippetAppendModalChange}
-                openSnippetAppendModal={openSnippetAppendModal}
-            />
-            <SnippetSaveDialog
-                categories={categories}
-                dialogNewsState={dialogNewsState}
-                toggleModalChange={toggleModalChange}
-                openModal={openModal}
-            />
+            {
+                categories && <SnippetAppendDialog
+                    categories={categories}
+                    dialogSnippetAppendState={dialogSnippetAppendState}
+                    toggleSnippetAppendModalChange={toggleSnippetAppendModalChange}
+                    openSnippetAppendModal={openSnippetAppendModal}
+                />
+            }
+            {
+                categories && <SnippetSaveDialog
+                    categories={categories}
+                    dialogNewsState={dialogNewsState}
+                    toggleModalChange={toggleModalChange}
+                    openModal={openModal}
+                />
+            }
             {
                 (news.length > 0)
                     ? news.map((a, idx) => {

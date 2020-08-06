@@ -68,9 +68,13 @@ export const SnippetNLPDialog = (props) => {
 
 
     const updateDatabase = () => {
-        responseState.objectivity && (article.objectivity = responseState.objectivity);
-        responseState.sentimentality && (article.sentimentality = responseState.sentimentality);
-
+        if (typeof responseState.objectivity !== "undefined") {
+            responseState.objectivity != 0 && (article.objectivity = responseState.objectivity);
+            responseState.objectivity === 0 && (article.objectivity = 0);
+        } else {
+            responseState.sentimentality != 0 && (article.sentimentality = responseState.sentimentality);
+            responseState.sentimentality === 0 && (article.sentimentality = 0);
+        }
         updateSnippet(article.id, article).then(() => {
             getSnippetById(id);
             toggleNLPModal();
@@ -132,7 +136,7 @@ export const SnippetNLPDialog = (props) => {
                             setAwaitingResponse(true);
                         }}
                     >
-                        Subjectivity Analysis
+                        Objectivity Analysis
                     </Button>
                 }
                 {

@@ -33,6 +33,7 @@ import ClassIcon from '@material-ui/icons/Class';
 import DomainIcon from '@material-ui/icons/Domain';
 import DomainDisabledIcon from '@material-ui/icons/DomainDisabled';
 // import FileCopyIcon from '@material-ui/icons/FileCopy';
+import FindInPageIcon from '@material-ui/icons/FindInPage';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 const useStyles = makeStyles((theme) => ({
@@ -63,6 +64,7 @@ export const Search = (props) => {
 
     const initialSearchState = {
         language: "en",
+        keywords: "",
         category: "",
         start_date: null,
         end_date: null,
@@ -141,7 +143,12 @@ export const Search = (props) => {
 
             Object.keys(searchState).forEach((key) => {
                 if (searchState[key] !== null && searchState[key] !== "") {
-                    searchCriteriaString = searchCriteriaString + `&${key}=${searchState[key]}`
+                    if (key === "keywords") {
+                        const keywordsString = searchState[key].split(" ").join();
+                        searchCriteriaString = searchCriteriaString + `&${key}=${keywordsString}`
+                    } else {
+                        searchCriteriaString = searchCriteriaString + `&${key}=${searchState[key]}`
+                    }
                 }
             });
 
@@ -260,6 +267,23 @@ export const Search = (props) => {
                                     startAdornment={
                                         <InputAdornment position="start">
                                             <DomainDisabledIcon />
+                                        </InputAdornment>
+                                    }
+                                />
+                            </FormControl>
+                            <FormControl className={classes.inputField}>
+                                <InputLabel id="searchFilter--domain">Keywords</InputLabel>
+                                <Input
+                                    variant="outlined"
+                                    margin="none"
+                                    fullWidth
+                                    name="keywords"
+                                    type="text"
+                                    id="searchFilter--keywords"
+                                    onChange={handleChange}
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            <FindInPageIcon />
                                         </InputAdornment>
                                     }
                                 />

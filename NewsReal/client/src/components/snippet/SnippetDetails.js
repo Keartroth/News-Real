@@ -224,10 +224,10 @@ export const SnippetDetails = (props) => {
                                         }</div>
                                 }
                                 {
-                                    (ra.objectivity) && <div><strong>Objectivity:</strong> {parseFloat((1 - ra.objectivity).toFixed(3)) * 100}%</div>
+                                    ra.objectivity != null && <div title="Objectivity classification scores close to 100 have a high probability of objectivity."><strong>Objectivity:</strong> {parseFloat(((1 - ra.objectivity) * 100).toFixed(3))}%</div>
                                 }
                                 {
-                                    (ra.sentimentality) && <div><strong>Sentimentality:</strong> {(ra.sentimentality > 0) ? `${ra.sentimentality * 100}% Positive` : `${ra.sentimentality * (-100)}% Negative`}</div>
+                                    ra.sentimentality != null && <div title="Sentiment classification scores close to 0 are neutral. The greater the value deviates from 0 the stronger the sentiment."><strong>Sentimentality:</strong> {(ra.sentimentality > 0) ? `${ra.sentimentality * 100}% Positive` : `${ra.sentimentality * (-100)}% Negative`}</div>
                                 }
                             </Typography>
                             <Typography component="div">
@@ -240,13 +240,15 @@ export const SnippetDetails = (props) => {
                             </Typography>
                         </CardContent>
                         <CardActions className={classes.buttonGroup}>
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    toggleNLPModal(ra);
-                                }}>Submit for Language Analysis</Button>
+                            {
+                                (snippet.sentimentality == null || snippet.objectivity == null) && <Button
+                                    color="primary"
+                                    variant="contained"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        toggleNLPModal(ra);
+                                    }}>Submit for Language Analysis</Button>
+                            }
                             <Button
                                 color="primary"
                                 variant="contained"
@@ -280,10 +282,10 @@ export const SnippetDetails = (props) => {
                         }
                         <div><strong>Created:</strong> {formatedUserDate}</div>
                         {
-                            snippet.objectivity && <span><strong>Objectivity:</strong> {parseFloat((1 - snippet.objectivity).toFixed(3)) * 100}%</span>
+                            snippet.objectivity != null && <span title="Objectivity classification scores close to 100 have a high probability of objectivity."><strong>Objectivity:</strong> {parseFloat(((1 - snippet.objectivity) * 100).toFixed(3))}%</span>
                         }
                         {
-                            snippet.sentimentality && <span><strong>Sentimentality:</strong> {(snippet.sentimentality > 0) ? `${snippet.sentimentality * 100}% Positive` : `${snippet.sentimentality * (-100)}% Negative`}</span>
+                            snippet.sentimentality != null && <span title="Sentiment classification scores close to 0 are neutral. The greater the value deviates from 0 the stronger the sentiment."><strong>Sentimentality:</strong> {(snippet.sentimentality > 0) ? `${(snippet.sentimentality * 100).toFixed(1)}% Positive` : `${(snippet.sentimentality * (-100).toFixed(1))}% Negative`}</span>
                         }
                     </Typography>
                     <CardMedia

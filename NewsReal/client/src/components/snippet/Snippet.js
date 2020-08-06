@@ -63,6 +63,9 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'space-between',
         marginBottom: '1rem',
     },
+    navLink: {
+        textDecoration: 'none',
+    },
 }));
 
 const capitalizeCategory = (s) => {
@@ -100,7 +103,7 @@ export const Snippet = (props) => {
             />
             <CardContent className={classes.buttonGroup}>
                 <CardActions>
-                    <NavLink to={`/snippet/${snippet.id}`} onClick={setReadyToFalse}>
+                    <NavLink className={classes.navLink} to={`/snippet/${snippet.id}`} onClick={setReadyToFalse}>
                         <Button
                             color="primary"
                             variant="contained"

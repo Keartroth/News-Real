@@ -81,6 +81,16 @@ namespace NewsReal.Controllers
                 return BadRequest();
             }
 
+            if (snippet.Objectivity == 0)
+            {
+                snippet.Objectivity = 0.00;
+            }
+
+            if (snippet.Sentimentality == 0)
+            {
+                snippet.Sentimentality = 0.00;
+            }
+
             _snippetRepository.Update(snippet);
             return NoContent();
         }
