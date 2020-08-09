@@ -9,6 +9,7 @@ import { SnippetProvider } from './providers/SnippetProvider';
 import { UserProfileContext } from "./providers/UserProfileProvider";
 // import logo from './logo.svg';
 import './App.css';
+import { SearchProvider } from './providers/SearchProvider';
 
 export const App = () => {
   const { isLoggedIn } = useContext(UserProfileContext);
@@ -31,11 +32,13 @@ export const App = () => {
     <Router>
       <NewsProvider>
         <SnippetProvider>
-          {
-            //Short circut evaluation is awesome
-            isLoggedIn && <Header categories={categories} handleSearchInput={handleSearchInput} />
-          }
-          <ApplicationViews categories={categories} searchTerms={searchTerms} />
+          <SearchProvider>
+            {
+              //Short circut evaluation is awesome
+              isLoggedIn && <Header categories={categories} handleSearchInput={handleSearchInput} />
+            }
+            <ApplicationViews categories={categories} searchTerms={searchTerms} />
+          </SearchProvider>
         </SnippetProvider>
       </NewsProvider>
     </Router>

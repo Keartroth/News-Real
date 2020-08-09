@@ -3,6 +3,7 @@ import { useLocation, NavLink } from "react-router-dom";
 import { UserProfileContext } from "../providers/UserProfileProvider";
 import { NewsContext } from '../providers/NewsProvider';
 import { SnippetContext } from '../providers/SnippetProvider';
+import { CategoryContext } from '../providers/CategoryProvider';
 import { Search } from './search/Search';
 import clsx from 'clsx';
 import {
@@ -12,6 +13,7 @@ import {
     IconButton,
     InputBase,
     Link,
+    ListSubheader,
     Toolbar,
     Typography,
     CssBaseline
@@ -133,6 +135,7 @@ export const Header = (props) => {
     const { logout } = useContext(UserProfileContext);
     const { newsReady } = useContext(NewsContext);
     const { snippetsReady } = useContext(SnippetContext);
+    const { categoriesReady } = useContext(CategoryContext);
     let pathname = useLocation().pathname;
 
     const [open, setOpen] = useState(false);
@@ -197,7 +200,7 @@ export const Header = (props) => {
                 </Toolbar>
             </AppBar>
             {
-                (pathname === "/") && categories && <Drawer
+                (pathname === "/") && categoriesReady && <Drawer
                     variant="permanent"
                     className={clsx(classes.drawer, {
                         [classes.drawerOpen]: open,
@@ -211,6 +214,7 @@ export const Header = (props) => {
                     }}
                 >
                     <div className={classes.toolbarIcon}>
+                        <ListSubheader inset>News Filter Criteria</ListSubheader>
                         <IconButton onClick={toggleDrawerChange}>
                             <ChevronLeftIcon />
                         </IconButton>
