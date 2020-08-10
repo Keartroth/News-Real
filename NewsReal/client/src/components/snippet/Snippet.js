@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     },
     cardTitle: {
         alignSelf: 'center',
+        fontWeight: 'bolder',
         maxWidth: 'fit-content',
         padding: '0.5rem 0em',
     },
@@ -47,9 +48,10 @@ const useStyles = makeStyles((theme) => ({
         overflow: 'inherit',
     },
     contentContainer: {
-        height: '100%',
+        height: '85%',
         position: 'relative',
         overflowY: 'auto',
+        whiteSpace: 'pre-line',
     },
     expandedDetails: {
         width: '75%',

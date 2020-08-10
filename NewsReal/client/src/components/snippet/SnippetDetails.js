@@ -26,6 +26,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        minHeight: '100vh',
         minWidth: 275,
         marginTop: '5rem',
         textAlign: '-webkit-center',
@@ -63,8 +64,16 @@ const useStyles = makeStyles((theme) => ({
     },
     cardTitle: {
         alignSelf: 'center',
+        fontSize: '1.25rem',
+        fontWeight: 'bolder',
         maxWidth: 'fit-content',
         padding: '0.5rem 0em',
+    },
+    circularProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        margin: '-25px 0 0 -25px',
     },
     content: {
         maxHeight: '20rem',
@@ -115,11 +124,12 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
     },
     textContainer: {
-        margin: '0.5rem 0',
-        textIndent: '1.5rem',
+        margin: '0.25rem 1.5rem',
+        whiteSpace: 'pre-line',
     },
     userTitle: {
         textAlign: 'center',
+        fontSize: '1.5rem',
     },
 }));
 
@@ -165,7 +175,7 @@ export const SnippetDetails = (props) => {
         setSnippetDeleteState(article);
         toggleSnack(article.userTitle, bool, snippetId);
     };
-
+    debugger
     const CategoryRender = () => {
         return (
             <>
@@ -195,8 +205,8 @@ export const SnippetDetails = (props) => {
                 <Typography className={classes.cardTitle} gutterBottom component="div">
                     {
                         (ra.userTitle)
-                            ? <div><div><strong>Title: </strong> {ra.userTitle}</div><div><strong>Link: </strong><a target="_blank" rel="noopener noreferrer" href={`${ra.url}`}>{ra.title}</a></div></div>
-                            : <div><strong>Link: </strong><a target="_blank" rel="noopener noreferrer" href={`${ra.url}`}>{ra.title}</a></div>
+                            ? <div><div>{ra.userTitle}</div><div><a target="_blank" rel="noopener noreferrer" href={`${ra.url}`}>{ra.title}</a></div></div>
+                            : <div><a target="_blank" rel="noopener noreferrer" href={`${ra.url}`}>{ra.title}</a></div>
                     }
                 </Typography>
                 <Grid className={classes.raContent}>
@@ -217,7 +227,7 @@ export const SnippetDetails = (props) => {
                                 <div className={classes.raInfo}><strong>Published:</strong> {formatedDate}</div>
                             </Typography>
                             <Typography className={classes.raInfoContainer} component="div">
-                                <div className={classes.raInfo}><strong>Created:</strong> {formatedUserDate}</div>
+                                <div className={classes.raInfo}>{formatedUserDate}</div>
                                 {
                                     <div className={classes.raInfo}><strong>Category: </strong>
                                         {
@@ -278,10 +288,10 @@ export const SnippetDetails = (props) => {
                     <Typography className={classes.cardTitle} gutterBottom component="div">
                         {
                             snippet.userTitle
-                                ? <div><strong>Title:</strong> {snippet.userTitle}</div>
-                                : <div> <strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href={`${snippet.url}`}> {snippet.title}</a></div>
+                                ? <div>{snippet.userTitle}</div>
+                                : <div><a target="_blank" rel="noopener noreferrer" href={`${snippet.url}`}> {snippet.title}</a></div>
                         }
-                        <div><strong>Created:</strong> {formatedUserDate}</div>
+                        <div>{formatedUserDate}</div>
                         {
                             snippet.objectivity != null && <span title="Objectivity classification scores close to 100 have a high probability of objectivity."><strong>Objectivity:</strong> {parseFloat(((1 - snippet.objectivity) * 100).toFixed(3))}%</span>
                         }
@@ -297,7 +307,7 @@ export const SnippetDetails = (props) => {
                     <CardContent className={classes.content}>
                         <Typography className={classes.userTitle} component="div">
                             {
-                                snippet.userTitle && <div> <strong>Link:</strong> <a target="_blank" rel="noopener noreferrer" href={`${snippet.url}`}> {snippet.title}</a></div>
+                                snippet.userTitle && <div><a target="_blank" rel="noopener noreferrer" href={`${snippet.url}`}> {snippet.title}</a></div>
                             }
                         </Typography>
                         <Typography className={classes.infoContainer} component="div">
@@ -363,7 +373,7 @@ export const SnippetDetails = (props) => {
                     {
                         snippetReady
                             ? <SnippetRender />
-                            : <CircularProgress />
+                            : <CircularProgress className={classes.circularProgress} />
                     }
                 </section>
                 <section>

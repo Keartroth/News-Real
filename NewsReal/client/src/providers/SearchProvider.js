@@ -14,7 +14,6 @@ export const SearchProvider = (props) => {
 
     useEffect(() => {
         if (searchParameters !== null) {
-            debugger
             setSearchParametersReady(true);
         }
     }, [searchParameters]);
@@ -66,7 +65,7 @@ export const SearchProvider = (props) => {
                 if (resp.ok) {
                     getSearchParameters();
                 }
-                throw new Error("Unauthorized");
+                else { throw new Error("Unauthorized"); }
             }));
     };
 
@@ -79,9 +78,9 @@ export const SearchProvider = (props) => {
                 }
             }).then((resp) => {
                 if (resp.ok) {
-                    return;
+                    getSearchParameters();
                 }
-                throw new Error("Failed to delete search parameters.")
+                else { throw new Error("Failed to delete search parameter.") };
             })
         );
     };
@@ -97,9 +96,9 @@ export const SearchProvider = (props) => {
                 body: JSON.stringify(searchParameter),
             }).then(resp => {
                 if (resp.ok) {
-                    return;
+                    getSearchParameters();
                 }
-                throw new Error("Unauthorized");
+                else { throw new Error("Unauthorized") };
             }))
     };
 

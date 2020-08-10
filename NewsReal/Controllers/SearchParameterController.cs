@@ -82,6 +82,21 @@ namespace NewsReal.Controllers
             return NoContent();
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var currentUserProfileID = GetCurrentUserProfile().Id;
+            var seachParameter = _searchParameterRepository.GetSearchParameterById(id);
+
+            if (currentUserProfileID != seachParameter.UserProfileId)
+            {
+                return Unauthorized();
+            }
+
+            _searchParameterRepository.Delete(id);
+            return NoContent();
+        }
+
         private UserProfile GetCurrentUserProfile()
         {
             var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;

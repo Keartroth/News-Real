@@ -22,13 +22,12 @@ import {
     fade,
     makeStyles
 } from '@material-ui/core/styles';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -131,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Header = (props) => {
     const classes = useStyles();
-    const { handleSearchInput, categories } = props;
+    const { handleSearchInput } = props;
     const { logout } = useContext(UserProfileContext);
     const { newsReady } = useContext(NewsContext);
     const { snippetsReady } = useContext(SnippetContext);
@@ -173,7 +172,11 @@ export const Header = (props) => {
                         </Link>
                     </Typography>
                     <Typography component="h1" variant="h6" className={classes.title}>
-                        <Link component={NavLink} to="/snippets" color="inherit" variant="body2">
+                        <Link component={NavLink} onClick={() => {
+                            if (open) {
+                                toggleDrawerChange();
+                            }
+                        }} to="/snippets" color="inherit" variant="body2">
                             Saved Snippets
                         </Link>
                     </Typography>
