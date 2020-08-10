@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { UserProfileContext } from "./UserProfileProvider";
 
 export const CategoryContext = React.createContext();
@@ -6,6 +6,13 @@ export const CategoryContext = React.createContext();
 export const CategoryProvider = (props) => {
     const { getToken } = useContext(UserProfileContext);
     const [categories, setCategories] = useState(null);
+    const [categoriesReady, setCategoriesReady] = useState(null);
+
+    useEffect(() => {
+        if (categories !== null) {
+            setCategoriesReady(true);
+        }
+    }, [categories]);
 
     const apiUrl = '/api/category'
 
@@ -21,7 +28,7 @@ export const CategoryProvider = (props) => {
     };
 
     return (
-        <CategoryContext.Provider value={{ categories, getCategories }}>
+        <CategoryContext.Provider value={{ categories, categoriesReady, getCategories }}>
             {props.children}
         </CategoryContext.Provider>
     );

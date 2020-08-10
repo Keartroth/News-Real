@@ -7,12 +7,14 @@ import { CategoryContext } from "./providers/CategoryProvider";
 import { NewsProvider } from './providers/NewsProvider';
 import { SnippetProvider } from './providers/SnippetProvider';
 import { UserProfileContext } from "./providers/UserProfileProvider";
+import { SearchContext } from "./providers/SearchProvider";
 // import logo from './logo.svg';
 import './App.css';
 
 export const App = () => {
   const { isLoggedIn } = useContext(UserProfileContext);
   const { categories, getCategories } = useContext(CategoryContext);
+  const { deleteSearchParameter } = useContext(SearchContext);
   const [searchTerms, setSearchTerms] = useState(null);
   const debounceSearch = debounce(setSearchTerms, 500);
 
@@ -20,6 +22,30 @@ export const App = () => {
     e.preventDefault();
     debounceSearch(e.target.value);
   };
+
+  const initialSnackState = {
+    snackOpen: false,
+    vertical: 'top',
+    horizontal: 'center',
+    searchParameterTitle: "",
+    searchParameterId: null,
+  }
+
+  const [snackState, setSnackState] = useState(initialSnackState);
+
+  const { snackOpen } = snackState;
+
+  const toggleSnack = (searchParameter) => {
+    if (snackOpen) {
+      setSnackState(initialSnackState);
+    } else {
+      setSnackState({ ...snackState, snackOpen: true, searchParameterTitle: searchParameter.title, searchParameterId: searchParameter.id });
+    }
+  };
+
+  const nukeSearch = (id) => {
+    deleteSearchParameter(id).then(toggleSnack);
+  }
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -33,9 +59,15 @@ export const App = () => {
         <SnippetProvider>
           {
             //Short circut evaluation is awesome
-            isLoggedIn && <Header categories={categories} handleSearchInput={handleSearchInput} />
+            isLoggedIn && <Header categories={categories} toggleSnack={toggleSnack} handleSearchInput={handleSearchInput} />
           }
-          <ApplicationViews categories={categories} searchTerms={searchTerms} />
+          <ApplicationViews
+            categories={categories}
+            searchTerms={searchTerms}
+            snackState={snackState}
+            toggleSnack={toggleSnack}
+            nukeSearch={nukeSearch}
+          />
         </SnippetProvider>
       </NewsProvider>
     </Router>

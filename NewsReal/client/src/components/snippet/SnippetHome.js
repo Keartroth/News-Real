@@ -15,6 +15,12 @@ const useStyles = makeStyles((theme) => ({
         minHeight: '100vh',
     },
     appBarSpacer: theme.mixins.toolbar,
+    circularProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        margin: '-25px 0 0 -25px',
+    },
     content: {
         flexGrow: 1,
         overflow: 'auto',
@@ -35,6 +41,8 @@ export const SnippetHome = (props) => {
         getSnippets();
     }, []);
 
+    debugger
+
     return (
         <>
             <div className={classes.root}>
@@ -45,7 +53,7 @@ export const SnippetHome = (props) => {
                         {
                             (snippetsReady)
                                 ? <div style={{ display: 'flex', flexWrap: 'wrap', padding: '2rem' }}><SnippetList {...props} snippets={(filteredSnippets !== null && searching) ? filteredSnippets : snippets} /></div>
-                                : <div style={{ margin: 'auto' }}><CircularProgress status="loading" /></div>
+                                : <div style={{ margin: 'auto' }}><CircularProgress className={classes.CircularProgress} status="loading" /></div>
                         }
                     </Container>
                 </div>

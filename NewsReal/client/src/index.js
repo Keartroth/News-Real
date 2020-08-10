@@ -5,6 +5,7 @@ import { App } from './App';
 import * as serviceWorker from './serviceWorker';
 import * as firebase from "firebase/app";
 import { CategoryProvider } from "./providers/CategoryProvider";
+import { SearchProvider } from './providers/SearchProvider';
 import { UserProfileProvider } from "./providers/UserProfileProvider";
 
 const firebaseConfig = {
@@ -16,7 +17,9 @@ ReactDOM.render(
   <React.StrictMode>
     <UserProfileProvider>
       <CategoryProvider>
-        <App />
+        <SearchProvider>
+          <App />
+        </SearchProvider>
       </CategoryProvider>
     </UserProfileProvider>
   </React.StrictMode>,

@@ -3,6 +3,7 @@ import { useLocation, NavLink } from "react-router-dom";
 import { UserProfileContext } from "../providers/UserProfileProvider";
 import { NewsContext } from '../providers/NewsProvider';
 import { SnippetContext } from '../providers/SnippetProvider';
+import { CategoryContext } from '../providers/CategoryProvider';
 import { Search } from './search/Search';
 import clsx from 'clsx';
 import {
@@ -12,6 +13,7 @@ import {
     IconButton,
     InputBase,
     Link,
+    ListSubheader,
     Toolbar,
     Typography,
     CssBaseline
@@ -20,13 +22,12 @@ import {
     fade,
     makeStyles
 } from '@material-ui/core/styles';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -129,10 +130,11 @@ const useStyles = makeStyles((theme) => ({
 
 export const Header = (props) => {
     const classes = useStyles();
-    const { handleSearchInput, categories } = props;
+    const { handleSearchInput } = props;
     const { logout } = useContext(UserProfileContext);
     const { newsReady } = useContext(NewsContext);
     const { snippetsReady } = useContext(SnippetContext);
+    const { categoriesReady } = useContext(CategoryContext);
     let pathname = useLocation().pathname;
 
     const [open, setOpen] = useState(false);
@@ -170,7 +172,11 @@ export const Header = (props) => {
                         </Link>
                     </Typography>
                     <Typography component="h1" variant="h6" className={classes.title}>
-                        <Link component={NavLink} to="/snippets" color="inherit" variant="body2">
+                        <Link component={NavLink} onClick={() => {
+                            if (open) {
+                                toggleDrawerChange();
+                            }
+                        }} to="/snippets" color="inherit" variant="body2">
                             Saved Snippets
                         </Link>
                     </Typography>
@@ -197,7 +203,7 @@ export const Header = (props) => {
                 </Toolbar>
             </AppBar>
             {
-                (pathname === "/") && categories && <Drawer
+                (pathname === "/") && categoriesReady && <Drawer
                     variant="permanent"
                     className={clsx(classes.drawer, {
                         [classes.drawerOpen]: open,
@@ -211,6 +217,7 @@ export const Header = (props) => {
                     }}
                 >
                     <div className={classes.toolbarIcon}>
+                        <ListSubheader inset>News Filter Criteria</ListSubheader>
                         <IconButton onClick={toggleDrawerChange}>
                             <ChevronLeftIcon />
                         </IconButton>

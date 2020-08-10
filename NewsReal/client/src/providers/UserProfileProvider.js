@@ -2,10 +2,21 @@ import React, { useState, useEffect, createContext } from "react";
 import { CircularProgress } from '@material-ui/core';
 import * as firebase from "firebase/app";
 import "firebase/auth";
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+    circularProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        margin: '-25px 0 0 -25px',
+    },
+}));
 
 export const UserProfileContext = createContext();
 
 export const UserProfileProvider = (props) => {
+    const classes = useStyles();
     const apiUrl = "/api/userprofile";
 
     const userProfile = sessionStorage.getItem("userProfile");
@@ -80,7 +91,7 @@ export const UserProfileProvider = (props) => {
             {
                 (isFirebaseReady)
                     ? props.children
-                    : <div style={{ display: 'flex', justifyContent: 'center' }}><CircularProgress status="loading" /></div>
+                    : <div style={{ display: 'flex', justifyContent: 'center' }}><CircularProgress className={classes.CircularProgress} status="loading" /></div>
             }
         </UserProfileContext.Provider>
     );

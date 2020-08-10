@@ -16,5 +16,7 @@ namespace NewsReal.Data
         public DbSet<ArticleReference> ArticleReference { get; set; }
 
         public DbSet<ArticleCategory> ArticleCategory { get; set; }
+
+        public DbSet<SearchParameter> SearchParameter { get; set; }
     }
 }
