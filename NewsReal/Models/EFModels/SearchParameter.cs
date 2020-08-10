@@ -9,8 +9,8 @@ namespace NewsReal.Models.EFModels
         public string Title { get; set; }
         public string Keywords { get; set; }
         public string Language { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public int? StartDate { get; set; }
+        public int? EndDate { get; set; }
         public int? Type { get; set; }
         public string Country { get; set; }
         public string Category { get; set; }
