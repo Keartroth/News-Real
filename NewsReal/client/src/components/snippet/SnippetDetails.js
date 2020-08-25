@@ -175,7 +175,7 @@ export const SnippetDetails = (props) => {
         setSnippetDeleteState(article);
         toggleSnack(article.userTitle, bool, snippetId);
     };
-    debugger
+
     const CategoryRender = () => {
         return (
             <>
@@ -214,7 +214,7 @@ export const SnippetDetails = (props) => {
                         <CardContent>
                             <CardMedia
                                 className={classes.cardMedia}
-                                image={(ra.image !== "None") ? ra.image : "https://source.unsplash.com/random/?newspaper"}
+                                image={(ra.image !== "None") ? ra.image : "https://images.unsplash.com/photo-1582487852281-845682679570?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"}
                                 alt="Image title"
                             />
                         </CardContent>
@@ -301,7 +301,7 @@ export const SnippetDetails = (props) => {
                     </Typography>
                     <CardMedia
                         className={classes.cardMedia}
-                        image={(snippet.image !== "None") ? snippet.image : "https://source.unsplash.com/random/?newspaper"}
+                        image={(snippet.image !== "None") ? snippet.image : "https://images.unsplash.com/photo-1582487852281-845682679570?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"}
                         alt="Image title"
                     />
                     <CardContent className={classes.content}>

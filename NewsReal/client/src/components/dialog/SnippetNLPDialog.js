@@ -1,7 +1,6 @@
 import React, {
     useContext,
     useState,
-    useEffect
 } from 'react';
 import {
     Button,
@@ -69,10 +68,10 @@ export const SnippetNLPDialog = (props) => {
 
     const updateDatabase = () => {
         if (typeof responseState.objectivity !== "undefined") {
-            responseState.objectivity != 0 && (article.objectivity = responseState.objectivity);
+            responseState.objectivity !== 0 && (article.objectivity = responseState.objectivity);
             responseState.objectivity === 0 && (article.objectivity = 0);
         } else {
-            responseState.sentimentality != 0 && (article.sentimentality = responseState.sentimentality);
+            responseState.sentimentality !== 0 && (article.sentimentality = responseState.sentimentality);
             responseState.sentimentality === 0 && (article.sentimentality = 0);
         }
         updateSnippet(article.id, article).then(() => {

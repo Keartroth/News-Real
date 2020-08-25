@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: 'rgba(169, 169, 169, 0.3)',
         borderRadius: '25px',
         fontSize: '3rem',
-        margin: 'auto',
+        margin: '10% auto',
         padding: '2rem',
     }
 }));

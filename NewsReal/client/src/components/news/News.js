@@ -113,13 +113,13 @@ export const News = ({ article, toggleModalChange, setDialogNewsState, setDialog
         if (articleOptions[selectedArticleIndex].includes('View')) {
             if (articleOptions[selectedArticleIndex].includes('Details')) {
                 setShowDetailState(!showDetailState);
-                e.target.parentElement.parentElement.parentElement.scrollIntoView();
                 articleOptions[selectedArticleIndex] = 'View Description';
+                e.target.parentElement.parentElement.parentElement.parentElement.scrollIntoView();
             } else {
                 if (article.description !== "") {
                     setShowDetailState(!showDetailState);
-                    e.target.parentElement.parentElement.parentElement.scrollIntoView();
                     articleOptions[selectedArticleIndex] = 'View Article Details';
+                    e.target.parentElement.parentElement.parentElement.scrollIntoView();
                 } else {
                     alert('This article has no additional description provided.\nVisit the article in question for more information.');
                 }
@@ -165,7 +165,7 @@ export const News = ({ article, toggleModalChange, setDialogNewsState, setDialog
         <Card className={(showDetailState) ? classes.cardFull : classes.card}>
             <CardMedia
                 className={classes.cardMedia}
-                image={(article.image !== "None") ? article.image : "https://source.unsplash.com/random/?newspaper"}
+                image={(article.image !== "None") ? article.image : "https://images.unsplash.com/photo-1582487852281-845682679570?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"}
                 alt="Image title"
             />
             <CardContent className={classes.cardContent}>

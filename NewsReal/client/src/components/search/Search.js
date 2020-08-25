@@ -3,7 +3,7 @@ import React, {
     useEffect,
     useState,
 } from 'react';
-import { format, toDate, zonedTimeToUtc } from 'date-fns';
+import { format } from 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { NewsContext } from '../../providers/NewsProvider';
 import { SearchContext } from '../../providers/SearchProvider';
@@ -128,6 +128,23 @@ const a11yProps = (index) => {
     };
 }
 
+const getRelativeDateFromInteger = (searchParameter) => {
+    let dateObject = {};
+    if (searchParameter.startDate !== null) {
+        const date = new Date();
+        date.setDate(date.getUTCDate() - searchParameter.startDate);
+        const startDate = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+        dateObject.start_date = startDate;
+    }
+    if (searchParameter.endDate !== null) {
+        const date = new Date();
+        date.setDate(date.getUTCDate() - searchParameter.endDate);
+        const endDate = format(date, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+        dateObject.end_date = endDate;
+    }
+    return dateObject;
+}
+
 export const Search = (props) => {
     const classes = useStyles();
     const { open, toggleDrawerChange, categories, toggleSnack } = props;
@@ -145,6 +162,12 @@ export const Search = (props) => {
     useEffect(() => {
         getSearchParameters();
     }, []);
+
+    useEffect(() => {
+        if (!checkState) {
+            setSearchState(initialSearchState);
+        }
+    }, [checkState]);
 
     const initialSearchState = {
         language: "en",
@@ -212,6 +235,8 @@ export const Search = (props) => {
                 toggleDrawerChange();
             }
             alert('No parameters selected.')
+        } else if (searchState.start_date > searchState.end_date) {
+            alert('Start date must be before end date.')
         } else {
             if (searchState.start_date !== null && searchState.start_date !== "") {
                 const startDate = format(searchState.start_date, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
@@ -278,16 +303,28 @@ export const Search = (props) => {
             alert('Cannot save blank search parameters.');
         } else if (searchState.title === "") {
             alert('Saved search criteria requires a title.');
+        } else if (searchState.start_date > searchState.end_date) {
+            alert('Start date must be before end date.')
         } else {
             if (searchState.start_date !== null && searchState.start_date !== "") {
-                searchState.start_date = format(new Date(searchState.start_date), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+                const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+                const today = new Date();
+                const startDate = new Date(searchState.start_date);
+                const utcToday = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+                const utcStart = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+                const diffUTCDays = Math.floor((utcToday - utcStart) / _MS_PER_DAY);
+                searchState.startDate = diffUTCDays
             }
             if (searchState.end_date !== null && searchState.end_date !== "") {
-                searchState.end_date = format(new Date(searchState.end_date), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+                const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+                const today = new Date();
+                const endDate = new Date(searchState.end_date);
+                const utcToday = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+                const utcEnd = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+                const diffUTCDays = Math.floor((utcToday - utcEnd) / _MS_PER_DAY);
+                searchState.endDate = diffUTCDays;
             }
 
-            searchState.startDate = searchState.start_date;
-            searchState.endDate = searchState.end_date;
             searchState.pageNumber = searchState.page_number;
             searchState.domainNot = searchState.domain_not;
 
@@ -329,7 +366,7 @@ export const Search = (props) => {
                                     <Select
                                         labelId="searchFilter--categoryLabel"
                                         id="searchFilter--category"
-                                        value={searchState.category}
+                                        value={searchState.category || ""}
                                         onChange={handleChange}
                                         label="Category"
                                         name="category"
@@ -357,9 +394,9 @@ export const Search = (props) => {
                                             format="MM/dd/yyyy"
                                             margin="none"
                                             id="start-date-picker-inline"
-                                            label="Date Range Start"
+                                            label={checkState ? "Start of Relative Range " : "Date Range Start"}
                                             name="start_date"
-                                            value={searchState.start_date}
+                                            value={searchState.start_date || null}
                                             onChange={(e) => { handleChange(e, "start_date") }}
                                             autoOk={true}
                                             disableFuture={true}
@@ -380,9 +417,9 @@ export const Search = (props) => {
                                             format="MM/dd/yyyy"
                                             margin="none"
                                             id="end-date-picker-inline"
-                                            label="Date Range End"
+                                            label={checkState ? "End of Relative Range " : "Date Range End"}
                                             name="end_date"
-                                            value={searchState.end_date}
+                                            value={searchState.end_date || null}
                                             onChange={(e) => { handleChange(e, "end_date") }}
                                             autoOk={true}
                                             disableFuture={true}
@@ -405,7 +442,7 @@ export const Search = (props) => {
                                         name="domain"
                                         type="text"
                                         id="searchFilter--domain"
-                                        value={searchState.domain}
+                                        value={searchState.domain || ""}
                                         title="exclude prefix (e.g. www)"
                                         onChange={handleChange}
                                         startAdornment={
@@ -426,7 +463,7 @@ export const Search = (props) => {
                                         name="domain_not"
                                         type="text"
                                         id="searchFilter--domainNot"
-                                        value={searchState.domain_not}
+                                        value={searchState.domain_not || ""}
                                         title="exclude prefix (e.g. www)"
                                         onChange={handleChange}
                                         startAdornment={
@@ -447,7 +484,7 @@ export const Search = (props) => {
                                         name="keywords"
                                         type="text"
                                         id="searchFilter--keywords"
-                                        value={searchState.keywords}
+                                        value={searchState.keywords || ""}
                                         title="Less is more"
                                         placeholder="Less is more"
                                         onChange={handleChange}
@@ -465,7 +502,7 @@ export const Search = (props) => {
                                     <Select
                                         labelId="searchFilter--pageNumberLabel"
                                         id="searchFilter--pageNumber"
-                                        value={searchState.page_number}
+                                        value={searchState.page_number || 1}
                                         onChange={handleChange}
                                         name="page_number"
                                         startAdornment={
@@ -540,8 +577,8 @@ export const Search = (props) => {
                                                     language: sp.language,
                                                     category: sp.category,
                                                     keywords: sp.keywords,
-                                                    start_date: sp.startDate,
-                                                    end_date: sp.endDate,
+                                                    start_date: null,
+                                                    end_date: null,
                                                     country: sp.country,
                                                     page_number: sp.pageNumber,
                                                     domain: sp.domain,
@@ -549,6 +586,12 @@ export const Search = (props) => {
                                                     type: sp.type,
                                                 };
 
+                                                let dateObject = {};
+                                                if (sp.startDate !== null || sp.endDate !== null) {
+                                                    dateObject = getRelativeDateFromInteger(sp);
+                                                    savedSearchState.start_date = dateObject.start_date;
+                                                    savedSearchState.end_date = dateObject.end_date;
+                                                }
                                                 submitSavedSearchCriteria(e, savedSearchState);
                                             }} />
                                         </ListItemIcon>
@@ -587,18 +630,43 @@ export const Search = (props) => {
                                 return (
                                     <TabPanel key={idx} value={tabValue} index={idx} component="div">
                                         <span className={classes.title}>{sp.title}</span>
+                                        <Button variant="contained" color="primary" className={classes.savedSearchButtonStyleTwo} onClick={(e) => {
+                                            e.preventDefault();
+
+                                            let savedSearchState = {
+                                                keywords: sp.keywords,
+                                                language: sp.language,
+                                                start_date: null,
+                                                end_date: null,
+                                                type: sp.type,
+                                                country: sp.country,
+                                                category: sp.category,
+                                                page_number: sp.pageNumber,
+                                                domain: sp.domain,
+                                                domain_not: sp.domainNot,
+                                            };
+
+                                            let dateObject = {};
+                                            if (sp.startDate !== null || sp.endDate !== null) {
+                                                dateObject = getRelativeDateFromInteger(sp);
+                                                savedSearchState.start_date = dateObject.start_date;
+                                                savedSearchState.end_date = dateObject.end_date;
+                                            }
+
+                                            submitSavedSearchCriteria(e, savedSearchState);
+                                        }}>Search By Criteria</Button>
                                         <Button variant="contained" color="primary" className={classes.savedSearchButtonStyleOne} onClick={(e) => {
                                             e.preventDefault();
 
                                             let savedSearchState = {
                                                 id: sp.id,
                                                 userProfileId: sp.userProfileId,
+                                                start_date: null,
+                                                end_date: null,
                                                 primary: sp.primary,
                                                 title: sp.title,
                                                 keywords: sp.keywords,
                                                 language: sp.language,
-                                                start_date: sp.startDate,
-                                                end_date: sp.endDate,
                                                 type: sp.type,
                                                 country: sp.country,
                                                 category: sp.category,
@@ -609,12 +677,20 @@ export const Search = (props) => {
                                             if (!checkState) {
                                                 toggleCheckState();
                                             }
+
+                                            let dateObject = {};
+                                            if (sp.startDate !== null || sp.endDate !== null) {
+                                                dateObject = getRelativeDateFromInteger(sp);
+                                                savedSearchState.start_date = dateObject.start_date;
+                                                savedSearchState.end_date = dateObject.end_date;
+                                            }
+
                                             setSearchState(savedSearchState);
                                         }}>Edit</Button>
                                         <Button variant="contained" color="primary" className={classes.savedSearchButtonStyleOne} onClick={() => { toggleSnack(sp) }}>Delete</Button>
                                         {
                                             sp.primary
-                                                ? <Button variant="contained" color="primary" className={classes.savedSearchButtonStyleTwo} onClick={(e) => { togglePrimarySavedSearchParameter(sp) }}>Unselect as Primary</Button>
+                                                ? <Button variant="contained" color="primary" className={classes.savedSearchButtonStyleTwo} onClick={(e) => { togglePrimarySavedSearchParameter(sp) }}>Unselect as Default</Button>
                                                 : <Button variant="contained" color="primary" className={classes.savedSearchButtonStyleTwo} onClick={(e) => {
                                                     e.preventDefault();
                                                     let totalPrimary;
@@ -622,30 +698,12 @@ export const Search = (props) => {
                                                         totalPrimary = searchParameters.filter(sp => sp.primary === true).length;
                                                     }
                                                     if (totalPrimary >= 5) {
-                                                        alert(`Unable to set ${sp.title} as a primary search parameter. \n Only five search parameters can be selected as primary at a time. \n Please deselect another search parameter first.`)
+                                                        alert(`Unable to set ${sp.title} as a default search parameter. \n Only five search parameters can be selected as default at a time. \n Please deselect another search parameter first.`)
                                                     } else {
                                                         togglePrimarySavedSearchParameter(sp);
                                                     }
-                                                }}>Select as Primary</Button>
+                                                }}>Select as Default</Button>
                                         }
-                                        <Button variant="contained" color="primary" className={classes.savedSearchButtonStyleTwo} onClick={(e) => {
-                                            e.preventDefault();
-
-                                            let savedSearchState = {
-                                                primary: sp.primary,
-                                                keywords: sp.keywords,
-                                                language: sp.language,
-                                                start_date: sp.startDate,
-                                                end_date: sp.endDate,
-                                                type: sp.type,
-                                                country: sp.country,
-                                                category: sp.category,
-                                                page_number: sp.pageNumber,
-                                                domain: sp.domain,
-                                                domain_not: sp.domainNot,
-                                            };
-                                            submitSavedSearchCriteria(e, savedSearchState);
-                                        }}>Search By Criteria</Button>
                                     </TabPanel>
                                 )
                             })

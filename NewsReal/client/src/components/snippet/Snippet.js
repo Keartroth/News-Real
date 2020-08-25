@@ -100,7 +100,7 @@ export const Snippet = (props) => {
             </Typography>
             <CardMedia
                 className={classes.cardMedia}
-                image={(snippet.image !== "None") ? snippet.image : "https://source.unsplash.com/random/?newspaper"}
+                image={(snippet.image !== "None") ? snippet.image : "https://images.unsplash.com/photo-1582487852281-845682679570?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"}
                 alt="Image title"
             />
             <CardContent className={classes.buttonGroup}>
