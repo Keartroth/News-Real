@@ -41,8 +41,6 @@ export const SnippetHome = (props) => {
         getSnippets();
     }, []);
 
-    debugger
-
     return (
         <>
             <div className={classes.root}>

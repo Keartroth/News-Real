@@ -49,6 +49,7 @@ namespace NewsReal.Repositories
                             JOIN UserProfile up ON up.Id = a.UserProfileId
                        LEFT JOIN ArticleReference ar ON ar.ReferenceArticleId = a.Id
                            WHERE a.UserProfileId = @id AND ReferenceArticleId IS NULL
+                           ORDER BY a.CreateDateTime DESC
                     ";
 
                     cmd.Parameters.AddWithValue("@id", id);
@@ -609,7 +610,6 @@ namespace NewsReal.Repositories
         }
 
         //Private methods for returning data.
-
         private List<ArticleCategory> GetArticleCategoriesByArticleId(int id)
         {
             return _context.ArticleCategory.Where(ac => ac.ArticleId == id).ToList();

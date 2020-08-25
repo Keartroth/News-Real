@@ -28,7 +28,6 @@ export const NewsProvider = (props) => {
     };
 
     const getNewsByDefinedParameters = (searchParameters) => {
-        debugger
         return getToken().then((token) =>
             fetch(apiUrl + `/searchnews/${searchParameters}`, {
                 method: "GET",

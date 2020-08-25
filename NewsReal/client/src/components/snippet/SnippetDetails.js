@@ -175,7 +175,7 @@ export const SnippetDetails = (props) => {
         setSnippetDeleteState(article);
         toggleSnack(article.userTitle, bool, snippetId);
     };
-    debugger
+
     const CategoryRender = () => {
         return (
             <>

@@ -129,7 +129,6 @@ const a11yProps = (index) => {
 }
 
 const getRelativeDateFromInteger = (searchParameter) => {
-    debugger
     let dateObject = {};
     if (searchParameter.startDate !== null) {
         const date = new Date();
@@ -578,6 +577,8 @@ export const Search = (props) => {
                                                     language: sp.language,
                                                     category: sp.category,
                                                     keywords: sp.keywords,
+                                                    start_date: null,
+                                                    end_date: null,
                                                     country: sp.country,
                                                     page_number: sp.pageNumber,
                                                     domain: sp.domain,
@@ -588,11 +589,9 @@ export const Search = (props) => {
                                                 let dateObject = {};
                                                 if (sp.startDate !== null || sp.endDate !== null) {
                                                     dateObject = getRelativeDateFromInteger(sp);
+                                                    savedSearchState.start_date = dateObject.start_date;
+                                                    savedSearchState.end_date = dateObject.end_date;
                                                 }
-
-                                                savedSearchState.start_date = dateObject.start_date;
-                                                savedSearchState.end_date = dateObject.end_date;
-
                                                 submitSavedSearchCriteria(e, savedSearchState);
                                             }} />
                                         </ListItemIcon>
@@ -637,6 +636,8 @@ export const Search = (props) => {
                                             let savedSearchState = {
                                                 keywords: sp.keywords,
                                                 language: sp.language,
+                                                start_date: null,
+                                                end_date: null,
                                                 type: sp.type,
                                                 country: sp.country,
                                                 category: sp.category,
@@ -648,20 +649,20 @@ export const Search = (props) => {
                                             let dateObject = {};
                                             if (sp.startDate !== null || sp.endDate !== null) {
                                                 dateObject = getRelativeDateFromInteger(sp);
+                                                savedSearchState.start_date = dateObject.start_date;
+                                                savedSearchState.end_date = dateObject.end_date;
                                             }
-
-                                            savedSearchState.start_date = dateObject.start_date;
-                                            savedSearchState.end_date = dateObject.end_date;
 
                                             submitSavedSearchCriteria(e, savedSearchState);
                                         }}>Search By Criteria</Button>
                                         <Button variant="contained" color="primary" className={classes.savedSearchButtonStyleOne} onClick={(e) => {
                                             e.preventDefault();
 
-                                            debugger
                                             let savedSearchState = {
                                                 id: sp.id,
                                                 userProfileId: sp.userProfileId,
+                                                start_date: null,
+                                                end_date: null,
                                                 primary: sp.primary,
                                                 title: sp.title,
                                                 keywords: sp.keywords,
@@ -680,10 +681,9 @@ export const Search = (props) => {
                                             let dateObject = {};
                                             if (sp.startDate !== null || sp.endDate !== null) {
                                                 dateObject = getRelativeDateFromInteger(sp);
+                                                savedSearchState.start_date = dateObject.start_date;
+                                                savedSearchState.end_date = dateObject.end_date;
                                             }
-
-                                            savedSearchState.start_date = dateObject.start_date;
-                                            savedSearchState.end_date = dateObject.end_date;
 
                                             setSearchState(savedSearchState);
                                         }}>Edit</Button>
