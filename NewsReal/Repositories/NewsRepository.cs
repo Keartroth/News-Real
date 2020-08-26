@@ -16,7 +16,6 @@ using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 using System.Net;
 using AngleSharp.Dom;
 using System.Linq;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace NewsReal.Repositories
 {
